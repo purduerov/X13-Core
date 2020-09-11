@@ -1,0 +1,38 @@
+{
+  "name": "surface",
+  "version": "0.0.1",
+  "description": "Pilot interface and data processing hub",
+  "main": "main.js",
+  "keywords": [
+    "Surface",
+    "Pilot",
+    "ROV",
+    "Purdue"
+  ],
+  "author": "Purdue ROV, lead Ivan Kouzmine",
+  "license": "ISC",
+  "scripts": {
+    "start": "electron .",
+    "build": "webpack --mode development"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.6",
+    "@babel/preset-env": "^7.11.5",
+    "@babel/preset-react": "^7.10.4",
+    "babel-loader": "^8.1.0",
+    "css-loader": "^4.3.0",
+    "postcss-loader": "^4.0.1",
+    "style-loader": "^1.2.1",
+    "webpack-combine-loaders": "^2.0.4"
+  },
+  "dependencies": {
+    "electron": "^10.1.1",
+    "electron-context-menu": "^2.3.0",
+    "electron-devtools-installer": "^3.1.1",
+    "electron-reload": "^1.5.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  }
+}
