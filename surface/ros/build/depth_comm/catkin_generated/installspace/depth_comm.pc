@@ -1,8 +1,0 @@
-prefix=/home/ivan/rov/X13-Core/surface/ros/install
-
-Name: depth_comm
-Description: Description of depth_comm
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
