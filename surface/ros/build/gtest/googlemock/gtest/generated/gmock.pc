@@ -1,0 +1,9 @@
+libdir=/home/ivan/rov/X13-Core/surface/ros/install/lib
+includedir=/home/ivan/rov/X13-Core/surface/ros/install/include
+
+Name: gmock
+Description: GoogleMock (without main() function)
+Version: 1.9.0
+URL: https://github.com/google/googletest
+Libs: -L${libdir} -lgmock -pthread
+Cflags: -I${includedir} -DGTEST_HAS_PTHREAD=1 -pthread

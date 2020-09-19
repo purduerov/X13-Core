@@ -1,0 +1,2 @@
+shared_msgs
+-DCATKIN_DEVEL_PREFIX=/home/ivan/rov/X13-Core/ros/devel -DCMAKE_INSTALL_PREFIX=/home/ivan/rov/X13-Core/ros/install -G Unix Makefiles

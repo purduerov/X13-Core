@@ -1,0 +1,8 @@
+prefix=/home/ivan/rov/X13-Core/surface/ros/devel
+
+Name: shared_msgs
+Description: Description of shared_msgs
+Version: 0.0.0
+Cflags: -I/home/ivan/rov/X13-Core/surface/ros/devel/include
+Libs: -L${prefix}/lib 
+Requires: 

@@ -1,0 +1,1 @@
+set(ORDERED_PATHS "/home/ivan/ros_catkin_ws/install_isolated/lib")

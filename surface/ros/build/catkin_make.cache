@@ -1,0 +1,2 @@
+depth_comm:gamepad:imu_comm:shared_msgs:test
+-DCATKIN_DEVEL_PREFIX=/home/ivan/rov/X13-Core/surface/ros/devel -DCMAKE_INSTALL_PREFIX=/home/ivan/rov/X13-Core/surface/ros/install -G Unix Makefiles

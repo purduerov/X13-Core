@@ -1,0 +1,8 @@
+prefix=/home/ivan/rov/X13-Core/surface/ros/devel
+
+Name: imu_comm
+Description: Description of imu_comm
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
