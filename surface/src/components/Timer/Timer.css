@@ -1,0 +1,16 @@
+.col-align{
+    display: flex;
+    align-items: center;
+}
+
+.big-font{
+    font-size: 1.75rem;
+}
+
+.timer{
+    float: right;
+}
+
+.timer-btn{
+    margin: .5rem;
+}
