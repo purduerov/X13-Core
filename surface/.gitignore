@@ -2,3 +2,5 @@ node_modules
 dist/main.js
 package-lock.json
 **/__pycache__
+**/build
+**/devel

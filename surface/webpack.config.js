@@ -30,5 +30,8 @@ module.exports = {
 				])
 			}
 		]},
-	performance: { hints: false }
+	performance: { hints: false },
+	node: {
+		__dirname: true
+	}
 };

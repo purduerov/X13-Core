@@ -1,6 +1,10 @@
 # X13 Surface
 Software for piloting and data processing
 
+## Dependencies
+### ROS
+
+
 ## Running
 After cloning:
 1. `npm install`
