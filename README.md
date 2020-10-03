@@ -80,7 +80,7 @@ You should now have everything ready to go. Simply add the `source` line to your
 Everything should be set up now. Remember to `source` your install of ROS.
 
 ### Compile from Source
-Oh dear, what are you doing here? These are only meant for those working with Ubuntu versions **other than 18.04**. When I compiled from source, I was using Ubuntu 19.04, so bear that in mind. If you have nothing else going on your Ubuntu install, I would **highly** recommend wiping it and getting 18.04 instead. If you're crazy like, welcome.
+Oh dear, what are you doing here? These are only meant for those working with Ubuntu versions **other than 18.04**. When I compiled from source, I was using Ubuntu 19.04, so bear that in mind. If you have nothing else going on your Ubuntu install, I would **highly** recommend wiping it and getting 18.04 instead. If you're crazy like me, welcome.
 
 1. Install Python 3 dependencies
 
@@ -133,7 +133,7 @@ After what seems like an eternity (about 30 minutes for me), you should have a w
 
 * catkin_make fails 70-90% way through a workspace
 
-    If this is in X12, some files still contain python shebangs. Try changing them to python3 ones.
-    If that still doesn't work, it might be more of an issue of using code that was written with Kinetic.
+    If this was ported from X12, some files still contain python shebangs. Try changing them to python3 ones.
+    Another issue might be is that you need to build nodes in `/ros` before `/surface/ros`
 
 In all cases, especially if you have had previous ROS installs on your machine, make sure `rosdep init`'s file is up-to-date with Python 3 dependencies. Meaning run `rosdep init` to find the file and delete it. Run that command again and run `rosdep update`. You may need to use `sudo` with the init stage.

@@ -1,8 +1,0 @@
-prefix=/home/ivan/rov/X13-Core/ros/install
-
-Name: shared_msgs
-Description: Description of shared_msgs
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
