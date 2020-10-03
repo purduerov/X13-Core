@@ -1,6 +1,7 @@
 import React from 'react';
 import Timer from '../Timer/Timer.jsx';
 import './Titlebar.css';
+import {Col} from 'react-bootstrap';
 
 export default class Titlebar extends React.Component {
 	constructor(props) {
@@ -10,13 +11,13 @@ export default class Titlebar extends React.Component {
 	render() {
 		return (
 			<div className='title'>
-				<div className='col col-align'>
+				<Col className='col-align'>
 					Purdue ROV Main Screen
-				</div>
+				</Col>
 
-				<div className='col'>
-					<Timer></Timer>
-				</div>
+				<Col>
+					<Timer/>
+				</Col>
 			</div>
 		);
 	}

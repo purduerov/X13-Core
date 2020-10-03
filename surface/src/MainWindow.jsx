@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import attachDepthNode from './components/Depth/attachDepthNode.js';
 import Titlebar from './components/Titlebar/Titlebar.jsx';
+import {Container} from 'react-bootstrap';
 
 export default class MainWindow extends Component {
 	constructor(props) {
@@ -14,12 +15,12 @@ export default class MainWindow extends Component {
 
 	render() {
 		return (
-			<div className='container-fluid p-0'>
+			<Container fluid className='p-0'>
 				<Titlebar/>
 				<div>
 					<h1>{this.state.depth}</h1>
 				</div>
-			</div>			
+			</Container>			
 		);
 	}
 

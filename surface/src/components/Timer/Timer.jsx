@@ -1,5 +1,6 @@
 import React from 'react';
 import './Timer.css';
+import {Button, Col, Row} from 'react-bootstrap';
 
 class Timer extends React.Component {
 	constructor(props){
@@ -85,16 +86,16 @@ class Timer extends React.Component {
 
 	render(){
 		return(
-			<div className='row timer'>
-				<div className='col col-align big-font'>
+			<Row className='timer'>
+				<Col className='col-align big-font'>
 					{this.state.stime.m}:{this.state.stime.s}
-				</div>
-				<div className='col col-align'>
-					<button className='btn btn-secondary timer-btn' onClick={this.startTimer}>Start</button>
-					<button className='btn btn-secondary timer-btn' onClick={this.stopTimer}>Stop</button>
-					<button className='btn btn-secondary timer-btn' onClick={this.resetTimer}>Reset</button>
-				</div>
-			</div>
+				</Col>
+				<Col className='col-align'>
+					<Button variant='secondary' className='timer-btn' onClick={this.startTimer}>Start</Button>
+					<Button variant='secondary' className='timer-btn' onClick={this.stopTimer}>Stop</Button>
+					<Button variant='secondary' className='timer-btn' onClick={this.resetTimer}>Reset</Button>
+				</Col>
+			</Row>
 		);
 	}
 }
