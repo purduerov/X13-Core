@@ -6,9 +6,15 @@ Software for piloting and data processing
 
 
 ## Running
-After cloning:
-1. `npm install`
-2. `npm run build`
-3. `npm start`
+### Single build
+0. `npm install`
+1. `npm run build`
+2. `npm start`
 
-The last two steps will soon be combined into an auto-updating watch function
+### Continuous updates
+0. `npm install`
+1. `npm run build-watch` --> seperate terminal
+2. `npm run start-watch` --> seperate terminal
+
+
+OUR code
