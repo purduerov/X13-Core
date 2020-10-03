@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import attachDepthNode from './components/Depth/attachDepthNode.js';
 import Titlebar from './components/Titlebar/Titlebar.jsx';
-import {Container} from 'react-bootstrap';
+import {Container, Row, Col} from 'react-bootstrap';
+import './MainWindow.css';
 
 export default class MainWindow extends Component {
 	constructor(props) {
@@ -15,11 +16,35 @@ export default class MainWindow extends Component {
 
 	render() {
 		return (
-			<Container fluid className='p-0'>
-				<Titlebar/>
-				<div>
-					<h1>{this.state.depth}</h1>
-				</div>
+			<Container fluid className='p-0 h-100'>
+							
+				<div className='h-100 d-flex flex-column'>
+
+					<Row className='mx-0'>
+						<Titlebar/>
+					</Row>
+					
+					<Row className='mx-0 px-3 pb-1 pt-3 h-75'>
+						<Col className='border'>
+						
+						</Col>
+
+						<Col xs={8} className='border mx-3'>
+						
+						</Col>
+
+						<Col className='border'>
+						
+						</Col>
+					</Row>
+
+					<Row className='mx-0 p-3 flex-grow-1'>
+						<Col className='border'>
+						
+						</Col>
+					</Row>
+				</div>						
+				
 			</Container>			
 		);
 	}

@@ -1,6 +1,5 @@
 html,
-body,
-* {
+body{
     user-select: none;
     cursor: default;
     height: 100%;
