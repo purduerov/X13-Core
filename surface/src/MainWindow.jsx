@@ -3,6 +3,7 @@ import attachDepthNode from './components/Depth/attachDepthNode.js';
 import Titlebar from './components/Titlebar/Titlebar.jsx';
 import {Container, Row, Col} from 'react-bootstrap';
 import './MainWindow.css';
+import Camera from './components/Camera/Camera.jsx';
 
 export default class MainWindow extends Component {
 	constructor(props) {
@@ -30,9 +31,9 @@ export default class MainWindow extends Component {
 						</Col>
 
 						<Col xs={8} className='border mx-3'>
-						
+						<Camera/>
 						</Col>
-
+						
 						<Col className='border'>
 						
 						</Col>
