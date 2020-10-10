@@ -76,6 +76,27 @@ export default class Camera extends React.Component {
 					</Col>
 				</Container>
 			);
+		} else if (this.props.mode == "all_widescreen") {
+		
+			return (
+				<Container>
+					<Row style={{height: '100%'}}>
+						<Col xs={10}>
+							<CameraFrame camera={this.state.cameras[this.state.activeCamera]} res="high"/>
+						</Col>
+						<Col xs={2}>
+						{this.state.cameras.map((camera, idx) => {
+							if (idx !== this.state.activeCamera)
+								return (<Row><CameraFrame key={idx} idx={idx} camera={camera} res="low" handleClick={this.handleClick}/></Row>);
+						})}
+						</Col>
+
+					</Row>
+				</Container>
+			
+
+			
+			);
 		} 
 		else return (
 			<p>
