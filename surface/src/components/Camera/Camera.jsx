@@ -1,7 +1,7 @@
 /* eslint-env browser */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Row, Container } from 'react-bootstrap';
+import { Row, Col, Container } from 'react-bootstrap';
 
 import CameraFrame from './CameraFrame.jsx';
 import CameraConfig from './camera.json';
@@ -45,56 +45,43 @@ export default class Camera extends React.Component {
 			});
 		};
 	}
-
-
-
-	render() {
-		//if (this.props.mode == "main_window") {
+	render(props) {
+		if (this.props.mode == "main_window") {
 		
-		return (
-			<Container>
-				<Row style={{height: '80%'}}>
-					
+			return (
+				<Container>
 					<CameraFrame camera={this.state.cameras[this.state.activeCamera]} res="high"/>
-				</Row>
-				<Row style={{height: '20%'}}>
-					{this.state.cameras.map((camera, idx) => {
-						if (idx !== this.state.activeCamera)
-							return <CameraFrame key={idx} idx={idx} camera={camera} res="low" handleClick={this.handleClick}/>;
-					})}
-				</Row>
-
-			</Container>
-		
-		
-		
-		
-		);
-		//}
-		/*if (props.mode == "row_box") {
-		return (
-			<Container>
-				<Row style={{height: '20%'}}>
-					{this.state.cameras.map((camera, idx) => {
-						if (idx !== this.state.activeCamera)
-							return <CameraFrame key={idx} idx={idx} camera={camera} res="low" handleClick={this.handleClick}/>;
-					})}
-				</Row>
-			</Container>
-		);
-		}
-		if (props.mode == "column_box") {
-		return (
-			<Container>
-				<Col style={{height: '20%'}}>
-					{this.state.cameras.map((camera, idx) => {
-						if (idx !== this.state.activeCamera)
-							return <CameraFrame key={idx} idx={idx} camera={camera} res="low" handleClick={this.handleClick}/>;
-					})}
-				</Col>
-			</Container>
-		);
-		}*/
+				</Container>
+			
+			);
+		} else if (this.props.mode == "row_box") {
+			return (
+				<Container>
+					<Row style={{height: '100%'}}>
+						{this.state.cameras.map((camera, idx) => {
+							if (idx !== this.state.activeCamera)
+								return <CameraFrame key={idx} idx={idx} camera={camera} res="low" handleClick={this.handleClick}/>;
+						})}
+					</Row>
+				</Container>
+			);
+		} else if (this.props.mode == "column_box") {
+			return (
+				<Container>
+					<Col style={{width: '100%'}}>
+						{this.state.cameras.map((camera, idx) => {
+							if (idx !== this.state.activeCamera)
+								return <CameraFrame key={idx} idx={idx} camera={camera} res="low" handleClick={this.handleClick}/>;
+						})}
+					</Col>
+				</Container>
+			);
+		} 
+		else return (
+			<p>
+			Mode not selected.
+			</p>
+			);
 	}
 
 }

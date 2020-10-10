@@ -27,11 +27,11 @@ export default class MainWindow extends Component {
 					
 					<Row className='mx-0 px-3 pb-1 pt-3 h-75'>
 						<Col className='border'>
-						
+						<Camera mode='column_box'/>						
 						</Col>
 
 						<Col xs={8} className='border mx-3'>
-						<Camera/>
+						<Camera mode="main_window"/>	
 						</Col>
 						
 						<Col className='border'>

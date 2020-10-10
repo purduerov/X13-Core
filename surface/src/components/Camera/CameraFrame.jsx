@@ -4,17 +4,17 @@ import { Col } from 'react-bootstrap';
 
 export default class CameraFrame extends Component {
 	render() {
-		if (this.props.res === 'high') {
+		if (this.props.res == 'high') {
 			return (
-				<Col>
+				<div>
 					<img src={this.props.camera.lowres} style={{height: '100%'}}/>
-				</Col>
+				</div>
 			);
 		} else {
 			return (
-				<Col onClick={this.props.handleClick(this.props.idx)}>
+				<div onClick={this.props.handleClick(this.props.idx)}>
 					<img src={this.props.camera.lowres} style={{width: '100%'}}/>
-				</Col>
+				</div>
 			);
 		}
 	}
