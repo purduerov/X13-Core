@@ -36,13 +36,13 @@ export default class CameraFrame extends Component {
 					<img src={this.props.camera.highres} style={frameStyle} alt="Image not found" 
 						ref={img => this.img = img} onError={() => this.img.src = this.props.camera.placeholder} 
 						onLoad={this.displayLoadingImage.bind(this)}/>
-							
+						
 				</div>
 			);
 		} else {
 			return (
 				<div onClick={this.props.handleClick(this.props.idx)}>
-				{(!loaded) ? <img src={this.state.load_img} style={placeholderStyle}/> : {camImg}}
+					{(!loaded) ? <img src={this.state.load_img} style={placeholderStyle}/> : {camImg}}
 					
 
 				</div>
