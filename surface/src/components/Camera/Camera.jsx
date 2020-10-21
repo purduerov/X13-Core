@@ -50,7 +50,7 @@ export default class Camera extends React.Component {
 			// TODO: Sync with column_box through a shared activeCamera.
 			return (
 				<Container>
-					<CameraFrame camera={this.state.cameras[this.state.activeCamera]} res="high"/>
+					<CameraFrame camera={this.state.cameras[this.state.activeCamera]} type="viewport"/>
 				</Container>
 			
 			);
@@ -61,7 +61,7 @@ export default class Camera extends React.Component {
 					<Col style={{width: '100%'}}>
 						{this.state.cameras.map((camera, idx) => {
 							if (idx !== this.state.activeCamera)
-								return <div> <CameraFrame key={idx} idx={idx} camera={camera} res="low" handleClick={this.handleClick}/> Camera {idx} </div>;
+								return <div> <CameraFrame key={idx} idx={idx} camera={camera} type="selection" handleClick={this.handleClick}/> Camera {idx} </div>;
 						})}
 					</Col>
 				</Container>
@@ -72,12 +72,12 @@ export default class Camera extends React.Component {
 				<Container>
 					<Row style={{height: '100%'}}>
 						<Col xs={10}>
-							<CameraFrame camera={this.state.cameras[this.state.activeCamera]} res="high"/>
+							<CameraFrame camera={this.state.cameras[this.state.activeCamera]} type="viewport"/>
 						</Col>
 						<Col xs={2}>
 						{this.state.cameras.map((camera, idx) => {
 							if (idx !== this.state.activeCamera)
-								return (<Row><CameraFrame key={idx} idx={idx} camera={camera} res="low" handleClick={this.handleClick}/> Camera {idx + 1} </Row>);
+								return (<Row><CameraFrame key={idx} idx={idx} camera={camera} type="selection" handleClick={this.handleClick}/> Camera {idx + 1} </Row>);
 						})}
 						</Col>
 

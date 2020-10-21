@@ -7,7 +7,7 @@ export default class CameraFrame extends Component {
 		super(props);
 				
 		this.state={
-			img: this.props.camera.highres,
+			img: this.props.camera.camFeed,
 			load_img: this.props.camera.placeholder,
 			loaded: false
 		};
@@ -22,24 +22,27 @@ export default class CameraFrame extends Component {
 		const placeholderStyle = {width:'100%'}
 		const loadImg = <img src={this.state.load_img} style={placeholderStyle}/>
 		// Note: camImg will not update each frame.
-		const camImg = <img src={this.props.camera.highres} style={frameStyle} alt="Image not found" 
+		const camImg = <img src={this.props.camera.camFeed} style={frameStyle} alt="Image not found" 
 					ref={img => this.img = img} onError={() => this.img.src = this.props.camera.placeholder} 
 					onLoad={this.displayLoadingImage.bind(this)}/>
 				
-		if (this.props.res == 'high') {
+		if (this.props.type == 'viewport') {
+			// Main camera-- has no onClick()
 			// must update
+			
 			return (
 				
 				<div>
 
 					{(!loaded) && <img src={this.state.load_img} style={placeholderStyle}/>}
-					<img src={this.props.camera.highres} style={frameStyle} alt="Image not found" 
+					<img src={this.props.camera.camFeed} style={frameStyle} alt="Image not found" 
 						ref={img => this.img = img} onError={() => this.img.src = this.props.camera.placeholder} 
 						onLoad={this.displayLoadingImage.bind(this)}/>
 						
 				</div>
 			);
 		} else {
+			// Type is selection menu, so it must be clickable.
 			return (
 				<div onClick={this.props.handleClick(this.props.idx)}>
 					{(!loaded) ? <img src={this.state.load_img} style={placeholderStyle}/> : {camImg}}
@@ -53,10 +56,10 @@ export default class CameraFrame extends Component {
 
 CameraFrame.propTypes = {
 	handleClick: PropTypes.func,
-	res: PropTypes.string.isRequired,
+	type: PropTypes.string.isRequired,
 	idx: PropTypes.number,
 	camera: PropTypes.shape({
-		highres: PropTypes.string.isRequired,
+		camFeed: PropTypes.string.isRequired,
 		placeholder: PropTypes.string.isRequired
 	})
 };
