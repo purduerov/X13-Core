@@ -52,8 +52,9 @@ def callback(data):
     msg.LB = stuff['LB']
     msg.Rtrigger = stuff['RT']
     msg.Ltrigger = stuff['LT']
-    rospy.loginfo(msg)
-    pub.publish(msg)
+    #rospy.loginfo(msg)
+    #pub.publish(msg)
+    print(data.data) #print raw json for frontend consumption
 
 
 def listener():

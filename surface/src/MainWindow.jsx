@@ -3,6 +3,7 @@ import attachDepthNode from './components/Depth/attachDepthNode.js';
 import Titlebar from './components/Titlebar/Titlebar.jsx';
 import {Container, Row, Col} from 'react-bootstrap';
 import './MainWindow.css';
+import Gamepad from './components/Gamepad/Gamepad.jsx';
 
 export default class MainWindow extends Component {
 	constructor(props) {
@@ -26,7 +27,7 @@ export default class MainWindow extends Component {
 					
 					<Row className='mx-0 px-3 pb-1 pt-3 h-75'>
 						<Col className='border'>
-						
+							<Gamepad></Gamepad>
 						</Col>
 
 						<Col xs={8} className='border mx-3'>
