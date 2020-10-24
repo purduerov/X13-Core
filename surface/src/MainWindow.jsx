@@ -4,6 +4,7 @@ import Titlebar from './components/Titlebar/Titlebar.jsx';
 import {Container, Row, Col} from 'react-bootstrap';
 import './MainWindow.css';
 import Gamepad from './components/Gamepad/Gamepad.jsx';
+import ThrusterCircle from './components/ThrusterCircle/ThrusterCircle.jsx';
 
 export default class MainWindow extends Component {
 	constructor(props) {
@@ -12,7 +13,13 @@ export default class MainWindow extends Component {
 		this.updateDepth = this.updateDepth.bind(this);
 
 		attachDepthNode(this.updateDepth);
-		this.state = {depth: 0};
+		this.state = {depth: 0, thrust: 0};
+
+		this.updateThrust = this.updateThrust.bind(this);
+	}
+
+	updateThrust(val){
+		this.setState({thrust: val});
 	}
 
 	render() {
@@ -27,7 +34,7 @@ export default class MainWindow extends Component {
 					
 					<Row className='mx-0 px-3 pb-1 pt-3 h-75'>
 						<Col className='border'>
-							<Gamepad></Gamepad>
+							<Gamepad updateThrust={this.updateThrust}></Gamepad>
 						</Col>
 
 						<Col xs={8} className='border mx-3'>
@@ -35,13 +42,13 @@ export default class MainWindow extends Component {
 						</Col>
 
 						<Col className='border'>
-						
+							<ThrusterCircle thrust={this.state.thrust}/>
 						</Col>
 					</Row>
 
 					<Row className='mx-0 p-3 flex-grow-1'>
 						<Col className='border'>
-						
+							
 						</Col>
 					</Row>
 				</div>						

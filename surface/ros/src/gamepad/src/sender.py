@@ -2,6 +2,7 @@
 
 from inputs import get_gamepad
 import json
+import sys
 
 #ROS
 import rospy
@@ -43,12 +44,16 @@ def process_event(event):
         gamepad_state[EVENTS[event.code]] = event.state
 
 def pub_data(event):
-    rospy.loginfo(gamepad_state)
+    #rospy.loginfo(gamepad_state)
+    print(json.dumps(gamepad_state)) #Proper formatting for stdout
     pub.publish(json.dumps(gamepad_state))
 
 def update_gamepad(event):
-    event = get_gamepad()[0]
-    process_event(event)
+    try:
+        event = get_gamepad()[0]
+        process_event(event)
+    except:
+        rospy.signal_shutdown('no gamepad')
 
 def talker():
     rospy.init_node('gp_pub', anonymous=True)
@@ -60,6 +65,12 @@ def talker():
   
 if __name__ == '__main__':
     global pub
+
+    try:
+        get_gamepad()
+    except:
+        sys.exit(json.dumps({'gamepad': False}))
+
     pub = rospy.Publisher('chatter', String, queue_size=10)
     try:
         talker()
