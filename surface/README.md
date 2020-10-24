@@ -13,8 +13,11 @@ Software for piloting and data processing
 
 ### Continuous updates
 0. `npm install`
-1. `npm run build-watch` --> seperate terminal
-2. `npm run start-watch` --> seperate terminal
+1. `npm run build-watch` --> separate terminal
+2. `npm run start-watch` --> separate terminal
+
+## Current Functions
+* Gamepad live output
 
 
 OUR code
