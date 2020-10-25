@@ -53,7 +53,7 @@ class MS5837(object):
         try:
             self._bus = smbus.SMBus(bus)
         except:
-            print("Bus %d is not available.") % bus
+            print("Bus %d is not available." % bus)
             print("Available busses are listed as /dev/i2c*")
             self._bus = None
         
@@ -65,7 +65,7 @@ class MS5837(object):
         
     def init(self):
         if self._bus is None:
-            "No bus!"
+            print("No bus in intialization!")
             return False
         
         self._bus.write_byte(self._MS5837_ADDR, self._MS5837_RESET)
@@ -180,8 +180,8 @@ class MS5837(object):
                 OFFi = (3*(self._temperature-2000)*(self._temperature-2000))/2
                 SENSi = (5*(self._temperature-2000)*(self._temperature-2000))/8
                 if (self._temperature/100) < -15: # Very low temp
-                    OFFi = OFFi+7*(self._temperature+1500l)*(self._temperature+1500)
-                    SENSi = SENSi+4*(self._temperature+1500l)*(self._temperature+1500)
+                    OFFi = OFFi+7*(self._temperature+1500)*(self._temperature+1500)
+                    SENSi = SENSi+4*(self._temperature+1500)*(self._temperature+1500)
             elif (self._temperature/100) >= 20: # High temp
                 Ti = 2*(dT*dT)/(137438953472)
                 OFFi = (1*(self._temperature-2000)*(self._temperature-2000))/16
