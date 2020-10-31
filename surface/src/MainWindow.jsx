@@ -10,16 +10,20 @@ export default class MainWindow extends Component {
 		super(props);
 
 		this.updateDepth = this.updateDepth.bind(this);
-
+		this.setActiveCamera = this.setActiveCamera.bind(this);
 		attachDepthNode(this.updateDepth);
 		this.state = {depth: 0,
-			activeCamera:3};
+			activeCamera:0};
 	}
 	setActiveCamera(idx) {
-		this.state.activeCamera = idx;
+		console.log("Active camera set to " + idx);
+		this.setState({
+			activeCamera: idx
+		});
+		
 	}
 	render() {
-		this.setActiveCamera(2);
+		
 		return (
 			<Container fluid className='p-0 h-100'>
 							
@@ -31,13 +35,13 @@ export default class MainWindow extends Component {
 					
 					<Row className='mx-0 px-3 pb-1 pt-3 h-75'>
 						<Col className='border'>
-						
-						<Camera mode="column_box"/>						
+						Last active camera: {this.state.activeCamera}
+						<Camera mode="column_box" updateActiveCamera={this.setActiveCamera}/>						
 						</Col>
 
 						<Col xs={8} className='border mx-3'>
-						<Camera mode="main_window" activeCamera={this.state.activeCamera}/>	
-						<Camera mode="all_widescreen"/>
+						<Camera mode="main_window" activeCamera={this.state.activeCamera} updateActiveCamera={this.setActiveCamera}/>	
+						{/*<Camera mode="all_widescreen" updateActiveCamera={this.setActiveCamera}/>*/}
 						</Col>
 						
 						<Col className='border'>

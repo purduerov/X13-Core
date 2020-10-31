@@ -38,14 +38,19 @@ export default class Camera extends React.Component {
 			this.setState({
 				activeCamera: key - 1
 			});
+			this.props.updateActiveCamera(this.state.activeCamera);
+		
 		}
 	}
 
 	handleClick(idx) {
 		return () => {
+			
 			this.setState({
 				activeCamera: idx
 			});
+			this.props.updateActiveCamera(this.state.activeCamera);
+		
 		};
 	}
 	render(props) {
@@ -53,7 +58,9 @@ export default class Camera extends React.Component {
 			// TODO: Sync with column_box through a shared activeCamera.
 			return (
 				<Container>
+					<Row style={{height: '100%', width: 'auto'}}>
 					<CameraFrame camera={this.state.cameras[this.props.activeCamera]} type="viewport"/>
+					</Row>
 				</Container>
 			
 			);
@@ -100,6 +107,7 @@ export default class Camera extends React.Component {
 
 }
 Camera.propTypes = {
-	activeCamera: PropTypes.number.isRequired
+	activeCamera: PropTypes.number.isRequired,
+	updateActiveCamera: PropTypes.func.isRequired
 };
 
