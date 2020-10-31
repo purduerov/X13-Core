@@ -1,7 +1,7 @@
 import time
 import board
 import busio
-import adafruit_BNO055
+import adafruit_bno055
 
 
 class BNO055(object):
@@ -84,27 +84,40 @@ class BNO055(object):
 
     def update(self):
         euler = self._sensor.euler
-        self._data['euler']['yaw'] = euler[0]
-        self._data['euler']['roll'] = euler[1]
-        self._data['euler']['pitch'] = euler[2]
+        if euler[0] is not None:
+            self._data['euler']['yaw'] = euler[0]
+        if euler[1] is not None:
+            self._data['euler']['roll'] = euler[1]
+        if euler[2] is not None:
+            self._data['euler']['pitch'] = euler[2]
 
         gyro = self._sensor.gyro
-        self._data['gyro']['x'] = gyro[0]
-        self._data['gyro']['y'] = gyro[1]
-        self._data['gyro']['z'] = gyro[2]
+        if gyro[0] is not None:
+            self._data['gyro']['x'] = gyro[0]
+        if gyro[1] is not None:
+            self._data['gyro']['y'] = gyro[1]
+        if gyro[2] is not None:
+            self._data['gyro']['z'] = gyro[2]
 
         acceleration = self._sensor.acceleration
-        self._data['acceleration']['x'] = acceleration[0]
-        self._data['acceleration']['y'] = acceleration[1]
-        self._data['acceleration']['z'] = acceleration[2]
+        if acceleration[0] is not None:
+            self._data['acceleration']['x'] = acceleration[0]
+        if acceleration[1] is not None:
+            self._data['acceleration']['y'] = acceleration[1]
+        if acceleration[2] is not None:
+            self._data['acceleration']['z'] = acceleration[2]
 
         linear_accel = self._sensor.linear_acceleration
-        self._data['linear_acceleration']['x'] = linear_accel[0]
-        self._data['linear_acceleration']['y'] = linear_accel[1]
-        self._data['linear_acceleration']['z'] = linear_accel[2]
+        if linear_accel[0] is not None:
+            self._data['linear_acceleration']['x'] = linear_accel[0]
+        if linear_accel[1] is not None:
+            self._data['linear_acceleration']['y'] = linear_accel[1]
+        if linear_accel[2] is not None:
+            self._data['linear_acceleration']['z'] = linear_accel[2]
 
         temp = self._sensor.temperature
-        self._data['temp'] = temp
+        if temp is not None:
+            self._data['temp'] = temp
 
         return True
 
@@ -157,8 +170,7 @@ if __name__ == '__main__':
         # Spew readings
         while True:
             if sensor.update():
-                print(
-                         "%s \t%0.2f \t%0.2f \t%0.2f \t\t%0.2f \t%0.2f \t%0.2f \t\t%0.2f \t%0.2f \t%0.2f \t\t%0.2f \t%0.2f \t%0.2f") % (
+                print("%s \t%0.2f \t%0.2f \t%0.2f \t\t%0.2f \t%0.2f \t%0.2f \t\t%0.2f \t%0.2f \t%0.2f \t\t%0.2f \t%0.2f \t%0.2f") % (
                      time.strftime("%H:%M:%S", time.localtime()) + '.%d' % (time.time() % 1 * 1000),
                      sensor.roll(),
                      sensor.pitch(),
