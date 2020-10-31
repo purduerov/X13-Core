@@ -35,7 +35,6 @@ export default class MainWindow extends Component {
 					
 					<Row className='mx-0 px-3 pb-1 pt-3 h-75'>
 						<Col className='border'>
-						Last active camera: {this.state.activeCamera}
 						<Camera mode="column_box" updateActiveCamera={this.setActiveCamera}/>						
 						</Col>
 

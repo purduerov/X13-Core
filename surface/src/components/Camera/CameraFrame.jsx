@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Col } from 'react-bootstrap';
+import { Col, Container } from 'react-bootstrap';
 
 export default class CameraFrame extends Component {
 	constructor(props) {
@@ -34,7 +34,7 @@ export default class CameraFrame extends Component {
 			
 			return (
 				
-				<div>
+				<Container>
 
 					{(!loaded) && <img src={this.state.load_img} style={placeholderStyle}/>}
 					<img src={this.props.camera.camFeed} 
@@ -44,16 +44,16 @@ export default class CameraFrame extends Component {
 						onError={() => this.img.src = this.props.camera.placeholder} 
 						onLoad={this.displayLoadingImage.bind(this)}/>
 						
-				</div>
+				</Container>
 			);
 		} else {
 			// Type is selection menu, so it must be clickable.
 			return (
-				<div onClick={this.props.handleClick(this.props.idx)}>
+				<Container onClick={this.props.handleClick(this.props.idx)}>
 					{(!loaded) ? <img src={this.state.load_img} style={placeholderStyle}/> : {camImg}}
 					
 
-				</div>
+				</Container>
 			);
 		}
 	}
