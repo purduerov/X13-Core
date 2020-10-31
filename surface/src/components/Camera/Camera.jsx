@@ -58,9 +58,11 @@ export default class Camera extends React.Component {
 			// TODO: Sync with column_box through a shared activeCamera.
 			return (
 				<Container>
-					<Row style={{height: '100%', width: 'auto'}}>
-					<CameraFrame camera={this.state.cameras[this.props.activeCamera]} type="viewport"/>
-					</Row>
+					<Col style={{width: '80%', alignSelf: 'center'}}>
+						<CameraFrame camera={this.state.cameras[this.props.activeCamera]} type="viewport"/>
+						Camera {this.props.activeCamera + 1}
+					</Col>
+					
 				</Container>
 			
 			);

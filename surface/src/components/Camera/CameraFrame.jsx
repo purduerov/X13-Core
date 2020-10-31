@@ -22,9 +22,11 @@ export default class CameraFrame extends Component {
 		const placeholderStyle = {width:'100%'}
 		const loadImg = <img src={this.state.load_img} style={placeholderStyle}/>
 		// Note: camImg will not update each frame.
-		const camImg = <img src={this.props.camera.camFeed} style={frameStyle} alt="Image not found" 
-					ref={img => this.img = img} onError={() => this.img.src = this.props.camera.placeholder} 
-					onLoad={this.displayLoadingImage.bind(this)}/>
+		const camImg = <img src={this.props.camera.camFeed} 
+							style={frameStyle} alt="Image not found" 
+							ref={img => this.img = img} 
+							onError={() => this.img.src = this.props.camera.placeholder} 
+							onLoad={this.displayLoadingImage.bind(this)}/>
 				
 		if (this.props.type == 'viewport') {
 			// Main camera-- has no onClick()
@@ -35,8 +37,11 @@ export default class CameraFrame extends Component {
 				<div>
 
 					{(!loaded) && <img src={this.state.load_img} style={placeholderStyle}/>}
-					<img src={this.props.camera.camFeed} style={frameStyle} alt="Image not found" 
-						ref={img => this.img = img} onError={() => this.img.src = this.props.camera.placeholder} 
+					<img src={this.props.camera.camFeed} 
+						style={frameStyle} 
+						alt="Image not found" 
+						ref={img => this.img = img} 
+						onError={() => this.img.src = this.props.camera.placeholder} 
 						onLoad={this.displayLoadingImage.bind(this)}/>
 						
 				</div>
