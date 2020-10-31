@@ -18,8 +18,11 @@ class bc:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-def printc(text, color):
-    print('{}{}{}'.format(color, text, bc.ENDC))
+def printc(text, color, same=False):
+    if same:
+        print('{}{}{}'.format(color, text, bc.ENDC), end='\r')
+    else:
+        print('{}{}{}'.format(color, text, bc.ENDC))
 
 def shell_source(script):
     pipe = Popen('{}; env'.format(script), stdout=PIPE, shell=True, encoding='utf8')
@@ -29,8 +32,8 @@ def shell_source(script):
     printc('[X] {}'.format('Sourced new files'), bc.OKGREEN)
 
 def run(cmd):
-    print('Running {}...'.format(cmd))  
-    if check_call(cmd, stdout=DEVNULL, shell=True) != 0:
+    printc('[-] {}'.format(cmd), bc.WARNING, True)  
+    if check_call(cmd, stdout=DEVNULL, stderr=DEVNULL, shell=True) != 0:
         printc('Something went wrong', bc.FAIL)
         sys.exit()
 
@@ -38,7 +41,7 @@ def run(cmd):
 
 printc('Surface Launch', bc.OKBLUE)
 printc('===========================', bc.BOLD)
-print('Working in {}'.format(SURFACE_DIR))
+print('Working in {}'.format(ROS_DIR))
 printc('Building ROS workspace in {}'.format(ROS_DIR), bc.HEADER)
 os.chdir(ROS_DIR)
 
