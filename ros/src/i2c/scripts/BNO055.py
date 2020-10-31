@@ -1,14 +1,20 @@
-from Adafruit_BNO055 import BNO055 as _BNO055
+import time
+import board
+import busio
+import adafruit_BNO055
 
 
 class BNO055(object):
     def __init__(self):
         # IMU Reset Pin connected to Pin 18
-        self._bno = _BNO055.BNO055(rst=18)
+        # self._bno = _BNO055.BNO055(rst=18)
 
         # Fail if it cannot be initialized
-        if not self._bno.begin():
-            raise I2CERROR('Failed to initialize BNO055!')
+        # if not self._bno.begin():
+        #     raise I2CERROR('Failed to initialize BNO055!')
+
+        i2c = busio.I2C(board.SCL, board.SDA)
+        self._sensor = adafruit_bno055.BNO055_I2C(i2c)
 
         self._data = {
             'euler': {
@@ -77,82 +83,74 @@ class BNO055(object):
         return self._data['linear_acceleration']['z']
 
     def update(self):
-        euler = self._bno.read_euler()
+        euler = self._sensor.euler
         self._data['euler']['yaw'] = euler[0]
         self._data['euler']['roll'] = euler[1]
         self._data['euler']['pitch'] = euler[2]
 
-        gyro = self._bno.read_gyroscope()
+        gyro = self._sensor.gyro
         self._data['gyro']['x'] = gyro[0]
         self._data['gyro']['y'] = gyro[1]
         self._data['gyro']['z'] = gyro[2]
 
-        acceleration = self._bno.read_accelerometer()
+        acceleration = self._sensor.acceleration
         self._data['acceleration']['x'] = acceleration[0]
         self._data['acceleration']['y'] = acceleration[1]
         self._data['acceleration']['z'] = acceleration[2]
 
-        linear_accel = self._bno.read_linear_acceleration()
+        linear_accel = self._sensor.linear_acceleration
         self._data['linear_acceleration']['x'] = linear_accel[0]
         self._data['linear_acceleration']['y'] = linear_accel[1]
         self._data['linear_acceleration']['z'] = linear_accel[2]
 
-        temp = self._bno.read_temp()
+        temp = self._sensor.temperature
         self._data['temp'] = temp
 
         return True
 
     def get_calibration(self):
-        return self._bno.get_calibration()
+        return self._sensor.calibration_status()
 
-    def reset_calibration(self):
-        cal_array_original = self.get_calibration()
-        self._bno.set_calibration(cal_array_original);
-        return cal_array_original
+    # def reset_calibration(self):
+    #     cal_array_original = self.get_calibration()
+    #     self._bno.set_calibration(cal_array_original);
+    #     return cal_array_original
 
-    def set_calibration(self, data):
-        self._bno.set_calibration(data)
+    # def set_calibration(self, data):
+    #     self._bno.set_calibration(data)
 
-    def sitrep(self):
-        sys, gyro, accel, mag = self._bno.get_calibration_status()
-        sys_stat, sys_test, sys_err = self._bno.get_system_status(True)
-        good_status = [3, 3, 3, 3, 1, 0x0F, 0]
-        test_array = [sys, gyro, accel, mag, sys_stat, sys_test, sys_err]
+    # def sitrep(self):
+    #     sys, gyro, accel, mag = self._bno.get_calibration_status()
+    #     sys_stat, sys_test, sys_err = self._bno.get_system_status(True)
+    #     good_status = [3, 3, 3, 3, 1, 0x0F, 0]
+    #     test_array = [sys, gyro, accel, mag, sys_stat, sys_test, sys_err]
 
-        for x in range(0, 4):
-            if test_array[x] != 3:
-                return False
+    #     for x in range(0, 4):
+    #         if test_array[x] != 3:
+    #             return False
 
-        if test_array[4] == 1:
-            return False
+    #     if test_array[4] == 1:
+    #         return False
 
-        if test_array[5] != 0x0F:
-            return False
+    #     if test_array[5] != 0x0F:
+    #         return False
 
-        if test_array[6] != 0:
-            return False
+    #     if test_array[6] != 0:
+    #         return False
 
-        return True
+    #     return True
 
 
 if __name__ == '__main__':
     # BNO055().main()
-    import time
-
 
     def main():
-        sensor = BNO055()  # Default I2C bus is 1 (Raspberry Pi 3)
+        sensor = BNO055()
 
         # We must initialize the sensor before reading it
         if not sensor:
             print ("Sensor could not be initialized")
             exit(1)
-
-        # print("Pressure: %.2f mbar") % (sensor.pressure())
-
-        # print("Temperature: %.2f C") % (sensor.temperature(ms5837.UNITS_Centigrade))
-
-        # time.sleep(2)
 
         print("Time \tRoll \tPitch \tYaw \tGyro: \tx \ty \tz \tACC: \tx \ty \tz \tLinear: \tx \ty \tz")
 
