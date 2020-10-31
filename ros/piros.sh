@@ -1,6 +1,6 @@
 #! /bin/bash
 
-source ~/X12-Core/ros/devel/setup.bash
+source ~/X13-Core/ros/devel/setup.bash
 
 #~/X11-Core/ros/src/can_com/scripts/start_can.sh
 
@@ -8,5 +8,5 @@ source ~/X12-Core/ros/devel/setup.bash
 
 # ./reset_can.py &
 
-roslaunch ~/X12-Core/ros/launch/run_rov.launch 
+roslaunch ~/X13-Core/ros/launch/run_rov.launch 
 # killall reset_can.py
