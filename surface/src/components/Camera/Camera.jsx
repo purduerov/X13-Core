@@ -6,6 +6,8 @@ import { Row, Col, Container } from 'react-bootstrap';
 import CameraFrame from './CameraFrame.jsx';
 import CameraConfig from './camera.json';
 
+const CameraContext = React.createContext(0);
+
 export default class Camera extends React.Component {
 	constructor(props) {
 		super(props);
@@ -17,6 +19,7 @@ export default class Camera extends React.Component {
 
 		this.handleClick = this.handleClick.bind(this);
 		this.handleKeyDown = this.handleKeyDown.bind(this);
+
 	}
 
 	componentWillMount() {
@@ -50,7 +53,7 @@ export default class Camera extends React.Component {
 			// TODO: Sync with column_box through a shared activeCamera.
 			return (
 				<Container>
-					<CameraFrame camera={this.state.cameras[this.state.activeCamera]} type="viewport"/>
+					<CameraFrame camera={this.state.cameras[this.props.activeCamera]} type="viewport"/>
 				</Container>
 			
 			);
@@ -61,7 +64,7 @@ export default class Camera extends React.Component {
 					<Col style={{width: '100%'}}>
 						{this.state.cameras.map((camera, idx) => {
 							if (idx !== this.state.activeCamera)
-								return <div> <CameraFrame key={idx} idx={idx} camera={camera} type="selection" handleClick={this.handleClick}/> Camera {idx} </div>;
+								return <div> <CameraFrame key={idx} idx={idx} camera={camera} type="selection" handleClick={this.handleClick}/> Camera {idx + 1} </div>;
 						})}
 					</Col>
 				</Container>
