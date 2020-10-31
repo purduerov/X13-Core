@@ -49,8 +49,8 @@ export default class Camera extends React.Component {
 			this.setState({
 				activeCamera: idx
 			});
-			this.props.updateActiveCamera(this.state.activeCamera);
-		
+			console.log("Updating active camera to index " + idx);
+			this.props.updateActiveCamera(idx);
 		};
 	}
 	render(props) {
