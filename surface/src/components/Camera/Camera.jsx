@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Row, Col, Container } from 'react-bootstrap';
 
 import CameraFrame from './CameraFrame.jsx';
-import CameraConfig from './camera.json';
+import CameraConfig from './test_camera.json';
 
 const CameraContext = React.createContext(0);
 
