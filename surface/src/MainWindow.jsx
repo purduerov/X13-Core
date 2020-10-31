@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import attachDepthNode from './components/Depth/attachDepthNode.js';
 import Titlebar from './components/Titlebar/Titlebar.jsx';
-import {Container, Row, Col} from 'react-bootstrap';
+import {Container, Row, Col, Button} from 'react-bootstrap';
 import './MainWindow.css';
 import Gamepad from './components/Gamepad/Gamepad.jsx';
 import ThrusterCircle from './components/ThrusterCircle/ThrusterCircle.jsx';
+import Console from './components/Console/Console.jsx';
+import roscore from './rosjs/roscore.js';
+import cleanEnv from '../electron/cleanEnv.js';
 
 export default class MainWindow extends Component {
 	constructor(props) {
@@ -13,7 +16,9 @@ export default class MainWindow extends Component {
 		this.updateDepth = this.updateDepth.bind(this);
 
 		attachDepthNode(this.updateDepth);
-		this.state = {depth: 0, thrust: 0};
+		this.state = {depth: 0, thrust: 0, output: []};
+
+		this.roscore = null;
 
 		this.updateThrust = this.updateThrust.bind(this);
 	}
@@ -21,6 +26,10 @@ export default class MainWindow extends Component {
 	updateThrust(val){
 		this.setState({thrust: val});
 	}
+
+	pushData(data) { 
+		this.setState({ output: [...this.state.output, data] })
+    }
 
 	render() {
 		return (
@@ -43,18 +52,33 @@ export default class MainWindow extends Component {
 
 						<Col className='border'>
 							<ThrusterCircle thrust={this.state.thrust}/>
+
+							<Container className='py-2'>
+								<Button variant='secondary' onClick={this.launchRoscore.bind(this)}>ROSCore</Button>
+							</Container>
+
+							<Container>
+								<Button variant='danger' onClick={cleanEnv.bind(this)}>Kill ROS</Button>
+							</Container>
+							
+							
 						</Col>
 					</Row>
 
 					<Row className='mx-0 p-3 flex-grow-1'>
 						<Col className='border'>
-							
+							<Console output={this.state.output}/>
 						</Col>
 					</Row>
 				</div>						
 				
 			</Container>			
 		);
+	}
+
+	launchRoscore(){
+		console.log('Launching');
+		roscore(this.pushData.bind(this));
 	}
 
 	updateDepth(newVal) {

@@ -1,11 +1,18 @@
 const { app } = require('electron');
-const createWindow = require('./electron/createWindow.js')
-const activateReload = require('./electron/activateReload.js')
-
+const path = require('path');
+const createWindow = require('./electron/createWindow.js');
+const cleanEnv = require('./electron/cleanEnv.js');
 const WATCH_MODE = process.env.NODE_ENV === 'WATCH';
 
-let windows = [];
+if(WATCH_MODE){
+	require('electron-reload')(__dirname, {
+		electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
+	});
+}
 
+cleanEnv();
+
+let windows = [];
 
 app.on('ready', () => {
 	createWindow(windows, 0);
@@ -16,10 +23,6 @@ app.on('window-all-closed', () => {
 		app.quit();
 	}
 });
-
-if(WATCH_MODE){
-	activateReload();
-}
 
 
 /*
