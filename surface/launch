@@ -39,24 +39,39 @@ def run(cmd):
 
     printc('[X] {}'.format(cmd), bc.OKGREEN)
 
-printc('Surface Launch', bc.OKBLUE)
-printc('===========================', bc.BOLD)
-print('Working in {}'.format(ROS_DIR))
-printc('Building ROS workspace in {}'.format(ROS_DIR), bc.HEADER)
-os.chdir(ROS_DIR)
+def develop():
+    printc('Surface Launch', bc.OKBLUE)
+    printc('===========================', bc.BOLD)
+    print('Starting webpack watch')
+    procs = [Popen('npm run build-watch', shell=True), Popen('npm run start-watch', shell=True)]
+    for p in procs:
+        p.wait()
+    
 
-buildRos = 'catkin_make'
+def main():
+    printc('Surface Launch', bc.OKBLUE)
+    printc('===========================', bc.BOLD)
+    print('Working in {}'.format(ROS_DIR))
+    printc('Building ROS workspace in {}'.format(ROS_DIR), bc.HEADER)
+    os.chdir(ROS_DIR)
 
-run(buildRos)
+    buildRos = 'catkin_make'
 
-shell_source('. {}'.format(os.path.join(ROS_DIR, 'devel/setup.sh')))
+    run(buildRos)
 
-printc('Setting up frontend', bc.HEADER)
-os.chdir(SURFACE_DIR)
-print('Working in {}'.format(SURFACE_DIR))
+    shell_source('. {}'.format(os.path.join(ROS_DIR, 'devel/setup.sh')))
 
-run('npm install')
-run('npm run build')
-run('npm start')
+    printc('Setting up frontend', bc.HEADER)
+    os.chdir(SURFACE_DIR)
+    print('Working in {}'.format(SURFACE_DIR))
 
+    run('npm install')
+    run('npm run build')
+    run('npm start')
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] == 'dev':
+        develop()
+    else:
+        main()
 

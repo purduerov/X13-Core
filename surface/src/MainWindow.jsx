@@ -47,7 +47,7 @@ export default class MainWindow extends Component {
 						</Col>
 
 						<Col xs={8} className='border mx-3'>
-						
+							Hello
 						</Col>
 
 						<Col className='border'>
