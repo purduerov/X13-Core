@@ -1,5 +1,4 @@
-
-#! /usr/bin/python
+#! /usr/bin/python3
 import rospy
 # import ms5837
 import ms5837
