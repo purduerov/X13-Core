@@ -8,6 +8,7 @@ import ThrusterCircle from './components/ThrusterCircle/ThrusterCircle.jsx';
 import Console from './components/Console/Console.jsx';
 import roscore from './rosjs/roscore.js';
 import cleanEnv from '../electron/cleanEnv.js';
+import thrusterListen from './components/ThrusterCircle/thrusterListen.js';
 
 export default class MainWindow extends Component {
 	constructor(props) {
@@ -16,19 +17,20 @@ export default class MainWindow extends Component {
 		this.updateDepth = this.updateDepth.bind(this);
 
 		attachDepthNode(this.updateDepth);
-		this.state = {depth: 0, thrust: 0, output: []};
+		this.state = {depth: 0, thrust: [0, 0, 0, 0, 0, 0, 0, 0], output: []};
 
 		this.roscore = null;
 
 		this.updateThrust = this.updateThrust.bind(this);
+		thrusterListen(this.updateThrust);
 	}
 
-	updateThrust(val){
-		this.setState({thrust: val});
+	updateThrust(data){
+		this.setState({thrust: [...this.state.thrust, data]});
 	}
 
 	pushData(data) { 
-		this.setState({ output: [...this.state.output, data] })
+		this.setState({ output: [...this.state.output, data] });
     }
 
 	render() {
@@ -51,7 +53,10 @@ export default class MainWindow extends Component {
 						</Col>
 
 						<Col className='border'>
-							<ThrusterCircle thrust={this.state.thrust}/>
+							{this.state.thrust.map((t) => (
+								<ThrusterCircle thrust={t}/>
+							))}
+								
 
 							<Container className='py-2'>
 								<Button variant='secondary' onClick={this.launchRoscore.bind(this)}>ROSCore</Button>
