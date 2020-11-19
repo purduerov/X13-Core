@@ -25,8 +25,14 @@ export default class MainWindow extends Component {
 		thrusterListen(this.updateThrust);
 	}
 
+	modifyValues(vals){
+		const list = this.state.thrust.map((t, idx) => Math.abs(vals[idx] - 127) / 127);
+	   
+		return list;
+	}
+
 	updateThrust(data){
-		this.setState({thrust: [...this.state.thrust, data]});
+		this.setState({thrust: this.modifyValues(data)});
 	}
 
 	pushData(data) { 
@@ -45,16 +51,16 @@ export default class MainWindow extends Component {
 					
 					<Row className='mx-0 px-3 pb-1 pt-3 h-75'>
 						<Col className='border'>
-							<Gamepad updateThrust={this.updateThrust}></Gamepad>
+							<Gamepad></Gamepad>
 						</Col>
 
 						<Col xs={8} className='border mx-3'>
-							Hello
+							<img src="http://192.168.1.3:8090/test.mjpg"/>
 						</Col>
 
 						<Col className='border'>
-							{this.state.thrust.map((t) => (
-								<ThrusterCircle thrust={t}/>
+							{this.state.thrust.map((t, idx) => (
+								<ThrusterCircle key={idx} thrust={t}/>
 							))}
 								
 

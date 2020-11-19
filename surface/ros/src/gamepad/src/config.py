@@ -51,8 +51,8 @@ gamepad_state = {
     'LT': 0.0,
     'RT': 0.0,
 
-    'DPADX': 0.0,
-    'DPADY': 0.0,
+    'DPADX': 0,
+    'DPADY': 0,
 
     'Y': 0,
     'B': 0,

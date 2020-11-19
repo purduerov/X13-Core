@@ -9,10 +9,6 @@ stdin, stdout, stderr = client.exec_command('cd X13-Core/ros')
 
 print(stdout.read().decode())
 
-stdin, stdout, stderr = client.exec_command('. compros.sh')
-
-print(stdout.read().decode())
-
 stdin, stdout, stderr = client.exec_command('. piros.sh')
 
 print(stdout.read().decode())

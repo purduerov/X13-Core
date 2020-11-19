@@ -10,7 +10,7 @@ module.exports = function thrusterListen(callback) {
     });
 
     sender.stdout.pipe(JSONStream.parse()).on('data', data => {
-        console.log(data);
+        //console.log(data);
         callback(data);
     });
 

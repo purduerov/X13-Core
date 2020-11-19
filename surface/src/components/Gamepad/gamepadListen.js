@@ -10,11 +10,11 @@ module.exports = function gamepadListen(callback) {
     });
 
     sender.stdout.pipe(JSONStream.parse()).on('data', data => {
-        console.log(data);
+        //console.log(data);
         callback(data);
     });
 
     sender.stderr.on('data', (data) => {
-        console.error(`stderr: ${data}`);
+        //console.error(`stderr: ${data}`);
     });
 }
