@@ -4,8 +4,8 @@ from shared_msgs.msg import can_msg, tools_command_msg
 
 TOOLS_BOARD_ID = 0x204
 
-MANIPULATOR_OPEN_BIT = 0x04
-MANIPULATOR_CLOSE_BIT = 0x40
+MANIPULATOR_OPEN_BIT = 0b00000001
+MANIPULATOR_CLOSE_BIT = 0b00000000
 MARKER_OPEN_BIT = 0x80
 MARKER_CLOSE_BIT = 0x08
 GROUT_TROUT_OPEN_BIT = 0x10
@@ -26,9 +26,9 @@ cmsg_mk.id = TOOLS_BOARD_ID
 
 changed = False
 pseudo_lock = False
-
-# Scott switched hoses, since only PM wasn't working
+#8'bdd654321
 """
+old from X12
 MANIPULATOR_OPEN_BIT = 0b100
 MANIPULATOR_CLOSE_BIT = 0b100000
 LIFT_BAG_OPEN_BIT = 0b1
