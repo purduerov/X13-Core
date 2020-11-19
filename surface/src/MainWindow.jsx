@@ -26,8 +26,8 @@ export default class MainWindow extends Component {
 	}
 
 	modifyValues(vals){
-		const list = this.state.thrust.map((t, idx) => Math.abs(vals[idx] - 127) / 127);
-	   
+		const list = this.state.thrust.map((t, idx) => vals[idx]);
+
 		return list;
 	}
 
@@ -35,20 +35,20 @@ export default class MainWindow extends Component {
 		this.setState({thrust: this.modifyValues(data)});
 	}
 
-	pushData(data) { 
+	pushData(data) {
 		this.setState({ output: [...this.state.output, data] });
     }
 
 	render() {
 		return (
 			<Container fluid className='p-0 h-100'>
-							
+
 				<div className='h-100 d-flex flex-column'>
 
 					<Row className='mx-0'>
 						<Titlebar/>
 					</Row>
-					
+
 					<Row className='mx-0 px-3 pb-1 pt-3 h-75'>
 						<Col className='border'>
 							<Gamepad></Gamepad>
@@ -62,7 +62,7 @@ export default class MainWindow extends Component {
 							{this.state.thrust.map((t, idx) => (
 								<ThrusterCircle key={idx} thrust={t}/>
 							))}
-								
+
 
 							<Container className='py-2'>
 								<Button variant='secondary' onClick={this.launchRoscore.bind(this)}>ROSCore</Button>
@@ -71,8 +71,8 @@ export default class MainWindow extends Component {
 							<Container>
 								<Button variant='danger' onClick={cleanEnv.bind(this)}>Kill ROS</Button>
 							</Container>
-							
-							
+
+
 						</Col>
 					</Row>
 
@@ -81,9 +81,9 @@ export default class MainWindow extends Component {
 							<Console output={this.state.output}/>
 						</Col>
 					</Row>
-				</div>						
-				
-			</Container>			
+				</div>
+
+			</Container>
 		);
 	}
 
@@ -96,5 +96,3 @@ export default class MainWindow extends Component {
 		this.setState({depth: newVal});
 	}
 }
-
-
