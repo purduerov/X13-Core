@@ -33,7 +33,7 @@ def shell_source(script):
     printc('[X] {}'.format('Sourced new files'), bc.OKGREEN)
 
 def run(cmd):
-    printc('[-] {}'.format(cmd), bc.WARNING, True)  
+    printc('[-] {}'.format(cmd), bc.WARNING, True)
     if check_call(cmd, stdout=DEVNULL, stderr=DEVNULL, shell=True) != 0:
         printc('Something went wrong', bc.FAIL)
         sys.exit()
@@ -43,11 +43,22 @@ def run(cmd):
 def develop():
     printc('Surface Launch', bc.OKBLUE)
     printc('===========================', bc.BOLD)
+    print('Working in {}'.format(ROS_DIR))
+    printc('Building ROS workspace in {}'.format(ROS_DIR), bc.HEADER)
+    os.chdir(ROS_DIR)
+
+    buildRos = 'catkin_make'
+
+    run(buildRos)
+
+    shell_source('. {}'.format(os.path.join(ROS_DIR, 'devel/setup.sh')))
+    shell_source('. {}'.format(os.path.abspath('{}/../ros/compros.sh'.format(SURFACE_DIR))))
+
     print('Starting webpack watch')
     procs = [Popen('npm run build-watch', shell=True), Popen('npm run start-watch', shell=True)]
     for p in procs:
         p.wait()
-    
+
 
 def main():
     printc('Surface Launch', bc.OKBLUE)
@@ -76,4 +87,3 @@ if __name__ == "__main__":
         develop()
     else:
         main()
-

@@ -17,17 +17,18 @@ export default class MainWindow extends Component {
 		this.updateDepth = this.updateDepth.bind(this);
 
 		attachDepthNode(this.updateDepth);
-		this.state = {depth: 0, thrust: [0, 0, 0, 0, 0, 0, 0, 0], output: []};
+		this.state = {depth: 0, thrust: [127, 127, 127, 127, 127, 127, 127, 127], output: []};
 
 		this.roscore = null;
 
 		this.updateThrust = this.updateThrust.bind(this);
 		thrusterListen(this.updateThrust);
+
 	}
 
 	modifyValues(vals){
-		const list = this.state.thrust.map((t, idx) => Math.abs(vals[idx] - 127) / 127);
-	   
+		const list = this.state.thrust.map((t, idx) => vals[idx]);
+
 		return list;
 	}
 
@@ -35,20 +36,20 @@ export default class MainWindow extends Component {
 		this.setState({thrust: this.modifyValues(data)});
 	}
 
-	pushData(data) { 
+	pushData(data) {
 		this.setState({ output: [...this.state.output, data] });
     }
 
 	render() {
 		return (
 			<Container fluid className='p-0 h-100'>
-							
+
 				<div className='h-100 d-flex flex-column'>
 
 					<Row className='mx-0'>
 						<Titlebar/>
 					</Row>
-					
+
 					<Row className='mx-0 px-3 pb-1 pt-3 h-75'>
 						<Col className='border'>
 							<Gamepad></Gamepad>
@@ -59,20 +60,16 @@ export default class MainWindow extends Component {
 						</Col>
 
 						<Col className='border'>
-							{this.state.thrust.map((t, idx) => (
-								<ThrusterCircle key={idx} thrust={t}/>
-							))}
-								
+							<ThrusterCircle thrust={this.state.thrust[0]} top={-40 + 50} left={-110 + 130}/>
+							<ThrusterCircle thrust={this.state.thrust[4]} top={40 + 50} left={-80 + 130}/>
+							<ThrusterCircle thrust={this.state.thrust[1]} top={-40 + 50} left={60 + 130}/>
+							<ThrusterCircle thrust={this.state.thrust[5]} top={40 + 50} left={30 + 130}/>
+							<ThrusterCircle thrust={this.state.thrust[7]} top={125 + 50} left={-80 + 130}/>
+							<ThrusterCircle thrust={this.state.thrust[3]} top={205 + 50} left={-110 + 130}/>
+							<ThrusterCircle thrust={this.state.thrust[6]} top={125 + 50} left={30 + 130}/>
+							<ThrusterCircle thrust={this.state.thrust[2]} top={205 + 50} left={60 + 130}/>
 
-							<Container className='py-2'>
-								<Button variant='secondary' onClick={this.launchRoscore.bind(this)}>ROSCore</Button>
-							</Container>
 
-							<Container>
-								<Button variant='danger' onClick={cleanEnv.bind(this)}>Kill ROS</Button>
-							</Container>
-							
-							
 						</Col>
 					</Row>
 
@@ -81,9 +78,9 @@ export default class MainWindow extends Component {
 							<Console output={this.state.output}/>
 						</Col>
 					</Row>
-				</div>						
-				
-			</Container>			
+				</div>
+
+			</Container>
 		);
 	}
 
@@ -96,5 +93,3 @@ export default class MainWindow extends Component {
 		this.setState({depth: newVal});
 	}
 }
-
-
