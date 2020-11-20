@@ -7,17 +7,18 @@ Software for piloting and data processing
 
 ## Running
 ### Single build
-0. `npm install`
-1. `npm run build`
-2. `npm start`
+In `/surface`, run `./launch`
 
-### Continuous updates
-0. `npm install`
-1. `npm run build-watch` --> separate terminal
-2. `npm run start-watch` --> separate terminal
+### Continuous updates (for development only!)
+In `/surface`, run `./launch dev`
+
 
 ## Current Functions
 * Gamepad live output
+* Camera stream through img (needs to change to RTSP capable component)
+* Thruster visualization
+* Depth readout (needs testing)
+* IMU visualization
 
 
 OUR code
