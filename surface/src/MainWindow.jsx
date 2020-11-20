@@ -6,6 +6,7 @@ import './MainWindow.css';
 import Gamepad from './components/Gamepad/Gamepad.jsx';
 import ThrusterCircle from './components/ThrusterCircle/ThrusterCircle.jsx';
 import Console from './components/Console/Console.jsx';
+import Cube from './components/Cube/Cube.jsx';
 import roscore from './rosjs/roscore.js';
 import cleanEnv from '../electron/cleanEnv.js';
 import thrusterListen from './components/ThrusterCircle/thrusterListen.js';
@@ -23,7 +24,6 @@ export default class MainWindow extends Component {
 
 		this.updateThrust = this.updateThrust.bind(this);
 		thrusterListen(this.updateThrust);
-
 	}
 
 	modifyValues(vals){
@@ -39,6 +39,8 @@ export default class MainWindow extends Component {
 	pushData(data) {
 		this.setState({ output: [...this.state.output, data] });
     }
+
+	//<img src="http://192.168.1.3:8090/test.mjpg"/>
 
 	render() {
 		return (
@@ -68,6 +70,9 @@ export default class MainWindow extends Component {
 							<ThrusterCircle thrust={this.state.thrust[3]} top={205 + 50} left={-110 + 130}/>
 							<ThrusterCircle thrust={this.state.thrust[6]} top={125 + 50} left={30 + 130}/>
 							<ThrusterCircle thrust={this.state.thrust[2]} top={205 + 50} left={60 + 130}/>
+
+							<Cube/>
+
 
 
 						</Col>
