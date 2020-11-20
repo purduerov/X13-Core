@@ -12,9 +12,9 @@ imu = [0, 0, 0]
 
 def _imu(comm):
     global imu
-    imu[0] = comm.gyro[0] / 180
-    imu[1] = (abs(comm.gyro[1]) - 180) / 360
-    imu[2] = comm.gyro[2] / 180
+    imu[0] = comm.gyro[0] / 90
+    imu[1] = (abs(comm.gyro[1]) - 180) / 180
+    imu[2] = comm.gyro[2] / 90
 
     print(json.dumps(imu))
 

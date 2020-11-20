@@ -72,9 +72,9 @@ export default class Cube extends React.Component {
         //this.cube.rotation.x += 0.01;
         //this.cube.rotation.y += 0.01;
 
-        this.cube.rotation.x = this.state.imu[0];
-        this.cube.rotation.y = this.state.imu[1];
-        this.cube.rotation.z = this.state.imu[2];
+        this.cube.rotation.x = this.state.imu[2];
+        this.cube.rotation.y = 0;
+        this.cube.rotation.z = this.state.imu[0];
 
 
 
