@@ -3,34 +3,20 @@ import Titlebar from './components/Titlebar/Titlebar.jsx';
 import {Container, Row, Col, Button} from 'react-bootstrap';
 import './MainWindow.css';
 import Gamepad from './components/Gamepad/Gamepad.jsx';
-import ThrusterCircle from './components/ThrusterCircle/ThrusterCircle.jsx';
 import Console from './components/Console/Console.jsx';
 import Cube from './components/Cube/Cube.jsx';
 import Depth from './components/Depth/Depth.jsx';
+import ThrusterInfo from './components/ThrusterInfo/ThrusterInfo.jsx';
 import roscore from './rosjs/roscore.js';
 import cleanEnv from '../electron/cleanEnv.js';
-import thrusterListen from './components/ThrusterCircle/thrusterListen.js';
 
 export default class MainWindow extends Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {depth: 0, thrust: [127, 127, 127, 127, 127, 127, 127, 127], output: []};
+		this.state = {depth: 0, output: []};
 
 		this.roscore = null;
-
-		this.updateThrust = this.updateThrust.bind(this);
-		thrusterListen(this.updateThrust);
-	}
-
-	modifyValues(vals){
-		const list = this.state.thrust.map((t, idx) => vals[idx]);
-
-		return list;
-	}
-
-	updateThrust(data){
-		this.setState({thrust: this.modifyValues(data)});
 	}
 
 	pushData(data) {
@@ -60,15 +46,8 @@ export default class MainWindow extends Component {
 						</Col>
 
 						<Col className='border'>
-							<ThrusterCircle thrust={this.state.thrust[0]} top={-40 + 50} left={-110 + 130}/>
-							<ThrusterCircle thrust={this.state.thrust[4]} top={40 + 50} left={-80 + 130}/>
-							<ThrusterCircle thrust={this.state.thrust[1]} top={-40 + 50} left={60 + 130}/>
-							<ThrusterCircle thrust={this.state.thrust[5]} top={40 + 50} left={30 + 130}/>
-							<ThrusterCircle thrust={this.state.thrust[7]} top={125 + 50} left={-80 + 130}/>
-							<ThrusterCircle thrust={this.state.thrust[3]} top={205 + 50} left={-110 + 130}/>
-							<ThrusterCircle thrust={this.state.thrust[6]} top={125 + 50} left={30 + 130}/>
-							<ThrusterCircle thrust={this.state.thrust[2]} top={205 + 50} left={60 + 130}/>
 
+							<ThrusterInfo/>
 							<Cube/>
 
 

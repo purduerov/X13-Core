@@ -44,6 +44,8 @@ export default class ThrusterCircle extends React.Component {
                 <div className='active-border' style={this.circleStyle}>
                     <div className='circle'>
                         <span className='val 360'>{Math.round(((Math.abs(this.props.thrust) - 127) / 127) * 100)}%</span>
+						<br/>
+						<span className='val 360'>{this.props.name}</span>
                     </div>
                 </div>
 			</div>

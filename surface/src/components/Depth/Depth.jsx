@@ -12,7 +12,7 @@ export default class Depth extends React.Component {
 	}
 
     updateDepth(val){
-        this.setState({depth: val})
+        this.setState({depth: val});
     }
 
 

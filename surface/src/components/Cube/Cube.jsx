@@ -4,7 +4,6 @@ import * as t from 'three';
 import imuListen from './imuListen.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
-
 export default class Cube extends React.Component {
 	constructor(props) {
         super(props);
@@ -14,7 +13,9 @@ export default class Cube extends React.Component {
         this.updateImu = this.updateImu.bind(this);
 		imuListen(this.updateImu);
 
-        this.rov = '';
+        this.rov = false;
+
+		this.loadModel = this.loadModel.bind(this);
     }
 
     modifyValues(vals){
@@ -43,17 +44,11 @@ export default class Cube extends React.Component {
         const material = new t.MeshBasicMaterial({ color: '#433F81'});
         const cube = new t.Mesh(geometry, material);
 
-        const loader = new GLTFLoader();
-        loader.load('../src/components/Cube/ROV.glb', function(gltf){
-            //scene.add(gltf.scene);
+		this.loadModel(this);
 
-        }, undefined, function ( error ) {
-        	console.error( error );
-        } );
-
-        camera.position.z = 3;
+        camera.position.z = 0.4;
         camera.position.y = 0;
-        scene.add(cube);
+        //scene.add(cube);
         renderer.setClearColor('#000000', 0);
         renderer.setSize(width, height);
 
@@ -68,16 +63,24 @@ export default class Cube extends React.Component {
         requestAnimationFrame(this.animate);
     }
 
+	loadModel(context){
+		const loader = new GLTFLoader();
+
+		loader.load('../src/components/Cube/ROV.glb', function(gltf){
+			context.rov = gltf.scene;
+			context.scene.add(context.rov);
+
+        }, undefined, function ( error ) {
+        	console.error( error );
+        } );
+	}
+
     animate() {
-        //this.cube.rotation.x += 0.01;
-        //this.cube.rotation.y += 0.01;
-
-        this.cube.rotation.x = this.state.imu[2];
-        this.cube.rotation.y = 0;
-        this.cube.rotation.z = this.state.imu[0];
-
-
-
+		if(this.rov){
+			this.rov.rotation.x = this.state.imu[2];
+	        this.rov.rotation.y = 0;
+	        this.rov.rotation.z = this.state.imu[0];
+		}
 
         this.renderScene();
         this.frameId = window.requestAnimationFrame(this.animate);
@@ -87,11 +90,10 @@ export default class Cube extends React.Component {
         this.renderer.render(this.scene, this.camera);
     }
 
-
-
 	render() {
 		return (
-			<Container style={{ width: 'auto', height: '200px', position: 'relative', top: '500px'}} ref={(mount) => { this.mount = mount }}/>
+			<Container style={{ width: '100%', height: '200px', position: 'relative', top: '500px'}} ref={(mount) => { this.mount = mount }}>
+			</Container>
 		);
 	}
 }
