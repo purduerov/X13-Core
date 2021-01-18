@@ -1,5 +1,5 @@
 import React from 'react';
-import {Container} from 'react-bootstrap';
+import {Container, Button} from 'react-bootstrap';
 import * as t from 'three';
 import imuListen from './imuListen.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -7,7 +7,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 export default class Cube extends React.Component {
 	constructor(props) {
         super(props);
-        this.state = {gamepad: {RSY: -0.8}, imu: [0, 0, 0]};
+        this.state = {gamepad: {RSY: -0.8}, imu: [0, 0, 0], offset: [Math.PI / 2, 0, -(Math.PI / 2)]};
         this.animate = this.animate.bind(this);
 
         this.updateImu = this.updateImu.bind(this);
@@ -39,24 +39,42 @@ export default class Cube extends React.Component {
           0.1,
           1000
         );
-        const renderer = new t.WebGLRenderer({ antialias: true, alpha: true });
-        const geometry = new t.BoxGeometry(3, 0.5, 2);
-        const material = new t.MeshBasicMaterial({ color: '#433F81'});
-        const cube = new t.Mesh(geometry, material);
+
+		const light = new t.RectAreaLight(0xffffff, 1.4, 100, 100);
+	    light.position.set(1, 1, 10);
+	    light.lookAt(1, 1, 3);
+	    scene.add(light)
+
+        const renderer = new t.WebGLRenderer({antialias: true, alpha: true});
+
+		const material_horizon = new t.LineBasicMaterial({color: 0xFFFFFF});
+		const material_rov = new t.LineDashedMaterial({
+			color: 0xFFFFFF,
+			linewidth: 1,
+			scale: 1,
+			dashSize: 0.05,
+			gapSize: 0.05,
+		});
+		const geometry_rov = new t.BufferGeometry().setFromPoints([new t.Vector3(-0.5, 0, 0), new t.Vector3(0.5, 0, 0)]);
+		const line_rov = new t.Line(geometry_rov, material_rov);
+		const geometry_horizon = new t.BufferGeometry().setFromPoints([new t.Vector3(-1, 0, 0), new t.Vector3(1, 0, 0)]);
+		const line_horizon = new t.Line(geometry_horizon, material_horizon);
+		line_rov.computeLineDistances();
+		scene.add(line_rov);
+		scene.add(line_horizon)
 
 		this.loadModel(this);
 
-        camera.position.z = 0.4;
-        camera.position.y = 0;
-        //scene.add(cube);
+        camera.position.z = 0.49;
+        camera.position.y = 0.3;
+		camera.rotation.x = -(1/8 * Math.PI)
+
         renderer.setClearColor('#000000', 0);
         renderer.setSize(width, height);
 
         this.scene = scene;
         this.camera = camera;
         this.renderer = renderer;
-        this.material = material;
-        this.cube = cube;
 
         this.mount.appendChild(this.renderer.domElement);
 
@@ -69,17 +87,16 @@ export default class Cube extends React.Component {
 		loader.load('../src/components/Cube/ROV.glb', function(gltf){
 			context.rov = gltf.scene;
 			context.scene.add(context.rov);
-
-        }, undefined, function ( error ) {
-        	console.error( error );
-        } );
+        }, undefined, function (error) {
+        	console.error(error);
+        });
 	}
 
     animate() {
 		if(this.rov){
-			this.rov.rotation.x = this.state.imu[2];
-	        this.rov.rotation.y = 0;
-	        this.rov.rotation.z = this.state.imu[0];
+			this.rov.rotation.x = this.state.imu[2] - this.state.offset[0];
+	        this.rov.rotation.y = 0 - this.state.offset[1];
+	        this.rov.rotation.z = this.state.imu[0] - this.state.offset[2];
 		}
 
         this.renderScene();
@@ -93,6 +110,7 @@ export default class Cube extends React.Component {
 	render() {
 		return (
 			<Container style={{ width: '100%', height: '200px', position: 'relative', top: '500px'}} ref={(mount) => { this.mount = mount }}>
+				<Button>Calibrate</Button>
 			</Container>
 		);
 	}

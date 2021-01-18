@@ -6,13 +6,13 @@ export default class Depth extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {depth: 0};
+		this.state = {depth: 0.0};
         this.updateDepth = this.updateDepth.bind(this);
         attachDepthNode(this.updateDepth);
 	}
 
     updateDepth(val){
-        this.setState({depth: val});
+        this.setState({depth: (Math.round(val * 100) / 100)});
     }
 
 

@@ -12,7 +12,7 @@ def callback(data):
 def listener():
     rospy.init_node('surface_depth', anonymous=True)
 
-    rospy.Subscriber('/surface_depth', Float32, callback)
+    rospy.Subscriber('/rov/depth', Float32, callback)
 
     rospy.spin()
 
