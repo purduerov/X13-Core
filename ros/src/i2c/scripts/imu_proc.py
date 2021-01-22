@@ -52,6 +52,7 @@ if __name__ == "__main__":
             ROV_Yaw = clamp_angle_0_to_360(imu.pitch()) - IMU_PITCH_OFFSET
             # out_message.gyro = [ROV_Pitch, ROV_Roll, ROV_Yaw]
             out_message.gyro = [imu.roll(),imu.yaw(),imu.pitch()]
+            # out_message.gyro = [imu.temp(),imu.temp(),imu.temp()]
             ROV_X_Accel = imu.acceleration_z()
             ROV_Y_Accel = imu.acceleration_x()
             ROV_Z_Accel = imu.acceleration_y()
