@@ -6,20 +6,22 @@ export default class Gamepad extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {gamepad: 'null'};
+		this.state = {gamepad: false};
 
 		this.updateGamepad = this.updateGamepad.bind(this);
 		gamepadListen(this.updateGamepad);
-		
+
 	}
 
 	updateGamepad(data){
 		if(data == false){
 			gamepadListen(this.updateGamepad);
 		}else{
-			this.setState({gamepad: data});
+			this.setState({gamepad: true});
+			console.log(this.state.gamepad);
 			//this.props.updateThrust(this.state.gamepad.RT);
-		}	
+		}
+		this.props.gamepadStateUpdate(this.state.gamepad);
 	}
 
 	render() {

@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 
 import json
-import sys
-
 #ROS
 import rospy
 from shared_msgs.msg import final_thrust_msg
-from std_msgs.msg import String
 
 thrust = [0, 0, 0, 0, 0, 0, 0, 0]
 

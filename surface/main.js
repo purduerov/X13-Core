@@ -2,7 +2,6 @@ const { app } = require('electron');
 const path = require('path');
 const createWindow = require('./electron/createWindow.js');
 const cleanEnv = require('./electron/cleanEnv.js');
-const rtsp = require('./electron/startRTSP.js');
 const WATCH_MODE = process.env.NODE_ENV === 'WATCH';
 
 if(WATCH_MODE){

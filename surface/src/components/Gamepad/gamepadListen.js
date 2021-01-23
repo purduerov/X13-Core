@@ -6,6 +6,7 @@ module.exports = function gamepadListen(callback) {
     sender = spawn('python3', ['-u', path.resolve(__dirname, '../../../ros/src/gamepad/src/sender.py')]);
 
     sender.on('exit', code => {
+        //console.log(this.state.gamepad);
         callback(false);
     });
 
@@ -16,5 +17,6 @@ module.exports = function gamepadListen(callback) {
 
     sender.stderr.on('data', (data) => {
         //console.error(`stderr: ${data}`);
+        callback(false);
     });
 }
