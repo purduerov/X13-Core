@@ -1,11 +1,11 @@
-#!/usr/bin/env python
+#! /usr/bin/env python3
 
 import rospy
 from std_msgs.msg import Float32
 
 def talker():
     rospy.init_node('test_servo_talker_node', anonymous=True)
-    pub = rospy.Publisher('test_servor_anlges', Float32, queue_size=10)
+    pub = rospy.Publisher('test_servor_angle', Float32, queue_size=10)
     rate = rospy.Rate(0.1)
     i = 0
     while not rospy.is_shutdown():
