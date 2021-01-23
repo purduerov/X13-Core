@@ -1,27 +1,48 @@
 import React from 'react';
-import {Col, Row} from 'react-bootstrap';
+import {Col, Row, Button} from 'react-bootstrap';
 import gamepadListen from './gamepadListen.js';
+import {ipcRenderer} from 'electron';
 
 export default class Gamepad extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {gamepad: false};
+		this.process = null;
 
 		this.updateGamepad = this.updateGamepad.bind(this);
-		gamepadListen(this.updateGamepad);
+		this.monitor = this.monitor.bind(this);
+
+		gamepadListen(this.updateGamepad, this.monitor);
+
+		ipcRenderer.on('kill', (event, args) => {
+			console.log('Killing...');
+			this.kill();
+		});
 
 	}
 
+	monitor(process){
+		this.process = process;
+	}
+
+	kill(){
+		if(this.process){
+			this.process.kill('SIGKILL');
+		}
+	}
+
 	updateGamepad(data){
+		/*
 		if(data == false){
-			gamepadListen(this.updateGamepad);
+			gamepadListen(this.updateGamepad, this.monitor);
 		}else{
 			this.setState({gamepad: true});
 			console.log(this.state.gamepad);
 			//this.props.updateThrust(this.state.gamepad.RT);
 		}
 		this.props.gamepadStateUpdate(this.state.gamepad);
+		*/
 	}
 
 	render() {

@@ -2,8 +2,10 @@ const { spawn } = require('child_process');
 const JSONStream = require('JSONStream');
 const path = require('path');
 
-module.exports = function imuListen(callback) {
+module.exports = function imuListen(callback, monitor) {
     sender = spawn('python3', ['-u', path.resolve(__dirname, '../../../ros/src/imu/src/status.py')]);
+
+    monitor(sender);
 
     sender.on('exit', code => {
         callback(false);

@@ -1,7 +1,8 @@
 import React from 'react';
 import {Container} from 'react-bootstrap';
 import ThrusterCircle from '../ThrusterCircle/ThrusterCircle.jsx';
-import thrusterListen from '../ThrusterCircle/thrusterListen.js';
+import thrusterListen from './thrusterListen.js';
+import {ipcRenderer} from 'electron';
 
 const INIT_THRUST = 127;
 
@@ -24,9 +25,27 @@ export default class ThrusterInfo extends React.Component {
 
         this.state = {thrust: [INIT_THRUST, INIT_THRUST, INIT_THRUST, INIT_THRUST, INIT_THRUST, INIT_THRUST, INIT_THRUST, INIT_THRUST]};
 
+		this.process = null;
+
         this.updateThrust = this.updateThrust.bind(this);
-		thrusterListen(this.updateThrust);
+		this.monitor = this.monitor.bind(this);
+		thrusterListen(this.updateThrust, this.monitor);
+
+		ipcRenderer.on('kill', (event, args) => {
+			console.log('Killing...');
+			this.kill();
+		});
     }
+
+	monitor(process){
+		this.process = process;
+	}
+
+	kill(){
+		if(this.process){
+			this.process.kill('SIGKILL');
+		}
+	}
 
     modifyValues(vals){
 		const list = this.state.thrust.map((t, idx) => vals[idx]);

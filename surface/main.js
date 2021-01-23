@@ -1,4 +1,4 @@
-const { app } = require('electron');
+const { app, ipcMain } = require('electron');
 const path = require('path');
 const createWindow = require('./electron/createWindow.js');
 const cleanEnv = require('./electron/cleanEnv.js');
@@ -16,6 +16,14 @@ let windows = [];
 
 app.on('ready', () => {
 	createWindow(windows, 0);
+	process.stdout.write('Created window');
+
+	windows[0].on('close', (event, args) => {
+		event.preventDefault();
+		windows[0].webContents.send('kill');
+		cb = windows[0].destroy;
+		setTimeout(cb, 100);
+	});
 });
 
 app.on('window-all-closed', () => {
