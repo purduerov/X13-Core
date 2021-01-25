@@ -4,38 +4,29 @@ import * as t from 'three';
 import imuListen from './imuListen.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {ipcRenderer} from 'electron';
+import {monitor, kill} from './../../tools/procMonitor.js';
 
 export default class Cube extends React.Component {
 	constructor(props) {
         super(props);
         this.state = {gamepad: {RSY: -0.8}, imu: [0, 0, 0], offset: [Math.PI / 2, 0, -(Math.PI / 2)]};
         this.animate = this.animate.bind(this);
-		this.process = null;
 
-		this.monitor = this.monitor.bind(this);
-        this.updateImu = this.updateImu.bind(this);
-		imuListen(this.updateImu, this.monitor);
+		this.monitor = monitor.bind(this);
+		this.kill = kill.bind(this);
+
 		this.handleCalibrate = this.handleCalibrate.bind(this);
+        this.updateImu = this.updateImu.bind(this);
+		this.loadModel = this.loadModel.bind(this);
+		imuListen(this.updateImu, this.monitor);
 
         this.rov = false;
-
-		this.loadModel = this.loadModel.bind(this);
 
 		ipcRenderer.on('kill', (event, args) => {
 			console.log('Killing...');
 			this.kill();
 		});
     }
-
-	monitor(process){
-		this.process = process;
-	}
-
-	kill(){
-		if(this.process){
-			this.process.kill('SIGKILL');
-		}
-	}
 
     modifyValues(vals){
 		const list = this.state.imu.map((t, idx) => vals[idx]);

@@ -14,6 +14,10 @@ cleanEnv();
 
 let windows = [];
 
+function boink(){
+	windows[0].destroy();
+}
+
 app.on('ready', () => {
 	createWindow(windows, 0);
 	process.stdout.write('Created window');
@@ -21,8 +25,7 @@ app.on('ready', () => {
 	windows[0].on('close', (event, args) => {
 		event.preventDefault();
 		windows[0].webContents.send('kill');
-		cb = windows[0].destroy;
-		setTimeout(cb, 100);
+		setTimeout(boink, 500);
 	});
 });
 

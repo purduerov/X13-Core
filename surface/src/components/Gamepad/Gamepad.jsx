@@ -2,16 +2,17 @@ import React from 'react';
 import {Col, Row, Button} from 'react-bootstrap';
 import gamepadListen from './gamepadListen.js';
 import {ipcRenderer} from 'electron';
+import {monitor, kill} from './../../tools/procMonitor.js';
 
 export default class Gamepad extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {gamepad: false};
-		this.process = null;
 
 		this.updateGamepad = this.updateGamepad.bind(this);
-		this.monitor = this.monitor.bind(this);
+		this.monitor = monitor.bind(this);
+		this.kill = kill.bind(this);
 
 		gamepadListen(this.updateGamepad, this.monitor);
 
@@ -20,16 +21,6 @@ export default class Gamepad extends React.Component {
 			this.kill();
 		});
 
-	}
-
-	monitor(process){
-		this.process = process;
-	}
-
-	kill(){
-		if(this.process){
-			this.process.kill('SIGKILL');
-		}
 	}
 
 	updateGamepad(data){
