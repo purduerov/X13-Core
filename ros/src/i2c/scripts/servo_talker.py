@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 
 import rospy
+import time
 from std_msgs.msg import Float32
 
 def talker():
@@ -10,16 +11,16 @@ def talker():
     i = 0
     while not rospy.is_shutdown():
         if i%2 == 0:
-            angle = 30.0
+            angle = 0.0
             print(angle)
             pub.publish(angle)
         else:
-            angle = 120.0
+            angle = 180.0
             print(angle)
             pub.publish(angle)
         i += 1
 
-        rate.sleep()
+        time.sleep(4)
 
 if __name__ == '__main__':
     try:
