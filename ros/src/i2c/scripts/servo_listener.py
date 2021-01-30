@@ -8,33 +8,35 @@ from time import sleep #imports sleep (aka waiting or pause) into the program
 
 #Setting a Pin Mode
 GPIO.setmode(GPIO.BCM) #Chose Board pin number scheme
-#Set up pin 11 for PWM
+#Set up pin 14 for PWM
 GPIO.setup(14, GPIO.OUT) #sets up pin 14 to an output
 p = GPIO.PWM(14,50) #sets up pin 11 as a PWM pin(50 is the frequency)
 p.start(0) #starts running PWM on the pin and sets it to 0. 0 is the middle, 
-duty_prev = 7.5 #in the middle
+duty_prev = 7 #duty cycle for in the middle duty cycle of 0 is off effectivly
 
 def callback(requestedAngle):
     rate = rospy.Rate(100)  
     #change the angle to desired duty cycle
-    duty = ((requestedAngle.data / 180) + 1 ) / 0.2 #((Angle you want / 180) + 1 for the period offset) / 2 for the total period))
+    duty = ((requestedAngle.data /180) * 10) + 2 #the range of the servo is dutycycle of 2-12 for some reason. So this formula should take in angle of 0-180 and transfer the value from 2-12
     global duty_prev
-
     if (duty != duty_prev):
         try:
+            
             print(f"Current Duty: {duty}")
             print(f"Prev Duty: {duty_prev} \n")
-            it = [12.4, 12, 0.8, 1]   #OKAY so for some reason a duty cycle of 1-12 is used to get a full 180  degrees of rotation
-            for i in it:
-               print(f"Current Duty Cycle: {i}")
-               p.ChangeDutyCycle(i)
-               time.sleep(2.5)
-            print("finished diognostic")
-            time.sleep(2.5)
+            #Debug code for testing a varity of values to test full range of motion
+            #it = [12.4, 12, 1.8, 2]   #OKAY so for some reason a duty cycle of 2-12 is used to get a full 180  degrees of rotation. even tho that data sheet says 5-10
+            #for i in it:
+            #   print(f"Current Duty Cycle: {i}")
+            #   p.ChangeDutyCycle(i)
+            #   time.sleep(2.5)
+            #print("finished diognostic")
+
+            p.ChangeDutyCycle(duty)
             duty_prev = duty
-#            p.ChangeDutyCycle(duty)
         except:
             print("there has been some error of some type :/")
+    #p.ChangeDutyCycle(0) #if the servo jitters a lot uncomment this it should stop all movement in between calls
     rate.sleep() #waits 0.01 seconds
 
 def listener():
