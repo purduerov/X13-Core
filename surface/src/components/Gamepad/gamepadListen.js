@@ -17,8 +17,10 @@ module.exports = function gamepadListen(connected, monitor) {
         connected(data);
     });
 
+    /*
     sender.stderr.on('data', (data) => {
-        //console.error(`stderr: ${data}`);
+        console.error(`stderr: ${data}`);
         connected(false);
     });
+    */
 }

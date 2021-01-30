@@ -51,13 +51,15 @@ export default class MainWindow extends Component {
 						</Col>
 
 						<Col xs={8} className='border mx-3'>
+							{/*
 							<img width='600px' height='500px' src="http://192.168.1.3:8090/test.mjpg"/>
 							<img width='600px' height='500px' src="http://192.168.1.4:8090/test.mjpg"/>
+							*/}
+							<Cube/>
 						</Col>
 
 						<Col className='border'>
 							<ThrusterInfo/>
-							<Cube/>
 						</Col>
 					</Row>
 

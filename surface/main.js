@@ -6,7 +6,8 @@ const WATCH_MODE = process.env.NODE_ENV === 'WATCH';
 
 if(WATCH_MODE){
 	require('electron-reload')(__dirname, {
-		electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
+		electron: path.join(__dirname, 'node_modules', '.bin', 'electron'),
+		hardResetMethod: 'close'
 	});
 }
 
@@ -14,7 +15,8 @@ cleanEnv();
 
 let windows = [];
 
-function boink(){
+
+function bonk(){
 	windows[0].destroy();
 }
 
@@ -25,7 +27,7 @@ app.on('ready', () => {
 	windows[0].on('close', (event, args) => {
 		event.preventDefault();
 		windows[0].webContents.send('kill');
-		setTimeout(boink, 500);
+		setTimeout(bonk, 500);
 	});
 });
 

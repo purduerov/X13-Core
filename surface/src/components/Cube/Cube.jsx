@@ -9,7 +9,7 @@ import {monitor, kill} from './../../tools/procMonitor.js';
 export default class Cube extends React.Component {
 	constructor(props) {
         super(props);
-        this.state = {gamepad: {RSY: -0.8}, imu: [0, 0, 0], offset: [Math.PI / 2, 0, -(Math.PI / 2)]};
+        this.state = {gamepad: {RSY: -0.8}, imu: [0, 0, 0], offset: [Math.PI / 2, 0, 0]};
         this.animate = this.animate.bind(this);
 
 		this.monitor = monitor.bind(this);
@@ -21,6 +21,13 @@ export default class Cube extends React.Component {
 		imuListen(this.updateImu, this.monitor);
 
         this.rov = false;
+		this.line_rov = new t.Line(new t.BufferGeometry().setFromPoints([new t.Vector3(-0.5, 0, 0), new t.Vector3(0.5, 0, 0)]), new t.LineDashedMaterial({
+			color: 0xFFFFFF,
+			linewidth: 1,
+			scale: 1,
+			dashSize: 0.05,
+			gapSize: 0.05,
+		}));
 
 		ipcRenderer.on('kill', (event, args) => {
 			console.log('Killing...');
@@ -58,24 +65,29 @@ export default class Cube extends React.Component {
         const renderer = new t.WebGLRenderer({antialias: true, alpha: true});
 
 		const material_horizon = new t.LineBasicMaterial({color: 0xFFFFFF});
-		const material_rov = new t.LineDashedMaterial({
-			color: 0xFFFFFF,
-			linewidth: 1,
-			scale: 1,
-			dashSize: 0.05,
-			gapSize: 0.05,
-		});
-		const geometry_rov = new t.BufferGeometry().setFromPoints([new t.Vector3(-0.5, 0, 0), new t.Vector3(0.5, 0, 0)]);
-		const line_rov = new t.Line(geometry_rov, material_rov);
 		const geometry_horizon = new t.BufferGeometry().setFromPoints([new t.Vector3(-1, 0, 0), new t.Vector3(1, 0, 0)]);
 		const line_horizon = new t.Line(geometry_horizon, material_horizon);
-		line_rov.computeLineDistances();
-		scene.add(line_rov);
-		scene.add(line_horizon)
+
+		const cm_1 = new t.Mesh(new t.PlaneGeometry(0.5, 0.25), new t.MeshBasicMaterial({color: 0xbafffc, side: t.DoubleSide}));
+		const cm_2 = new t.Mesh(new t.PlaneGeometry(0.5, 0.25), new t.MeshBasicMaterial({color: 0xb5b5b5, side: t.DoubleSide}));
+		const cm_3 = new t.Mesh(new t.PlaneGeometry(0.5, 0.25), new t.MeshBasicMaterial({color: 0xb5b5b5, side: t.DoubleSide}));
+		scene.add(cm_1);
+		scene.add(cm_2);
+		scene.add(cm_3);
+		cm_1.position.z = -0.5;
+		cm_2.position.x = 0.5;
+		cm_2.rotation.y = Math.PI/2;
+		cm_3.position.x = -0.5;
+		cm_3.rotation.y = Math.PI/2;
+
+
+		this.line_rov.computeLineDistances();
+		scene.add(this.line_rov);
+		scene.add(line_horizon);
 
 		this.loadModel(this);
 
-        camera.position.z = 0.49;
+        camera.position.z = 0.55;
         camera.position.y = 0.3;
 		camera.rotation.x = -(1/8 * Math.PI)
 
@@ -92,14 +104,10 @@ export default class Cube extends React.Component {
     }
 
 	handleCalibrate(){
-		let newX = (this.state.imu[2] / 180) * Math.PI + Math.PI / 1.5;
-		let newZ = Math.PI / 2 - (this.state.imu[0] / 180) * Math.PI;
+		let newX = (this.state.imu[0] / 180) * Math.PI + Math.PI / 2;
+		let newY = -(this.state.imu[2] / 180) * Math.PI;
 
-
-		console.log(this.state.offset);
-		this.setState({offset: [newX, 0, newZ]});
-		console.log(this.state.offset);
-		console.log(this.state.imu);
+		this.setState({offset: [newX, newY, 0]});
 	}
 
 	loadModel(context){
@@ -116,12 +124,13 @@ export default class Cube extends React.Component {
     animate() {
 		if(this.rov){
 			this.rov.rotation.x = (this.state.imu[0] / 180) * Math.PI - this.state.offset[0];
-	        this.rov.rotation.y = (this.state.imu[2] / 180) * Math.PI - this.state.offset[2]
+			this.rov.rotation.y = (this.state.imu[2] / 180) * Math.PI - this.state.offset[1]
 	        this.rov.rotation.z = Math.PI / 2;
+			this.line_rov.rotation.z = -this.rov.rotation.y;
 		}
 
         this.renderScene();
-        this.frameId = window.requestAnimationFrame(this.animate);
+        window.requestAnimationFrame(this.animate);
     }
 
     renderScene() {
@@ -130,7 +139,7 @@ export default class Cube extends React.Component {
 
 	render() {
 		return (
-			<Container style={{ width: '100%', height: '200px', position: 'relative', top: '500px'}} ref={(mount) => { this.mount = mount }}>
+			<Container style={{ width: '100%', height: '90%'}} ref={(mount) => { this.mount = mount }}>
 				<Button onClick={this.handleCalibrate}>Calibrate</Button>
 			</Container>
 		);
