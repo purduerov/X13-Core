@@ -17,8 +17,8 @@ from time import sleep #imports sleep (aka waiting or pause) into the program
 #Setting a Pin Mode
 GPIO.setmode(GPIO.BCM) #Chose Board pin number scheme
 #Set up pin 14 for PWM
-GPIO.setup(14, GPIO.OUT) #sets up pin 14 to an output
-p = GPIO.PWM(14,50) #sets up pin 11 as a PWM pin(50 is the frequency)
+GPIO.setup(13, GPIO.OUT) #sets up pin 14 to an output
+p = GPIO.PWM(13,50) #sets up pin 11 as a PWM pin(50 is the frequency)
 p.start(0) #starts running PWM on the pin and sets it to 0. 0 is the middle
 duty_prev = 6.5 #sets to middle duty cycle
 
@@ -34,7 +34,7 @@ def callback(requestedAngle):
             print(f"Current Duty: {duty}")
             print(f"Prev Duty: {duty_prev} \n")
             #Debug code for testing a varity of values to test full range of motion
-            #it = [12.4, 12, 0.8, 1]   #OKAY so for some reason a duty cycle of 1-12 is used to get a full 180  degrees of rotation. even tho that data sheet indicats 5-10
+            #it = [12.4, 12, 1, 0.8]   #OKAY so for some reason a duty cycle of 1-12 is used to get a full 180  degrees of rotation. even tho that data sheet indicats 5-10
             #for i in it:
             #   print(f"Current Duty Cycle: {i}")
             #   p.ChangeDutyCycle(i)
