@@ -14,7 +14,7 @@ desired_p_unramped = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 locked_dims_list = [False, False, False, False, False, False]
 disabled_list = [False, False, False, False, False, False, False, False]
 inverted_list = [0, 0, 0, 0, 0, 0, 0, 0]
-MAX_CHANGE = .035
+MAX_CHANGE = 1
 # watch dog stuff
 last_packet_time = 0.0
 is_timed_out = False

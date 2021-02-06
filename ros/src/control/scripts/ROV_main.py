@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 import rospy
 import enum
-from shared_msgs.msg import controller_msg, thrust_command_msg, thrust_disable_inverted_msg, tools_command_msg
+from shared_msgs.msg import controller_msg, thrust_command_msg, thrust_disable_inverted_msg, tools_command_msg, rov_velocity_command
 from geometry_msgs.msg import Twist
 class Coord(enum.Enum):
     ROV_Centric = 1
@@ -24,7 +24,13 @@ def onLoop():
     tools_command = tools_command_msg()
     tools_command.manipulator = controller_tools_command[0]
     tools_command_pub.publish(tools_command)
-
+def _velocity_input(msg):
+    controller_percent_power[0] = msg.twist.linear.x
+    controller_percent_power[1] = msg.twist.linear.y
+    controller_percent_power[2] = msg.twist.linear.z
+    controller_percent_power[3] = msg.twist.angular.x
+    controller_percent_power[4] = msg.twist.angular.y
+    controller_percent_power[5] = msg.twist.angular.z
 def _controller_input(contr):
     controller_percent_power[0] = contr.LY_axis * translation_Scaling # translational
     controller_percent_power[1] = -contr.LX_axis * translation_Scaling * .5 # translation
@@ -45,6 +51,7 @@ def _controller_input(contr):
 
 if __name__ == '__main__':
     rospy.init_node('ROV_main')
+    velocity_sub = rospy.Subscriber('/rov_velocity', rov_velocity_command,_velocity_input)
     controller_sub = rospy.Subscriber('/gamepad_listener', controller_msg,_controller_input)
     thrust_command_pub = rospy.Publisher('/thrust_command', thrust_command_msg, queue_size=1)
     tools_command_pub = rospy.Publisher('/tools_proc', tools_command_msg, queue_size=10)
