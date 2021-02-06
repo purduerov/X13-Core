@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.0.2)
-project(shared_msgs)
+cmake_minimum_required(VERSION 2.8.3)
+project(roslib_comm)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -7,7 +7,11 @@ project(shared_msgs)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED sensor_msgs message_generation std_msgs)
+find_package(catkin REQUIRED COMPONENTS
+  roscpp
+  rospy
+  std_msgs
+)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -43,25 +47,11 @@ find_package(catkin REQUIRED sensor_msgs message_generation std_msgs)
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(
-   FILES
-   esc_single_msg.msg
-   auto_control_msg.msg
-   auto_command_msg.msg
-   pressure_msg.msg
-   thrust_command_msg.msg
-   final_thrust_msg.msg
-   can_msg.msg
-   i2c_msg.msg
-   imu_msg.msg
-   depth_msg.msg
-   temp_msg.msg
-   thrust_status_msg.msg
-   tools_command_msg.msg
-   controller_msg.msg
-   thrust_disable_inverted_msg.msg
-   rov_velocity_command.msg
- )
+# add_message_files(
+#   FILES
+#   Message1.msg
+#   Message2.msg
+# )
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -78,11 +68,10 @@ add_message_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
-   DEPENDENCIES
-   std_msgs 
-   sensor_msgs
- )
+# generate_messages(
+#   DEPENDENCIES
+#   std_msgs
+# )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -115,9 +104,8 @@ generate_messages(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES shared_msgs
-  CATKIN_DEPENDS message_runtime
-#  CATKIN_DEPENDS other_catkin_pkg
+#  LIBRARIES roslib
+#  CATKIN_DEPENDS roscpp rospy std_msgs
 #  DEPENDS system_lib
 )
 
@@ -129,12 +117,12 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(
 # include
-# ${catkin_INCLUDE_DIRS}
+  ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/shared_msgs.cpp
+#   src/${PROJECT_NAME}/roslib_comm.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -145,7 +133,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/shared_msgs_node.cpp)
+# add_executable(${PROJECT_NAME}_node src/roslib_comm_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -171,7 +159,7 @@ include_directories(
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
-# catkin_install_python(PROGRAMS
+# install(PROGRAMS
 #   scripts/my_python_script
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
@@ -209,7 +197,7 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_shared_msgs.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_roslib_comm.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

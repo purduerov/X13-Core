@@ -29,6 +29,7 @@ def mapThrusters(can_pow, can_map=None, printOut=False):
             0x202: [0, 4, 5, 6],
             0x203: [0, 1, 2, 3]
         }
+        # print("Setting mapper to {}.".format(can_map))
 
     can_out = {}
 
@@ -80,9 +81,9 @@ def mainLoop(timesleep=1, bound=5, increment=1, mid=127, channel='can0', bustype
 
     inc = increment
     offset = 0
-    while True:
+    for i in range(2):
         num = 127 + offset
-        print("Thrusters setting to {}".format(num))
+        print("--Thrusters setting to {}".format(num))
 
         base = [num] * 8
 
@@ -104,5 +105,9 @@ def mainLoop(timesleep=1, bound=5, increment=1, mid=127, channel='can0', bustype
 
 if __name__ == "__main__":
     bound = 10 * 10
-    inc = 4
-    print(mainLoop(bound=bound, increment=inc, timesleep=.1))
+    if(len(sys.argv) == 2):
+        inc = int(sys.argv[1])
+        print("Using supplied increment of {}".format(inc))
+    else:
+        inc = 25
+    print(mainLoop(bound = bound, increment = inc, timesleep = 0.1))
