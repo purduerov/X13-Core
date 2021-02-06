@@ -60,6 +60,7 @@ add_message_files(
    tools_command_msg.msg
    controller_msg.msg
    thrust_disable_inverted_msg.msg
+   rov_velocity_command.msg
  )
 
 ## Generate services in the 'srv' folder
@@ -79,7 +80,7 @@ add_message_files(
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
    DEPENDENCIES
-   std_msgs 
+   std_msgs
    sensor_msgs
  )
 
