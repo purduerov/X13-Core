@@ -39,7 +39,7 @@ THRUST_MAX = 3.71
 # Center of mass coordinates relative to our measurement point
 COM_X = 0.0  # 0.056 * 0.0254
 COM_Y = 0.0  # -0.1256 * 0.0254
-COM_Z = 0.0 * 0.0254
+COM_Z = 2.0 * 0.0254
 
 # Thruster locations relative to the measurement point of the ROV.
 #                      X	Y	Z

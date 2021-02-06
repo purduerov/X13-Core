@@ -14,7 +14,7 @@ desired_p_unramped = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 locked_dims_list = [False, False, False, False, False, False]
 disabled_list = [False, False, False, False, False, False, False, False]
 inverted_list = [0, 0, 0, 0, 0, 0, 0, 0]
-MAX_CHANGE = .035
+MAX_CHANGE = .02
 # watch dog stuff
 last_packet_time = 0.0
 is_timed_out = False
@@ -37,6 +37,7 @@ def ramp(index):
     if (abs(desired_p_unramped[index] - desired_thrusters[index]) > MAX_CHANGE):
         if (desired_p_unramped[index] - desired_thrusters[index] > 0):
             desired_thrusters[index] += MAX_CHANGE
+            #print(index, "ramping", desired_thrusters[index])
         else:
             desired_thrusters[index] -= MAX_CHANGE
         return
@@ -99,7 +100,7 @@ if __name__ == "__main__":
 
     # initialize subscribers
     comm_sub = rospy.Subscriber('/thrust_command', thrust_command_msg, _pilot_command)
-    ramp_sub = rospy.Subscriber('/ramp', String, _updateRamp)
+    #ramp_sub = rospy.Subscriber('/ramp', String, _updateRamp)
     # controller_sub = rospy.Subscriber('/surface/controller',controller_msg, _teleop)
     #controller_sub = rospy.Subscriber('gamepad_listener', controller_msg, _teleop)
     # initialize publishers
