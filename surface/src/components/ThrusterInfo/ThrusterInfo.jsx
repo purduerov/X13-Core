@@ -10,10 +10,10 @@ const INIT_THRUST = 127;
 const T_OFF = 50;
 const L_OFF = 140;
 
-const HL = -110 + L_OFF;
+const HL = -130 + L_OFF;
 const HR = 60 + L_OFF;
-const VL = -80 + L_OFF;
-const VR = 30 + L_OFF;
+const VL = -90 + L_OFF;
+const VR = 20 + L_OFF;
 const HBT = 205 + T_OFF;
 const VBT = 125 + T_OFF;
 const HFT = -40 + T_OFF;

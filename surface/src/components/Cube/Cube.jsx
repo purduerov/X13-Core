@@ -9,7 +9,7 @@ import {monitor, kill} from './../../tools/procMonitor.js';
 export default class Cube extends React.Component {
 	constructor(props) {
         super(props);
-        this.state = {gamepad: {RSY: -0.8}, imu: [0, 0, 0], offset: [Math.PI / 2, 0, 0]};
+        this.state = {gamepad: {RSY: -0.8}, imu: [0, 0, 0], offset: [Math.PI / 2, 0, 0], demoMode: [0, 0, 0]};
         this.animate = this.animate.bind(this);
 
 		this.monitor = monitor.bind(this);
@@ -123,10 +123,12 @@ export default class Cube extends React.Component {
 
     animate() {
 		if(this.rov){
-			this.rov.rotation.x = (this.state.imu[0] / 180) * Math.PI - this.state.offset[0];
-			this.rov.rotation.y = (this.state.imu[2] / 180) * Math.PI - this.state.offset[1]
+			this.rov.rotation.x = (this.state.imu[0] / 180) * Math.PI - this.state.offset[0] + this.state.demoMode[0];
+			this.rov.rotation.y = (this.state.imu[2] / 180) * Math.PI - this.state.offset[1] + this.state.demoMode[1];
 	        this.rov.rotation.z = Math.PI / 2;
 			this.line_rov.rotation.z = -this.rov.rotation.y;
+
+			//this.setState({demoMode: [this.state.demoMode[0] + Math.PI / 20, this.state.demoMode[0] + Math.PI / 20, 0]});
 		}
 
         this.renderScene();

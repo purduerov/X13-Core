@@ -43,7 +43,7 @@ export default class MainWindow extends Component {
 						<Titlebar statusUpdates={this.state.statusUpdates}/>
 					</Row>
 
-					<Row className='mx-0 px-3 pb-1 pt-3 h-75'>
+					<Row className='mx-0 px-3 pb-1 pt-3' style={{height: '70%'}}>
 						<Col className='border'>
 							<Gamepad gamepadStateUpdate={this.gamepadStateUpdate}/>
 							<Depth/>
