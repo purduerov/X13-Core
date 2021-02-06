@@ -2,6 +2,7 @@
 import rospy
 import enum
 from shared_msgs.msg import controller_msg, thrust_command_msg, thrust_disable_inverted_msg, tools_command_msg
+from geometry_msgs.msg import Twist
 class Coord(enum.Enum):
     ROV_Centric = 1
     POOL_Centric = 2
