@@ -7,6 +7,7 @@
 #However for some reason testing hardcoded values found that it takes 1-12 percent for a full range of 180 degree motion for some reason
 #that's not mathmatically correct but it works so eh
 #duty cycle(6) for in the middle. duty cycle(0) is off
+#for this inclosure the input can be 12 to 120 degrees. the code will automatically make these the max values
 
 import rospy
 from std_msgs.msg import Float32
@@ -17,8 +18,8 @@ from time import sleep #imports sleep (aka waiting or pause) into the program
 #Setting a Pin Mode
 GPIO.setmode(GPIO.BCM) #Chose Board pin number scheme
 #Set up pin 14 for PWM
-GPIO.setup(13, GPIO.OUT) #sets up pin 14 to an output
-p = GPIO.PWM(13,50) #sets up pin 11 as a PWM pin(50 is the frequency)
+GPIO.setup(13, GPIO.OUT) #sets up pin 13 to an output
+p = GPIO.PWM(13,50) #sets up pin 13 as a PWM pin(50 is the frequency)
 p.start(0) #starts running PWM on the pin and sets it to 0. 0 is the middle
 duty_prev = 6.5 #sets to middle duty cycle
 
@@ -26,6 +27,12 @@ def callback(requestedAngle):
     rate = rospy.Rate(100)  
     #change the angle to desired duty cycle
     duty = ((requestedAngle.data /180) * 11) + 1 #the range of the servo is dutycycle of 1-12 for some reason. So this formula should take in angle of 0-180 and transfer the value from 1-12
+    #caps the duty cycle to the max angle values
+    if duty > 8.3:
+       duty = 8.3
+    elif duty < 1.74:
+       duty = 1.74
+    
     global duty_prev
     #only run if new number
     if (duty != duty_prev):
@@ -45,8 +52,9 @@ def callback(requestedAngle):
             duty_prev = duty
         except:
             print("there has been some error of some type :/")
-    #p.ChangeDutyCycle(0) #if the servo jitters a lot uncomment this it should stop all movement in between calls
-    rate.sleep() #waits 0.01 seconds
+    sleep(0.4) #this is so the servo pauses before turning off the power
+    p.ChangeDutyCycle(0) #if the servo jitters a lot uncomment this it should stop all movement in between calls
+    
 
 def listener():
     rospy.init_node('test_servo_listener_node', anonymous=True)
