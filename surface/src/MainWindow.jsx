@@ -8,6 +8,7 @@ import Cube from './components/Cube/Cube.jsx';
 import Depth from './components/Depth/Depth.jsx';
 import ThrusterInfo from './components/ThrusterInfo/ThrusterInfo.jsx';
 import ThrustRamping from './components/ThrustRamping/ThrustRamping.jsx';
+import Cam_servo from './components/Cam_servo/Cam_servo.jsx';
 import roscore from './rosjs/roscore.js';
 import cleanEnv from '../electron/cleanEnv.js';
 
@@ -48,6 +49,7 @@ export default class MainWindow extends Component {
 							<Gamepad gamepadStateUpdate={this.gamepadStateUpdate}/>
 							<Depth/>
 							<ThrustRamping/>
+							<Cam_servo />
 						</Col>
 
 						<Col xs={8} className='border mx-3'>
