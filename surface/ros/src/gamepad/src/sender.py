@@ -7,8 +7,32 @@ import sys
 #ROS
 import rospy
 from std_msgs.msg import String
+from shared_msgs.msg import rov_velocity_command
+from geometry_msgs.msg import Twist
 
 from config import *
+
+def getMessage():
+    global gamepad_state
+
+    t = Twist()
+
+    t.linear.x = gamepad_state['LSY'] * SCALE_TRANSLATIONAL
+    t.linear.y = -gamepad_state['LSX'] * SCALE_TRANSLATIONAL * SCALE_TRANSLATIONAL_MAGIC
+    t.linear.z = (gamepad_state['RT'] - gamepad_state['LT']) * SCALE_TRANSLATIONAL
+
+    if gamepad_state['A'] == 1:
+        x = 1 * SCALE_ROTATIONAL
+    elif gamepad_state['B'] == 1:
+        x = -1 * SCALE_ROTATIONAL
+    else:
+        x = 0.0
+
+    t.angular.x = x
+    t.angular.y = -gamepad_state['RSY'] * SCALE_ROTATIONAL * SCALE_TRANSLATIONAL_MAGIC
+    t.angular.z = gamepad_state['RSY'] * SCALE_ROTATIONAL
+
+    return rov_velocity_command(t, 'gamepad', False, False)
 
 def correct_raw(raw, abbv):
     sign = (raw >= 0) * 2 - 1
@@ -32,7 +56,7 @@ def correct_raw(raw, abbv):
     return corrected
 
 def process_event(event):
-    
+
     if event.ev_type in ignore_events:
         return
 
@@ -44,9 +68,8 @@ def process_event(event):
         gamepad_state[EVENTS[event.code]] = event.state
 
 def pub_data(event):
-    #rospy.loginfo(gamepad_state)
-    print(json.dumps(gamepad_state)) #Proper formatting for stdout
-    pub.publish(json.dumps(gamepad_state))
+
+    pub.publish(getMessage())
 
 def update_gamepad(event):
     try:
@@ -62,7 +85,7 @@ def talker():
     rospy.Timer(rospy.Duration(0.001), update_gamepad)
 
     rospy.spin()
-  
+
 if __name__ == '__main__':
     global pub
 
@@ -71,7 +94,7 @@ if __name__ == '__main__':
     except:
         sys.exit(json.dumps({'gamepad': False}))
 
-    pub = rospy.Publisher('chatter', String, queue_size=10)
+    pub = rospy.Publisher('rov_velocity', rov_velocity_command, queue_size=10)
     try:
         talker()
     except rospy.ROSInterruptException:

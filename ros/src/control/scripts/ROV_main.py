@@ -1,7 +1,8 @@
-#! /usr/bin/python
+#! /usr/bin/python3
 import rospy
 import enum
 from shared_msgs.msg import controller_msg, thrust_command_msg, thrust_disable_inverted_msg, tools_command_msg
+from geometry_msgs.msg import Twist
 class Coord(enum.Enum):
     ROV_Centric = 1
     POOL_Centric = 2
@@ -11,8 +12,8 @@ class Contr_Type(enum.Enum):
 
 controller_percent_power = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 controller_tools_command = [0,0,0,0]
-translation_Scaling = .5
-rotation_Scaling = .4
+translation_Scaling = 1.0
+rotation_Scaling = 0.3
 
 def onLoop():
     #Thruster Control
@@ -25,17 +26,17 @@ def onLoop():
     tools_command_pub.publish(tools_command)
 
 def _controller_input(contr):
-    controller_percent_power[0] = -contr.LY_axis * translation_Scaling # translational
-    controller_percent_power[1] = -contr.LX_axis * translation_Scaling # translation
-    controller_percent_power[2] = ((contr.Rtrigger + 1) - (contr.Ltrigger + 1)) * translation_Scaling
+    controller_percent_power[0] = contr.LY_axis * translation_Scaling # translational
+    controller_percent_power[1] = -contr.LX_axis * translation_Scaling * .5 # translation
+    controller_percent_power[2] = ((contr.Rtrigger) - (contr.Ltrigger)) * translation_Scaling 
     if contr.a == 1:
         controller_percent_power[3] = 1 * rotation_Scaling
     elif contr.b == 1:
         controller_percent_power[3] = -1 * rotation_Scaling
     else:
         controller_percent_power[3] = 0.0
-    controller_percent_power[4] = -contr.RY_axis * rotation_Scaling# pitch
-    controller_percent_power[5] = -contr.RX_axis * rotation_Scaling # yaw
+    controller_percent_power[4] = -contr.RY_axis * rotation_Scaling * .5# pitch
+    controller_percent_power[5] = contr.RX_axis * rotation_Scaling # yaw
     if contr.x == 1:
         controller_tools_command[0] = 1
     if contr.y ==1:
@@ -47,7 +48,7 @@ if __name__ == '__main__':
     controller_sub = rospy.Subscriber('/gamepad_listener', controller_msg,_controller_input)
     thrust_command_pub = rospy.Publisher('/thrust_command', thrust_command_msg, queue_size=1)
     tools_command_pub = rospy.Publisher('/tools_proc', tools_command_msg, queue_size=10)
-    r = rospy.Rate(1)
+    r = rospy.Rate(50)
     while not rospy.is_shutdown():
         onLoop()
         r.sleep()

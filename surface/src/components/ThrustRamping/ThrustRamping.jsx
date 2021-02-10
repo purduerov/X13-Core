@@ -1,6 +1,8 @@
 import React from 'react';
 import {Col, Row, Container} from 'react-bootstrap';
 import {send, rampSender} from './rampSender.js';
+import {ipcRenderer} from 'electron';
+import {monitor, kill} from './../../tools/procMonitor.js';
 
 export default class ThrustRamping extends React.Component {
 	constructor(props) {
@@ -9,8 +11,15 @@ export default class ThrustRamping extends React.Component {
 		this.state = {ramp: 0.001};
 
 		this.handleChange = this.handleChange.bind(this);
+		this.monitor = monitor.bind(this);
+		this.kill = kill.bind(this);
 
-		rampSender();
+		rampSender(this.monitor);
+
+		ipcRenderer.on('kill', (event, args) => {
+			console.log('Killing...');
+			this.kill();
+		});
 
 	}
 

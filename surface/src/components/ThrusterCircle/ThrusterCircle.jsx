@@ -12,6 +12,7 @@ export default class ThrusterCircle extends React.Component {
 
         this.setValue = this.setValue.bind(this);
 		this.setValue();
+
     }
 
     componentDidUpdate(){

@@ -8,7 +8,7 @@ export default class Console extends React.Component {
 
 	render() {
 		return (
-			<Container>
+			<Container className='overflow-auto'>
                 {this.props.output.map((line) => <div>{line}</div>)}
 			</Container>
 		);

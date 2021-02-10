@@ -16,7 +16,7 @@ export default class MainWindow extends Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {depth: 0, output: [], status_states: {'gamepad': false}};
+		this.state = {depth: 0, output: [], statusUpdates: {'gamepad': false}};
 		this.gamepadStateUpdate = this.gamepadStateUpdate.bind(this);
 
 		this.roscore = null;
@@ -27,9 +27,9 @@ export default class MainWindow extends Component {
     }
 
 	gamepadStateUpdate(state){
-		let st = this.state.status_states;
+		let st = this.state.statusUpdates;
 		st['gamepad'] = state;
-		this.setState({status_states: st});
+		this.setState({statusUpdates: st});
 	}
 
 	//<img src="http://192.168.1.3:8090/test.mjpg"/>
@@ -41,10 +41,10 @@ export default class MainWindow extends Component {
 				<div className='h-100 d-flex flex-column'>
 
 					<Row className='mx-0'>
-						<Titlebar status_states={this.state.status_states}/>
+						<Titlebar statusUpdates={this.state.statusUpdates}/>
 					</Row>
 
-					<Row className='mx-0 px-3 pb-1 pt-3 h-75'>
+					<Row className='mx-0 px-3 pb-1 pt-3' style={{height: '70%'}}>
 						<Col className='border'>
 							<Gamepad gamepadStateUpdate={this.gamepadStateUpdate}/>
 							<Depth/>
@@ -53,13 +53,15 @@ export default class MainWindow extends Component {
 						</Col>
 
 						<Col xs={8} className='border mx-3'>
+							{/*
 							<img width='600px' height='500px' src="http://192.168.1.3:8090/test.mjpg"/>
 							<img width='600px' height='500px' src="http://192.168.1.4:8090/test.mjpg"/>
+							*/}
+							<Cube/>
 						</Col>
 
 						<Col className='border'>
 							<ThrusterInfo/>
-							<Cube/>
 						</Col>
 					</Row>
 

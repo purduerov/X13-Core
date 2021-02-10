@@ -1,17 +1,19 @@
 import React from 'react';
 import {Container} from 'react-bootstrap';
 import ThrusterCircle from '../ThrusterCircle/ThrusterCircle.jsx';
-import thrusterListen from '../ThrusterCircle/thrusterListen.js';
+import thrusterListen from './thrusterListen.js';
+import {ipcRenderer} from 'electron';
+import {monitor, kill} from './../../tools/procMonitor.js';
 
 const INIT_THRUST = 127;
 
 const T_OFF = 50;
 const L_OFF = 140;
 
-const HL = -110 + L_OFF;
+const HL = -130 + L_OFF;
 const HR = 60 + L_OFF;
-const VL = -80 + L_OFF;
-const VR = 30 + L_OFF;
+const VL = -90 + L_OFF;
+const VR = 20 + L_OFF;
 const HBT = 205 + T_OFF;
 const VBT = 125 + T_OFF;
 const HFT = -40 + T_OFF;
@@ -25,7 +27,14 @@ export default class ThrusterInfo extends React.Component {
         this.state = {thrust: [INIT_THRUST, INIT_THRUST, INIT_THRUST, INIT_THRUST, INIT_THRUST, INIT_THRUST, INIT_THRUST, INIT_THRUST]};
 
         this.updateThrust = this.updateThrust.bind(this);
-		thrusterListen(this.updateThrust);
+		this.monitor = monitor.bind(this);
+		this.kill = kill.bind(this);
+		thrusterListen(this.updateThrust, this.monitor);
+
+		ipcRenderer.on('kill', (event, args) => {
+			console.log('Killing...');
+			this.kill();
+		});
     }
 
     modifyValues(vals){

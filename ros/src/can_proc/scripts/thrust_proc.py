@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#! /usr/bin/python3
 import rospy
 from shared_msgs.msg import can_msg, final_thrust_msg
 
@@ -10,9 +10,10 @@ can_ids = [0x201, 0x201, 0x203, 0x202, 0x202, 0x203, 0x203, 0x202]  # can IDs
 can_pos = [5, 6, 7, 5, 6, 4, 5, 7]  # positions in data packet
 
 can_better_map = {
-    0x201: [1, 0, None, None],
-    0x202: [None, 3, 4, 7],
-    0x203: [5, 6, None, 2]
+    0x201: [None, None, None, None],
+    0x202: [0, 4, 7, 3],
+    0x203: [5, 1, 3, 6]
+   #0x203: [None,None,None,None]
 }
 
 can_pow = []  # power of thrusters
