@@ -22,7 +22,7 @@ function createWindow (windows, idx) {
 		window: windows[idx],
 		showInspectElement: true
 	});
-		
+
 	windows[idx].on('closed', () => {
 		windows[idx] = null;
 	});
