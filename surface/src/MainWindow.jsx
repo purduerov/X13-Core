@@ -17,12 +17,10 @@ export default class MainWindow extends Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {depth: 0, output: [], statusUpdates: {'gamepad': false}, activeCamera: 0};
+		this.state = {output: [], statusUpdates: {'gamepad': false}, activeCamera: 0};
 		this.gamepadStateUpdate = this.gamepadStateUpdate.bind(this);
 
-		this.updateDepth = this.updateDepth.bind(this);
 		this.setActiveCamera = this.setActiveCamera.bind(this);
-		attachDepthNode(this.updateDepth);
 
 		this.roscore = null;
 	}
@@ -59,7 +57,7 @@ export default class MainWindow extends Component {
 
 					<Row className='mx-0 px-3 pb-1 pt-3' style={{height: '70%'}}>
 						<Col className='border'>
-							<Gamepad gamepadStateUpdate={this.gamepadStateUpdate}/>
+							<Camera mode="column_box" updateActiveCamera={this.setActiveCamera}/>
 							<Depth/>
 							<ThrustRamping/>
 							<Cam_servo />
@@ -70,11 +68,7 @@ export default class MainWindow extends Component {
 							<img width='600px' height='500px' src="http://192.168.1.3:8090/test.mjpg"/>
 							<img width='600px' height='500px' src="http://192.168.1.4:8090/test.mjpg"/>
 							*/}
-							<Cube/>
-							<Camera mode="column_box" updateActiveCamera={this.setActiveCamera}/>
-						</Col>
 
-						<Col xs={8} className='border mx-3'>
 							<Camera mode="main_window" activeCamera={this.state.activeCamera} updateActiveCamera={this.setActiveCamera}/>
 						</Col>
 
