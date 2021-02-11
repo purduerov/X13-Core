@@ -12,8 +12,8 @@ class Contr_Type(enum.Enum):
 
 controller_percent_power = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 controller_tools_command = [0,0,0,0]
-translation_Scaling = 1.0
-rotation_Scaling = 0.3
+translation_Scaling = 0.6
+rotation_Scaling = 0.2
 
 def onLoop():
     #Thruster Control
@@ -33,7 +33,7 @@ def _velocity_input(msg):
     controller_percent_power[5] = msg.twist.angular.z
 def _controller_input(contr):
     controller_percent_power[0] = contr.LY_axis * translation_Scaling # translational
-    controller_percent_power[1] = -contr.LX_axis * translation_Scaling * .5 # translation
+    controller_percent_power[1] = contr.LX_axis * translation_Scaling * .5 # translation
     controller_percent_power[2] = ((contr.Rtrigger) - (contr.Ltrigger)) * translation_Scaling 
     if contr.a == 1:
         controller_percent_power[3] = 1 * rotation_Scaling
