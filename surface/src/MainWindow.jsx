@@ -17,7 +17,7 @@ export default class MainWindow extends Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {depth: 0, output: [], statusUpdates: {'gamepad': false}, activeCamera:0};
+		this.state = {depth: 0, output: [], statusUpdates: {'gamepad': false}, activeCamera: 0};
 		this.gamepadStateUpdate = this.gamepadStateUpdate.bind(this);
 
 		this.updateDepth = this.updateDepth.bind(this);
@@ -44,10 +44,10 @@ export default class MainWindow extends Component {
 		this.setState({
 			activeCamera: idx
 		});
-		
 	}
+
 	render() {
-		
+
 		return (
 			<Container fluid className='p-0 h-100'>
 
@@ -71,14 +71,13 @@ export default class MainWindow extends Component {
 							<img width='600px' height='500px' src="http://192.168.1.4:8090/test.mjpg"/>
 							*/}
 							<Cube/>
-						<Camera mode="column_box" updateActiveCamera={this.setActiveCamera}/>						
+							<Camera mode="column_box" updateActiveCamera={this.setActiveCamera}/>
 						</Col>
 
 						<Col xs={8} className='border mx-3'>
-						<Camera mode="main_window" activeCamera={this.state.activeCamera} updateActiveCamera={this.setActiveCamera}/>	
-						{/*<Camera mode="all_widescreen" updateActiveCamera={this.setActiveCamera}/>*/}
+							<Camera mode="main_window" activeCamera={this.state.activeCamera} updateActiveCamera={this.setActiveCamera}/>
 						</Col>
-						
+
 						<Col className='border'>
 							<ThrusterInfo/>
 						</Col>
