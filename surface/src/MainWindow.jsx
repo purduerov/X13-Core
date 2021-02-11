@@ -11,13 +11,18 @@ import ThrustRamping from './components/ThrustRamping/ThrustRamping.jsx';
 import Cam_servo from './components/Cam_servo/Cam_servo.jsx';
 import roscore from './rosjs/roscore.js';
 import cleanEnv from '../electron/cleanEnv.js';
+import Camera from './components/Camera/Camera.jsx';
 
 export default class MainWindow extends Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {depth: 0, output: [], statusUpdates: {'gamepad': false}};
+		this.state = {depth: 0, output: [], statusUpdates: {'gamepad': false}, activeCamera:0};
 		this.gamepadStateUpdate = this.gamepadStateUpdate.bind(this);
+
+		this.updateDepth = this.updateDepth.bind(this);
+		this.setActiveCamera = this.setActiveCamera.bind(this);
+		attachDepthNode(this.updateDepth);
 
 		this.roscore = null;
 	}
@@ -34,7 +39,15 @@ export default class MainWindow extends Component {
 
 	//<img src="http://192.168.1.3:8090/test.mjpg"/>
 
+	setActiveCamera(idx) {
+		console.log("Active camera set to " + idx);
+		this.setState({
+			activeCamera: idx
+		});
+		
+	}
 	render() {
+		
 		return (
 			<Container fluid className='p-0 h-100'>
 
@@ -58,8 +71,14 @@ export default class MainWindow extends Component {
 							<img width='600px' height='500px' src="http://192.168.1.4:8090/test.mjpg"/>
 							*/}
 							<Cube/>
+						<Camera mode="column_box" updateActiveCamera={this.setActiveCamera}/>						
 						</Col>
 
+						<Col xs={8} className='border mx-3'>
+						<Camera mode="main_window" activeCamera={this.state.activeCamera} updateActiveCamera={this.setActiveCamera}/>	
+						{/*<Camera mode="all_widescreen" updateActiveCamera={this.setActiveCamera}/>*/}
+						</Col>
+						
 						<Col className='border'>
 							<ThrusterInfo/>
 						</Col>
