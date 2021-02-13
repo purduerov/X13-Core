@@ -1,20 +1,20 @@
-#!/usr/bin/env python3 
+#!/usr/bin/env python3
 
-import rospy 
+import rospy
 from std_msgs.msg import Float32, String
 import json
 
 angle = 30.0
 
-def servo_sender(): 
+def servo_sender():
     rospy.init_node('servo_sender')
     pub = rospy.Publisher('servo', Float32, queue_size=10)
-    rate = rospy.Rate(1)
+    rate = rospy.Rate(100)
 
     while not rospy.is_shutdown():
         newVal = float(input('val').rstrip())
         angle = newVal
-        pub.publish(json.dumps(angle))
+        pub.publish(angle)
         print(angle)
         rate.sleep()
 

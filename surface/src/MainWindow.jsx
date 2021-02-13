@@ -57,11 +57,13 @@ export default class MainWindow extends Component {
 							<img width='600px' height='500px' src="http://192.168.1.3:8090/test.mjpg"/>
 							<img width='600px' height='500px' src="http://192.168.1.4:8090/test.mjpg"/>
 							*/}
-							<Cube/>
+							<img width='600px' height='500px' src="http://192.168.1.3:8090/test.mjpg"/>
+
 						</Col>
 
 						<Col className='border'>
 							<ThrusterInfo/>
+							<Cube/>
 						</Col>
 					</Row>
 
