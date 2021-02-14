@@ -9,10 +9,13 @@ from area import *
 
 if __name__ == "__main__":
 
-    filename = './photos/okcolor1.mp4'
+    #filename = './photos/okcolor1.mp4'
+    #filename = './photos/ROV_Pool_test.mp4'
+    filename = './photos/land.mp4'
 
     cap = cv2.VideoCapture(filename)
     frame_count = 0
+    capture_count = 0
     if not(cap.isOpened()):
         print('Vid didn\'t open')
         sys.exit()
@@ -23,10 +26,14 @@ if __name__ == "__main__":
     
     while(cap.isOpened()):
         ret, frame = cap.read() 
-        print(frame_count)
 
-        if not ret:
+        if not ret: #video feed is dead
             break
+
+        print(frame_count)
+        #print(frame.shape)
+        frame = imutils.resize(frame, width=500)
+        #print(frame.shape)
 
         frame_count += 1
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -44,8 +51,8 @@ if __name__ == "__main__":
                 if(cv2.waitKey(0) & 0xFF == ord('s')):
                     frame = imutils.resize(frame, width=300)    #refactor pls
                     crop_picture = frame[coords[2]:coords[3], coords[0]:coords[1]]
-                    cv2.imwrite('./saved.jpg', crop_picture)
-                    break
+                    cv2.imwrite('./saved'+str(capture_count)+'.jpg', crop_picture)
+                    capture_count += 1
         elif(bits == ord('n')):
             pass 
         else:

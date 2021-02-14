@@ -162,7 +162,7 @@ def show_desired_rect(lines, done, picture):
     if(max_perim < perimeter_percentage):
         print('No confidence in any rectangles')
         return
-    expand = 10
+    expand = 5
     topx = 300
     topy = 205
     coords = [max(coords[0]-expand,0), min(coords[1]+expand,topx), max(coords[2]-expand,0), min(coords[3]+expand,topy)]

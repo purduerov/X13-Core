@@ -8,7 +8,7 @@ import imutils
 tolerance = .2
 perimeter_percentage = .4
 resolution = 300
-edge_tolerance = 10
+edge_tolerance = 2
 
 def linelen(x):
     return math.sqrt( pow(x[3]-x[1], 2) + pow(x[2]-x[0], 2) )
@@ -178,7 +178,7 @@ def show_desired_rect(lines, done, picture):
     
     print('perimeter ratio: ' + str(max_perim))
     #This graphs the final rectangle that will be used for cropping, but before the crop
-    '''
+    
     plt.imshow(picture,cmap = 'gray')
     
     l1x = [ lines[biggest[0]][0], lines[biggest[0]][2] ]
@@ -194,7 +194,7 @@ def show_desired_rect(lines, done, picture):
     plt.plot(l3x, l3y, '--')
     plt.plot(l4x, l4y, '--')
     plt.show()
-    '''
+    
     crop(area_coords, picture)
     
     return area_coords
@@ -283,7 +283,7 @@ def operate(lines, picture):
                         done.add( frozenset([ortho, para1, para2, testortho]) )
     if(done):
         #Super useful helper
-        #show_all_rects(lines, done, picture)
+        show_all_rects(lines, done, picture)
         coords = show_desired_rect(lines, done, picture)
         return coords
     else:
@@ -301,6 +301,7 @@ def get_lines(maybe):
     resized = imutils.resize(image, width=resolution)
     #ratio = image.shape[0] / float(resized.shape[0])
     new_image = resized.copy()
+    #print(new_image.shape)
 
     edges = cv2.Canny(resized, 10, 100, 3, L2gradient=True)
 
