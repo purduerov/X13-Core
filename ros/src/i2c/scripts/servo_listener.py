@@ -21,44 +21,50 @@ GPIO.setmode(GPIO.BCM) #Chose Board pin number scheme
 GPIO.setup(13, GPIO.OUT) #sets up pin 13 to an output
 p = GPIO.PWM(13,50) #sets up pin 13 as a PWM pin(50 is the frequency)
 p.start(0) #starts running PWM on the pin and sets it to 0. 0 is the middle
-duty_prev = 6.5 #sets to middle duty cycle
+duty_prev = 5.8 #sets to middle duty cycle this is the "middle"
+p.ChangeDutyCycle(duty_prev)
+sleep(0.04) #max time delay
+p.ChangeDutyCycle(0)
 
 def callback(requestedAngle):
+    global duty_prev
     rate = rospy.Rate(100)  
     #change the angle to desired duty cycle
     duty = ((requestedAngle.data /180) * 11) + 1 #the range of the servo is dutycycle of 1-12 for some reason. So this formula should take in angle of 0-180 and transfer the value from 1-12
     #caps the duty cycle to the max angle values
-    if duty > 8.3:
-       duty = 8.3
-    elif duty < 1.74:
-       duty = 1.74
+    if duty > 8.02:
+       duty = 8.02
+    elif duty < 2.02:
+       duty = 2.02
     
-    global duty_prev
+    dutyDiff = abs(duty_prev - duty)
+    timeToWait = (12.5*(dutyDiff**0.515)+10)/1000
+
     #only run if new number
     if (duty != duty_prev):
         try:
-            
-            print(f"Current Duty: {duty}")
-            print(f"Prev Duty: {duty_prev} \n")
+            print(f"Current Duty: {duty:.4f}")
+            print(f"Prev Duty: {duty_prev:.4f}")
+            print(f"Duty Diff = {dutyDiff:.6f} and timeToWait = {timeToWait:.6f}\n")
             #Debug code for testing a varity of values to test full range of motion
-            #it = [12.4, 12, 1, 0.8]   #OKAY so for some reason a duty cycle of 1-12 is used to get a full 180  degrees of rotation. even tho that data sheet indicats 5-10
+            #it = [8.02, 2.02, 8.02, 6.5, 7.5, 6.5, 6.6, 6.5, 2.02]  #OKAY so for some reason a duty cycle of 1-12 is used to get a full 180 degrees of rotation. even tho that data sheet indicats 5-10
             #for i in it:
             #   print(f"Current Duty Cycle: {i}")
             #   p.ChangeDutyCycle(i)
-            #   time.sleep(2.5)
+            #   time.sleep(2.0)
             #print("finished diognostic")
-
             p.ChangeDutyCycle(duty)
             duty_prev = duty
         except:
             print("there has been some error of some type :/")
-    sleep(0.4) #this is so the servo pauses before turning off the power
+    sleep(timeToWait) #this is so the servo pauses before turning off the power
     p.ChangeDutyCycle(0) #if the servo jitters a lot uncomment this it should stop all movement in between calls
     
 
 def listener():
-    rospy.init_node('test_servo_listener_node', anonymous=True)
-    rospy.Subscriber("test_servor_angle", Float32, callback)
+    rospy.init_node('servo_listener_node', anonymous=True)
+    rospy.Subscriber("servo", Float32, callback)
+    #rospy.Subscriber("test_servor_angle", Float32, callback)
     rospy.spin() #keeps python from exiting until this node is stopped 
 
 if __name__ == '__main__':
