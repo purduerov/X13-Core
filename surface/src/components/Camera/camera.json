@@ -1,0 +1,22 @@
+[
+	{
+		"name": "Camera 1",
+		"camFeed": "http://192.168.1.2:8090/test.mjpg",
+		"placeholder": "assets/test_images/test_cam1.png"
+	},
+	{
+		"name": "Camera 2",
+		"camFeed": "http://192.168.1.4:8090/test.mjpg",
+		"placeholder": "assets/test_images/test_cam2.png"
+	},
+	{
+		"name": "Camera 3",
+		"camFeed": "http://192.168.1.2:8090/test.mjpg",
+		"placeholder": "assets/test_images/test_cam3.png"
+	},
+	{
+		"name": "Camera 4",
+		"camFeed": "assets/test_images/test_cam4.png",
+		"placeholder": "assets/test_images/test_cam4.png"
+	}
+]

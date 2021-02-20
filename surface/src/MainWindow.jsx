@@ -11,13 +11,16 @@ import ThrustRamping from './components/ThrustRamping/ThrustRamping.jsx';
 import Servo from './components/Servo/Servo.jsx';
 import roscore from './rosjs/roscore.js';
 import cleanEnv from '../electron/cleanEnv.js';
+import Camera from './components/Camera/Camera.jsx';
 
 export default class MainWindow extends Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {depth: 0, output: [], statusUpdates: {'gamepad': false}};
+		this.state = {output: [], statusUpdates: {'gamepad': false}, activeCamera: 0};
 		this.gamepadStateUpdate = this.gamepadStateUpdate.bind(this);
+
+		this.setActiveCamera = this.setActiveCamera.bind(this);
 
 		this.roscore = null;
 	}
@@ -34,7 +37,15 @@ export default class MainWindow extends Component {
 
 	//<img src="http://192.168.1.3:8090/test.mjpg"/>
 
+	setActiveCamera(idx) {
+		console.log("Active camera set to " + idx);
+		this.setState({
+			activeCamera: idx
+		});
+	}
+
 	render() {
+
 		return (
 			<Container fluid className='p-0 h-100'>
 
@@ -46,7 +57,7 @@ export default class MainWindow extends Component {
 
 					<Row className='mx-0 px-3 pb-1 pt-3' style={{height: '70%'}}>
 						<Col className='border'>
-							<Gamepad gamepadStateUpdate={this.gamepadStateUpdate}/>
+							<Camera mode="column_box" updateActiveCamera={this.setActiveCamera}/>
 							<Depth/>
 							<ThrustRamping/>
 							<Servo/>
@@ -57,8 +68,8 @@ export default class MainWindow extends Component {
 							<img width='600px' height='500px' src="http://192.168.1.3:8090/test.mjpg"/>
 							<img width='600px' height='500px' src="http://192.168.1.4:8090/test.mjpg"/>
 							*/}
-							<img width='600px' height='500px' src="http://192.168.1.3:8090/test.mjpg"/>
 
+							<Camera mode="main_window" activeCamera={this.state.activeCamera} updateActiveCamera={this.setActiveCamera}/>
 						</Col>
 
 						<Col className='border'>
