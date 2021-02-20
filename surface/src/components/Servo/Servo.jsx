@@ -4,7 +4,7 @@ import {servoSender, send} from './servoSender.js';
 import {monitor, kill} from './../../tools/procMonitor.js';
 import {ipcRenderer} from 'electron';
 
-export default class Cam_servo extends React.Component {
+export default class Servo extends React.Component {
     constructor(props) {
         super(props);
         this.state = {angle: 30.0};

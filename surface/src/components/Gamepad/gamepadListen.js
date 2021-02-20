@@ -1,5 +1,4 @@
 const { spawn } = require('child_process');
-const JSONStream = require('JSONStream');
 const path = require('path');
 
 module.exports = function gamepadListen(connected, monitor) {
@@ -12,9 +11,12 @@ module.exports = function gamepadListen(connected, monitor) {
         connected(false);
     });
 
-    sender.stdout.pipe(JSONStream.parse()).on('data', data => {
-        //console.log(data);
-        connected(data);
+    sender.stdout.on('data', data => {
+        try{
+            connected(JSON.parse(data));
+        }catch(e){
+            console.log('Non-JSON data | ROS gamepad node likely failed');
+        }
     });
 
     /*
