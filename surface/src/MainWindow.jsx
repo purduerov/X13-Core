@@ -15,7 +15,6 @@ import cleanEnv from '../electron/cleanEnv.js';
 export default class MainWindow extends Component {
 	constructor(props) {
 		super(props);
-
 		this.state = {depth: 0, output: [], statusUpdates: {'gamepad': false}};
 		this.gamepadStateUpdate = this.gamepadStateUpdate.bind(this);
 
@@ -27,6 +26,7 @@ export default class MainWindow extends Component {
     }
 
 	gamepadStateUpdate(state){
+		console.log(state);
 		let st = this.state.statusUpdates;
 		st['gamepad'] = state;
 		this.setState({statusUpdates: st});
@@ -46,7 +46,10 @@ export default class MainWindow extends Component {
 
 					<Row className='mx-0 px-3 pb-1 pt-3' style={{height: '70%'}}>
 						<Col className='border'>
+						{/*
 							<Gamepad gamepadStateUpdate={this.gamepadStateUpdate}/>
+						*/}
+
 							<Depth/>
 							<ThrustRamping/>
 							<Cam_servo />
@@ -57,7 +60,7 @@ export default class MainWindow extends Component {
 							<img width='600px' height='500px' src="http://192.168.1.3:8090/test.mjpg"/>
 							<img width='600px' height='500px' src="http://192.168.1.4:8090/test.mjpg"/>
 							*/}
-							<Cube/>
+							<Cube currCam={3}/>
 						</Col>
 
 						<Col className='border'>

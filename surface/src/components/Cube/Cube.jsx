@@ -8,19 +8,19 @@ import {monitor, kill} from './../../tools/procMonitor.js';
 
 export default class Cube extends React.Component {
 	constructor(props) {
-        super(props);
-        this.state = {gamepad: {RSY: -0.8}, imu: [0, 0, 0], offset: [Math.PI / 2, 0, 0], demoMode: [0, 0, 0]};
-        this.animate = this.animate.bind(this);
-
+		super(props);
+		this.state = {gamepad: {RSY: -0.8}, imu: [0, 0, 0], offset: [Math.PI / 2, 0, 0], demoMode: [0, 0, 0]};
+		this.animate = this.animate.bind(this);
+		this.cameras = this.loadCameras.bind(this);
 		this.monitor = monitor.bind(this);
 		this.kill = kill.bind(this);
 
 		this.handleCalibrate = this.handleCalibrate.bind(this);
-        this.updateImu = this.updateImu.bind(this);
+		this.updateImu = this.updateImu.bind(this);
 		this.loadModel = this.loadModel.bind(this);
 		imuListen(this.updateImu, this.monitor);
 
-        this.rov = false;
+		this.rov = false;
 		this.line_rov = new t.Line(new t.BufferGeometry().setFromPoints([new t.Vector3(-0.5, 0, 0), new t.Vector3(0.5, 0, 0)]), new t.LineDashedMaterial({
 			color: 0xFFFFFF,
 			linewidth: 1,
@@ -33,44 +33,58 @@ export default class Cube extends React.Component {
 			console.log('Killing...');
 			this.kill();
 		});
-    }
+	}
 
-    modifyValues(vals){
+	modifyValues(vals){
 		const list = this.state.imu.map((t, idx) => vals[idx]);
 
 		return list;
 	}
 
-    updateImu(data){
+	loadCameras() {
+		let cameraList = [];
+
+		for (var i = 0; i < 3; i++) {
+			cameraList.push(new t.Mesh(new t.PlaneGeometry(0.5, 0.25), new t.MeshBasicMaterial({color: 0xb5b5b5, side: t.DoubleSide})));
+		}
+
+		cameraList[(this.props.currCam - 1)].material.color.setHex(0xbafffc);
+		return cameraList;
+	}
+
+	updateImu(data){
 		this.setState({imu: this.modifyValues(data)});
 	}
 
-    componentDidMount(){
-        const width = this.mount.clientWidth;
-        const height = this.mount.clientHeight;
+	componentDidMount(){
+		const width = this.mount.clientWidth;
+		const height = this.mount.clientHeight;
 
-        const scene = new t.Scene();
-        const camera = new t.PerspectiveCamera(
-          75,
-          width / height,
-          0.1,
-          1000
-        );
+		const scene = new t.Scene();
+		const camera = new t.PerspectiveCamera(
+			75,
+			width / height,
+			0.1,
+			1000
+		);
 
 		const light = new t.RectAreaLight(0xffffff, 1.4, 100, 100);
-	    light.position.set(1, 1, 10);
-	    light.lookAt(1, 1, 3);
-	    scene.add(light)
+		light.position.set(1, 1, 10);
+		light.lookAt(1, 1, 3);
+		scene.add(light)
 
-        const renderer = new t.WebGLRenderer({antialias: true, alpha: true});
+		const renderer = new t.WebGLRenderer({antialias: true, alpha: true});
 
 		const material_horizon = new t.LineBasicMaterial({color: 0xFFFFFF});
 		const geometry_horizon = new t.BufferGeometry().setFromPoints([new t.Vector3(-1, 0, 0), new t.Vector3(1, 0, 0)]);
 		const line_horizon = new t.Line(geometry_horizon, material_horizon);
 
-		const cm_1 = new t.Mesh(new t.PlaneGeometry(0.5, 0.25), new t.MeshBasicMaterial({color: 0xbafffc, side: t.DoubleSide}));
-		const cm_2 = new t.Mesh(new t.PlaneGeometry(0.5, 0.25), new t.MeshBasicMaterial({color: 0xb5b5b5, side: t.DoubleSide}));
-		const cm_3 = new t.Mesh(new t.PlaneGeometry(0.5, 0.25), new t.MeshBasicMaterial({color: 0xb5b5b5, side: t.DoubleSide}));
+
+		const cam = this.cameras();
+		const cm_1 = cam[0];
+		const cm_2 = cam[1];
+		const cm_3 = cam[2];
+
 		scene.add(cm_1);
 		scene.add(cm_2);
 		scene.add(cm_3);
@@ -87,21 +101,21 @@ export default class Cube extends React.Component {
 
 		this.loadModel(this);
 
-        camera.position.z = 0.55;
-        camera.position.y = 0.3;
+		camera.position.z = 0.55;
+		camera.position.y = 0.3;
 		camera.rotation.x = -(1/8 * Math.PI)
 
-        renderer.setClearColor('#000000', 0);
-        renderer.setSize(width, height);
+		renderer.setClearColor('#000000', 0);
+		renderer.setSize(width, height);
 
-        this.scene = scene;
-        this.camera = camera;
-        this.renderer = renderer;
+		this.scene = scene;
+		this.camera = camera;
+		this.renderer = renderer;
 
-        this.mount.appendChild(this.renderer.domElement);
+		this.mount.appendChild(this.renderer.domElement);
 
-        requestAnimationFrame(this.animate);
-    }
+		requestAnimationFrame(this.animate);
+	}
 
 	handleCalibrate(){
 		let newX = (this.state.imu[0] / 180) * Math.PI + Math.PI / 2;
@@ -116,33 +130,33 @@ export default class Cube extends React.Component {
 		loader.load('../src/components/Cube/ROV.glb', function(gltf){
 			context.rov = gltf.scene;
 			context.scene.add(context.rov);
-        }, undefined, function (error) {
-        	console.error(error);
-        });
+		}, undefined, function (error) {
+			console.error(error);
+		});
 	}
 
-    animate() {
+	animate() {
 		if(this.rov){
 			this.rov.rotation.x = (this.state.imu[0] / 180) * Math.PI - this.state.offset[0] + this.state.demoMode[0];
 			this.rov.rotation.y = (this.state.imu[2] / 180) * Math.PI - this.state.offset[1] + this.state.demoMode[1];
-	        this.rov.rotation.z = Math.PI / 2;
+			this.rov.rotation.z = Math.PI / 2;
 			this.line_rov.rotation.z = -this.rov.rotation.y;
 
 			//this.setState({demoMode: [this.state.demoMode[0] + Math.PI / 20, this.state.demoMode[0] + Math.PI / 20, 0]});
 		}
 
-        this.renderScene();
-        window.requestAnimationFrame(this.animate);
-    }
+		this.renderScene();
+		window.requestAnimationFrame(this.animate);
+	}
 
-    renderScene() {
-        this.renderer.render(this.scene, this.camera);
-    }
+	renderScene() {
+		this.renderer.render(this.scene, this.camera);
+	}
 
 	render() {
 		return (
 			<Container style={{ width: '100%', height: '90%'}} ref={(mount) => { this.mount = mount }}>
-				<Button onClick={this.handleCalibrate}>Calibrate</Button>
+			<Button onClick={this.handleCalibrate}>Calibrate</Button>
 			</Container>
 		);
 	}
