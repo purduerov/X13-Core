@@ -1,7 +1,7 @@
 [
 	{
 		"name": "Camera 1",
-		"camFeed": "http://192.168.1.2:8090/test.mjpg",
+		"camFeed": "http://192.168.1.3:8090/omx.mjpg",
 		"placeholder": "assets/test_images/test_cam1.png"
 	},
 	{

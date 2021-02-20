@@ -4,16 +4,14 @@ import PropTypes from 'prop-types';
 import { Row, Col, Container } from 'react-bootstrap';
 
 import CameraFrame from './CameraFrame.jsx';
-import CameraConfig from './test_camera.json';
-
-const CameraContext = React.createContext(0);
+import cameraConfig from './camera.json';
 
 export default class Camera extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			cameras: CameraConfig,
+			cameras: cameraConfig,
 			activeCamera: 0,
 		};
 
@@ -39,13 +37,12 @@ export default class Camera extends React.Component {
 				activeCamera: key - 1
 			});
 			this.props.updateActiveCamera(this.state.activeCamera);
-		
+
 		}
 	}
 
 	handleClick(idx) {
 		return () => {
-			
 			this.setState({
 				activeCamera: idx
 			});
@@ -62,9 +59,9 @@ export default class Camera extends React.Component {
 						<CameraFrame camera={this.state.cameras[this.props.activeCamera]} type="viewport"/>
 						Camera {this.props.activeCamera + 1}
 					</Col>
-					
+
 				</Container>
-			
+
 			);
 		} else if (this.props.mode == "column_box") {
 			// TODO: Sync with main_window component through a shared activeCamera.
@@ -79,7 +76,7 @@ export default class Camera extends React.Component {
 				</Container>
 			);
 		} else if (this.props.mode == "all_widescreen") {
-		
+
 			return (
 				<Container>
 					<Row style={{height: '100%'}}>
@@ -95,11 +92,11 @@ export default class Camera extends React.Component {
 
 					</Row>
 				</Container>
-			
 
-			
+
+
 			);
-		} 
+		}
 		else return (
 			<p>
 			Mode not selected.
@@ -109,7 +106,5 @@ export default class Camera extends React.Component {
 
 }
 Camera.propTypes = {
-	activeCamera: PropTypes.number.isRequired,
 	updateActiveCamera: PropTypes.func.isRequired
 };
-
