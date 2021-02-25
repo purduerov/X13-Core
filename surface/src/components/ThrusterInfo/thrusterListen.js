@@ -12,7 +12,7 @@ module.exports = function thrusterListen(callback, monitor) {
 
     thrusters.stdout.on('data', data => {
         try{
-            callback(JSON.parse(data));
+            callback(JSON.parse(data.toString().split('\n')[0]));
         }catch(e){
             console.log('Non-JSON data | ROS thruster node likely failed');
         }

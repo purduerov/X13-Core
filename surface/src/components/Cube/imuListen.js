@@ -12,7 +12,7 @@ module.exports = function imuListen(callback, monitor) {
 
     imu.stdout.on('data', data => {
         try{
-            callback(JSON.parse(data));
+            callback(JSON.parse(data.toString().split('\n')[0]));
         }catch(e){
             console.log('Non-JSON data | ROS IMU node likely failed');
         }

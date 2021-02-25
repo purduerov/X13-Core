@@ -8,7 +8,7 @@ module.exports = function attachDepthNode(callback, monitor) {
 
     sensor.stdout.on('data', data => {
         try{
-            callback(JSON.parse(data));
+            callback(JSON.parse(data.toString().split('\n')[0]));
         }catch(e){
             console.log('Non-JSON data | ROS depth node likely failed');
         }

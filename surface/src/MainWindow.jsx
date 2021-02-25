@@ -61,6 +61,7 @@ export default class MainWindow extends Component {
 							<Depth/>
 							<ThrustRamping/>
 							<Servo/>
+							<Gamepad/>
 						</Col>
 
 						<Col xs={8} className='border mx-3'>
@@ -69,12 +70,13 @@ export default class MainWindow extends Component {
 							<img width='600px' height='500px' src="http://192.168.1.4:8090/test.mjpg"/>
 							*/}
 
+
 							<Camera mode="main_window" activeCamera={this.state.activeCamera} updateActiveCamera={this.setActiveCamera}/>
 						</Col>
 
 						<Col className='border'>
 							<ThrusterInfo/>
-							<Cube/>
+							
 						</Col>
 					</Row>
 
