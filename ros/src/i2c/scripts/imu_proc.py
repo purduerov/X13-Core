@@ -5,6 +5,7 @@ import math
 from BNO055 import BNO055
 from shared_msgs.msg import imu_msg
 from std_msgs.msg import Bool
+from geometry_msgs.msg import Pose
 
 IMU_PITCH_OFFSET = 0.0
 IMU_ROLL_OFFSET = 0.0
@@ -38,6 +39,8 @@ if __name__ == "__main__":
     # Publish to the CAN hardware transmitter
     pub = rospy.Publisher('imu', imu_msg,
                           queue_size=1)
+    pub2 = rospy.Publisher('imu_quat', Pose,
+                          queue_size=1)
 
     #sub = rospy.Subscriber('reset_imu', Bool,
     #                       _reset_imu_offsets)
@@ -46,12 +49,18 @@ if __name__ == "__main__":
     while not rospy.is_shutdown():
         if imu.update():
             out_message = imu_msg()
+            pose_message = Pose()
             # convert everything to a 0 to 360 to apply a 1d rotation then convert back to -180 to 180
             ROV_Pitch = clamp_angle_0_to_360(imu.roll()) - IMU_ROLL_OFFSET
             ROV_Roll = clamp_angle_0_to_360(imu.yaw()) - IMU_YAW_OFFSET
             ROV_Yaw = clamp_angle_0_to_360(imu.pitch()) - IMU_PITCH_OFFSET
             # out_message.gyro = [ROV_Pitch, ROV_Roll, ROV_Yaw]
-            out_message.gyro = [imu.roll(),imu.yaw(),imu.pitch()]
+            pose_message.orientation.x = imu.quat_x()
+            pose_message.orientation.y = imu.quat_y()
+            pose_message.orientation.z = imu.quat_z()
+            pose_message.orientation.w = imu.quat_w()
+            pub2.publish(pose_message)
+            out_message.gyro = [imu.quat_x(),imu.quat_y(),imu.quat_z()]
             # out_message.gyro = [imu.temp(),imu.temp(),imu.temp()]
             ROV_X_Accel = imu.acceleration_z()
             ROV_Y_Accel = imu.acceleration_x()
