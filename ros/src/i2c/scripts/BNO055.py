@@ -17,6 +17,12 @@ class BNO055(object):
                 'pitch': 0,  # Rotation about x axis (parallel to the pins of IMU) +/- 0.01 degree
 
             },
+            'quat': {
+                'x':0,
+                'y':0,
+                'z':0,
+                'w':0
+            },
             'gyro': {
                 'x': 0,  # 3e-2 degree/sec
                 'y': 0,  # 3e-2 degree/sec
@@ -56,6 +62,16 @@ class BNO055(object):
 
     def gyro_z(self):
         return self._data['gyro']['z']
+    def quat_x(self):
+        return self._data['quat']['x']
+    def quat_y(self):
+        return self._data['quat']['y']
+    def quat_z(self):
+        return self._data['quat']['z']
+    def quat_w(self):
+        return self._data['quat']['w']
+    def quat_arr(self):
+        return [self.quat_x(),self.quat_y(),self.quat_z(),self.quat_w()]
 
     def acceleration_x(self):
         return self._data['acceleration']['x']
@@ -77,6 +93,25 @@ class BNO055(object):
 
     def update(self):
         euler = self._sensor.euler
+        if euler[0] is not None:
+            self._data['euler']['yaw'] = euler[0]
+        if euler[1] is not None:
+            self._data['euler']['roll'] = euler[1]
+        if euler[2] is not None:
+            self._data['euler']['pitch'] = euler[2]
+
+        quat = self._sensor.quaternion
+        if quat[0] is not None:
+            self._data['quat']['x'] = quat[0]
+        if quat[1] is not None:
+            self._data['quat']['y'] = quat[1]
+        if quat[2] is not None:
+            self._data['quat']['z'] = quat[2]
+        if quat[3] is not None:
+            self._data['quat']['w'] = quat[3]
+        
+
+
         if euler[0] is not None:
             self._data['euler']['yaw'] = euler[0]
         if euler[1] is not None:
