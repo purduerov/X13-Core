@@ -17,25 +17,26 @@ export default class MainWindow extends Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {output: [], statusUpdates: {'gamepad': false}, activeCamera: 0};
-		this.gamepadStateUpdate = this.gamepadStateUpdate.bind(this);
+		this.state = {output: [], gamepadStyle: {backgroundColor: '#FF0000'}, activeCamera: 0};
+		this.gamepadStatusLogic = this.gamepadStatusLogic.bind(this);
 
 		this.setActiveCamera = this.setActiveCamera.bind(this);
 
 		this.roscore = null;
+		console.log(this.state.gamepadStyle);
 	}
 
 	pushData(data) {
 		this.setState({ output: [...this.state.output, data] });
     }
 
-	gamepadStateUpdate(state){
-		let st = this.state.statusUpdates;
-		st['gamepad'] = state;
-		this.setState({statusUpdates: st});
+	gamepadStatusLogic(state){
+		if(state){
+			this.setState({gamepadStyle: {backgroundColor: '#00FF00'}});
+		}else{
+			this.setState({gamepadStyle: {backgroundColor: '#FF0000'}});
+		}
 	}
-
-	//<img src="http://192.168.1.3:8090/test.mjpg"/>
 
 	setActiveCamera(idx) {
 		console.log("Active camera set to " + idx);
@@ -52,7 +53,7 @@ export default class MainWindow extends Component {
 				<div className='h-100 d-flex flex-column'>
 
 					<Row className='mx-0'>
-						<Titlebar statusUpdates={this.state.statusUpdates}/>
+						<Titlebar statusUpdates={this.state.gamepadStyle}/>
 					</Row>
 
 					<Row className='mx-0 px-3 pb-1 pt-3' style={{height: '70%'}}>
@@ -61,7 +62,7 @@ export default class MainWindow extends Component {
 							<Depth/>
 							<ThrustRamping/>
 							<Servo/>
-							<Gamepad/>
+							<Gamepad status={this.gamepadStatusLogic}/>
 						</Col>
 
 						<Col xs={8} className='border mx-3'>
@@ -76,7 +77,7 @@ export default class MainWindow extends Component {
 
 						<Col className='border'>
 							<ThrusterInfo/>
-							
+
 						</Col>
 					</Row>
 

@@ -5,20 +5,14 @@ export default class Status extends React.Component {
 	constructor(props) {
 		super(props);
 
-        this.state = {module: this.props.module, status: this.props.status};
-        this.style = {backgroundColor: '#39B4CC'};
-
-        this.updateStatus();
+        this.state = {module: this.props.module};
+		console.log(this.props.status);
 	}
-
-    updateStatus(){
-		this.style = this.state.status();
-    }
 
 	render() {
 		return (
             <span>
-    	        <span className="colored-circle" style={this.style}/>
+    	        <span className="colored-circle" style={this.props.status}/>
                 <span>{this.state.module}</span>
             </span>
 		);

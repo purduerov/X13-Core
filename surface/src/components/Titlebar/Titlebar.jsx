@@ -7,15 +7,6 @@ import {Col} from 'react-bootstrap';
 export default class Titlebar extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {statusUpdates: this.props.statusUpdates};
-		this.gamepadStatusLogic = this.gamepadStatusLogic.bind(this);
-	}
-
-	gamepadStatusLogic(){
-		if(this.state.statusUpdates['gamepad']){
-			return {backgroundColor: '#00FF00'};
-		}
-		return {backgroundColor: '#FF0000'};
 	}
 
 	render() {
@@ -26,9 +17,9 @@ export default class Titlebar extends React.Component {
 				</Col>
 
 				<Col>
-					<Status module='Gamepad' status={this.gamepadStatusLogic}/>
-					<Status module='Test 1' status={this.gamepadStatusLogic}/>
-					<Status module='Test 2' status={this.gamepadStatusLogic}/>
+					<Status module='Gamepad' status={this.props.statusUpdates}/>
+					<Status module='Test 1' status={this.props.statusUpdates}/>
+					<Status module='Test 2' status={this.props.statusUpdates}/>
 				</Col>
 
 				<Col>
