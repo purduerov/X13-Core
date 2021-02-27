@@ -8,7 +8,7 @@ angle = 30.0
 
 def servo_sender():
     rospy.init_node('servo_sender')
-    pub = rospy.Publisher('servo', Float32, queue_size=10)
+    pub = rospy.Publisher('/rov/servo', Float32, queue_size=10)
     rate = rospy.Rate(100)
 
     while not rospy.is_shutdown():
