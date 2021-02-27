@@ -4,53 +4,28 @@ from shared_msgs.msg import can_msg, tools_command_msg
 
 TOOLS_BOARD_ID = 0x204
 
-MANIPULATOR_OPEN_BIT = 0b00001000
-MANIPULATOR_CLOSE_BIT = 0b0000000
-MARKER_OPEN_BIT = 0x80
-MARKER_CLOSE_BIT = 0x08
-GROUT_TROUT_OPEN_BIT = 0b11110111
-GROUT_TROUT_CLOSE_BIT = 0x00
-LIFT_BAG_OPEN_BIT = 0x02
-LIFT_BAG_CLOSE_BIT = 0x20
-
-cmsg = can_msg()
-cmsg_pm = can_msg()
-cmsg_gt = can_msg()
-cmsg_lb = can_msg()
-cmsg_mk = can_msg()
-
-cmsg_pm.id = TOOLS_BOARD_ID
-cmsg_gt.id = TOOLS_BOARD_ID
-cmsg_lb.id = TOOLS_BOARD_ID
-cmsg_mk.id = TOOLS_BOARD_ID
+PM_BIT = 0b00001000
+#MANIPULATOR_CLOSE_BIT = 0b0000000
+GHOST_BIT = 0b11110111
 
 changed = False
 pseudo_lock = False
 #8'bdd654321
-"""
-old from X12
-MANIPULATOR_OPEN_BIT = 0b100
-MANIPULATOR_CLOSE_BIT = 0b100000
-LIFT_BAG_OPEN_BIT = 0b1
-LIFT_BAG_CLOSE_BIT = 0b1000000
-"""
 
 pub = None
 sub = None
 
 
 def message_received(msg):
-    global cmsg_pm, cmsg_gt, cmsg_lb, cmsg_mk
     # data_list = [0] * 8
-
-    pm = (msg.manipulator * MANIPULATOR_OPEN_BIT) | ((not msg.manipulator) * MANIPULATOR_CLOSE_BIT)
-    gt = (msg.groutTrout * GROUT_TROUT_OPEN_BIT) | ((not msg.groutTrout) * GROUT_TROUT_CLOSE_BIT)
-    lb = (msg.liftBag * LIFT_BAG_OPEN_BIT) | ((not msg.liftBag) * LIFT_BAG_CLOSE_BIT)
-    mk = (msg.marker * MARKER_OPEN_BIT) | ((not msg.marker) * MARKER_CLOSE_BIT)
+    pm = (msg.pm * PM_BIT)
+    gt = (msg.ghost * GHOST_BIT)
     cmd = pm | gt
     # If we're doing this, we're getting rid of the rate
     # Pilots likely have a hard time beating 5 to 10 Hz...
     # We'll deal with spamming later
+    cmsg = can_msg()
+    cmsg.id = TOOLS_BOARD_ID
     cmsg.data = cmd
     pub.publish(cmsg)
     # if cmsg_pm.data != pm:
@@ -69,9 +44,9 @@ def message_received(msg):
     #     cmsg_mk.data = mk
     #     pub.publish(cmsg_mk)
 
-    # data_list[-1] = data_list[-1] | (msg.manipulator * MANIPULATOR_OPEN_BIT)
+    # data_list[-1] = data_list[-1] | (msg.manipulator * PM_BIT)
     # data_list[-1] = data_list[-1] | ((not msg.manipulator) * MANIPULATOR_CLOSE_BIT)
-    # data_list[-1] = data_list[-1] | (msg.groutTrout * GROUT_TROUT_OPEN_BIT)
+    # data_list[-1] = data_list[-1] | (msg.groutTrout * GHOST_BIT)
     # data_list[-1] = data_list[-1] | ((not msg.groutTrout) * GROUT_TROUT_CLOSE_BIT)
     # data_list[-1] = data_list[-1] | (msg.liftBag * LIFT_BAG_OPEN_BIT)
     # data_list[-1] = data_list[-1] | ((not msg.liftBag) * LIFT_BAG_CLOSE_BIT)

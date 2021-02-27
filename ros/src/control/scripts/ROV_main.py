@@ -23,8 +23,8 @@ def onLoop():
     thrust_command_pub.publish(thrust_command)
     #Tools Control
     tools_command = tools_command_msg()
-    tools_command.manipulator = controller_tools_command[0]
-    tools_command.groutTrout = controller_tools_command[1]
+    tools_command.pm = controller_tools_command[0]
+    tools_command.ghost = controller_tools_command[1]
     tools_command_pub.publish(tools_command)
 
 def _velocity_input(msg):

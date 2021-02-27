@@ -27,7 +27,7 @@ can_better_map = {
     0x203: [ 0, 0, 0, 0 ]
 }
 
-can_pow = []  # power of thrusters
+can_pow = [127,127,127,127,127,127,127,127]  # power of thrusters
 can_last = {
     0x201: None,
     0x202: None,
@@ -45,15 +45,16 @@ def message_received(msg):
     rospy.loginfo('message received')
 
     # Seperate final_thrust_msg
-    del can_pow[:]
-    can_pow.append(msg.hfl)
-    can_pow.append(msg.hfr)
-    can_pow.append(msg.hbr)
-    can_pow.append(msg.hbl)
-    can_pow.append(msg.vfl)
-    can_pow.append(msg.vfr)
-    can_pow.append(msg.vbr)
-    can_pow.append(msg.vbl)
+    can_pow = msg.thrusters
+
+    # can_pow.append(msg.hfl)
+    # can_pow.append(msg.hfr)
+    # can_pow.append(msg.hbr)
+    # can_pow.append(msg.hbl)
+    # can_pow.append(msg.vfl)
+    # can_pow.append(msg.vfr)
+    # can_pow.append(msg.vbr)
+    # can_pow.append(msg.vbl)
 
     base_board = min(can_ids)
     max_board = max(can_ids)
