@@ -70,6 +70,8 @@ class BNO055(object):
         return self._data['quat']['z']
     def quat_w(self):
         return self._data['quat']['w']
+    def quat_arr(self):
+        return [self.quat_x(),self.quat_y(),self.quat_z(),self.quat_w()]
 
     def acceleration_x(self):
         return self._data['acceleration']['x']
