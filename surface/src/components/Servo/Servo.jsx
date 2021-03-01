@@ -1,13 +1,24 @@
 import React from 'react';
 import {Col, Row, Container} from 'react-bootstrap';
 import {servoSender, send} from './servoSender.js';
+import {monitor, kill} from './../../tools/procMonitor.js';
+import {ipcRenderer} from 'electron';
 
-export default class Cam_servo extends React.Component {
+export default class Servo extends React.Component {
     constructor(props) {
         super(props);
         this.state = {angle: 100.0};
         this.handleChange=this.handleChange.bind(this);
-        servoSender();
+
+        this.monitor = monitor.bind(this);
+		this.kill = kill.bind(this);
+
+        servoSender(this.monitor);
+
+        ipcRenderer.on('kill', (event, args) => {
+			console.log('Killing...');
+			this.kill();
+		});
     }
 
     handleChange(val) {

@@ -1,5 +1,4 @@
 const { spawn } = require('child_process');
-const JSONStream = require('JSONStream');
 const path = require('path');
 
 module.exports = function attachDepthNode(callback, monitor) {
@@ -7,8 +6,12 @@ module.exports = function attachDepthNode(callback, monitor) {
 
     monitor(sensor);
 
-    sensor.stdout.pipe(JSONStream.parse()).on('data', data => {
-        callback(data);
+    sensor.stdout.on('data', data => {
+        try{
+            callback(JSON.parse(data.toString().split('\n')[0]));
+        }catch(e){
+            console.log('Non-JSON data | ROS depth node likely failed');
+        }
     });
 
     sensor.stderr.on('data', (data) => {

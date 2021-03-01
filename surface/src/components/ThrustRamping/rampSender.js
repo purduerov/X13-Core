@@ -1,5 +1,4 @@
 const { spawn } = require('child_process');
-const JSONStream = require('JSONStream');
 const path = require('path');
 
 var sender = null;

@@ -10,10 +10,11 @@ export default class Cube extends React.Component {
 	constructor(props) {
         super(props);
         this.state = {gamepad: {RSY: -0.8}, imu: [0, 0, 0], offset: [Math.PI / 2, 0, 0], demoMode: [0, 0, 0]};
-        this.animate = this.animate.bind(this);
 
 		this.monitor = monitor.bind(this);
 		this.kill = kill.bind(this);
+		this.imu = [0, 0, 0];
+		this.animate = this.animate.bind(this);
 
 		this.handleCalibrate = this.handleCalibrate.bind(this);
         this.updateImu = this.updateImu.bind(this);
@@ -33,6 +34,8 @@ export default class Cube extends React.Component {
 			console.log('Killing...');
 			this.kill();
 		});
+
+		window.requestAnimationFrame(this.animate);
     }
 
     modifyValues(vals){
@@ -42,7 +45,30 @@ export default class Cube extends React.Component {
 	}
 
     updateImu(data){
-		this.setState({imu: this.modifyValues(data)});
+		//this.setState({imu: this.modifyValues(data)});;
+		this.imu[0] = data[0];
+		this.imu[1] = data[1];
+		this.imu[2] = data[2];
+
+		if(this.rov){
+			this.rov.rotation.x = (this.imu[0] / 180) * Math.PI - this.state.offset[0] + this.state.demoMode[0];
+			this.rov.rotation.y = (this.imu[2] / 180) * Math.PI - this.state.offset[1] + this.state.demoMode[1];
+	        this.rov.rotation.z = Math.PI / 2;
+			this.line_rov.rotation.z = -this.rov.rotation.y;
+
+			//this.setState({demoMode: [this.state.demoMode[0] + Math.PI / 20, this.state.demoMode[0] + Math.PI / 20, 0]});
+		}
+
+		window.requestAnimationFrame(this.animate);
+	}
+
+	stop() {
+	    cancelAnimationFrame(this.frameId)
+	}
+
+	componentWillUnmount() {
+	    this.stop();
+	    this.mount.removeChild(this.renderer.domElement);
 	}
 
     componentDidMount(){
@@ -100,12 +126,16 @@ export default class Cube extends React.Component {
 
         this.mount.appendChild(this.renderer.domElement);
 
-        requestAnimationFrame(this.animate);
+        this.updateImu([0, 0, 0]);
     }
 
+	animate(){
+		this.renderScene();
+	}
+
 	handleCalibrate(){
-		let newX = (this.state.imu[0] / 180) * Math.PI + Math.PI / 2;
-		let newY = -(this.state.imu[2] / 180) * Math.PI;
+		let newX = (this.imu[0] / 180) * Math.PI + Math.PI / 2;
+		let newY = -(this.imu[2] / 180) * Math.PI;
 
 		this.setState({offset: [newX, newY, 0]});
 	}
@@ -120,20 +150,6 @@ export default class Cube extends React.Component {
         	console.error(error);
         });
 	}
-
-    animate() {
-		if(this.rov){
-			this.rov.rotation.x = (this.state.imu[0] / 180) * Math.PI - this.state.offset[0] + this.state.demoMode[0];
-			this.rov.rotation.y = (this.state.imu[2] / 180) * Math.PI - this.state.offset[1] + this.state.demoMode[1];
-	        this.rov.rotation.z = Math.PI / 2;
-			this.line_rov.rotation.z = -this.rov.rotation.y;
-
-			//this.setState({demoMode: [this.state.demoMode[0] + Math.PI / 20, this.state.demoMode[0] + Math.PI / 20, 0]});
-		}
-
-        this.renderScene();
-        window.requestAnimationFrame(this.animate);
-    }
 
     renderScene() {
         this.renderer.render(this.scene, this.camera);

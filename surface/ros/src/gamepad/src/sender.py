@@ -7,10 +7,14 @@ import sys
 #ROS
 import rospy
 from std_msgs.msg import String
+from std_msgs.msg import Bool
 from shared_msgs.msg import rov_velocity_command
 from geometry_msgs.msg import Twist
 
 from config import *
+
+pm_toggle = False
+gh_toggle = False
 
 def getMessage():
     global gamepad_state
@@ -18,21 +22,31 @@ def getMessage():
     t = Twist()
 
     t.linear.x = gamepad_state['LSY'] * SCALE_TRANSLATIONAL
-    t.linear.y = -gamepad_state['LSX'] * SCALE_TRANSLATIONAL * SCALE_TRANSLATIONAL_MAGIC
+    t.linear.y = gamepad_state['LSX'] * SCALE_TRANSLATIONAL * SCALE_TRANSLATIONAL_MAGIC
     t.linear.z = (gamepad_state['RT'] - gamepad_state['LT']) * SCALE_TRANSLATIONAL
 
-    if gamepad_state['A'] == 1:
+    if gamepad_state['LB'] == 1:
         x = 1 * SCALE_ROTATIONAL
-    elif gamepad_state['B'] == 1:
+    elif gamepad_state['RB'] == 1:
         x = -1 * SCALE_ROTATIONAL
     else:
         x = 0.0
 
     t.angular.x = x
-    t.angular.y = -gamepad_state['RSY'] * SCALE_ROTATIONAL * SCALE_TRANSLATIONAL_MAGIC
-    t.angular.z = gamepad_state['RSY'] * SCALE_ROTATIONAL
+    t.angular.y = gamepad_state['RSY'] * SCALE_ROTATIONAL
+    t.angular.z = -gamepad_state['RSX'] * SCALE_ROTATIONAL
 
     return rov_velocity_command(t, 'gamepad', False, False)
+
+def getPMState():
+    global pm_toggle
+
+    return Bool(pm_toggle)
+
+def getGHState():
+    global gh_toggle
+
+    return Bool(gh_toggle)
 
 def correct_raw(raw, abbv):
     sign = (raw >= 0) * 2 - 1
@@ -56,12 +70,19 @@ def correct_raw(raw, abbv):
     return corrected
 
 def process_event(event):
+    global pm_toggle, gh_toggle
 
     if event.ev_type in ignore_events:
         return
 
     if event.ev_type == EVENT_KEY:
         gamepad_state[EVENTS[event.code]] = event.state
+        if event.code == 'BTN_SOUTH' and event.state:
+            pm_toggle = not pm_toggle
+
+        if event.code == 'BTN_EAST' and event.state:
+            gh_toggle = not gh_toggle
+
     elif event.ev_type == EVENT_ABSOLUTE:
         gamepad_state[EVENTS[event.code]] = correct_raw(event.state, EVENTS[event.code])
     else:
@@ -70,6 +91,8 @@ def process_event(event):
 def pub_data(event):
 
     pub.publish(getMessage())
+    pub_pm.publish(getPMState())
+    pub_gh.publish(getGHState())
 
 def update_gamepad(event):
     try:
@@ -87,7 +110,7 @@ def talker():
     rospy.spin()
 
 if __name__ == '__main__':
-    global pub
+    global pub, pub_pm, pub_gh
 
     try:
         get_gamepad()
@@ -95,6 +118,9 @@ if __name__ == '__main__':
         sys.exit(json.dumps({'gamepad': False}))
 
     pub = rospy.Publisher('rov_velocity', rov_velocity_command, queue_size=10)
+    pub_pm = rospy.Publisher('pm_cmd', Bool, queue_size=10)
+    pub_gh = rospy.Publisher('gh_cmd', Bool, queue_size=10)
+
     try:
         talker()
     except rospy.ROSInterruptException:
