@@ -3,13 +3,6 @@
         <node name="can_node" pkg="can_com" type="can_bus.py"/>
         <node name="thrust_proc" pkg="can_proc" type="thrust_proc.py"/>
         <node name="tool_proc" pkg="can_proc" type="tool_proc.py"/>
-<<<<<<< HEAD
-        <node name="ROV_main" pkg="control" type="ROV_main.py"/>
-        <node name="imu" pkg="i2c_proc" type="imu_proc.py"/>
-	<node name="i2c_com" pkg="i2c_com" type="i2c.py"/>
-        <node name="thrust_control" pkg="control" type="thrust_control.py"/>
-    </group>
-=======
         <node name="ROV_main" pkg="control" type="ROV_main.py"/> 
 	<node name="depth" pkg="i2c" type="depth_proc.py"/>
         <node name="imu" pkg="i2c" type="imu_proc.py"/>
@@ -18,6 +11,5 @@
 		
     </group>
     <node name="gp_listen" pkg="roslib_comm" type="gamepad_listener.py"/>
->>>>>>> origin/development
 
 </launch>

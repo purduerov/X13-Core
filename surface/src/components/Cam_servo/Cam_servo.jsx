@@ -5,7 +5,7 @@ import {servoSender, send} from './servoSender.js';
 export default class Cam_servo extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {angle: 30.0};
+        this.state = {angle: 100.0};
         this.handleChange=this.handleChange.bind(this);
         servoSender();
     }
@@ -20,7 +20,7 @@ export default class Cam_servo extends React.Component {
             <Container>
                 <label>Servo Angle: {this.state.angle}</label>
                 <br />
-                <input type="range" value={this.state.angle} min={0.0} max={180.0} step={5.0} onChange={this.handleChange} />
+                <input type="range" value={this.state.angle} min={12.0} max={120.0} step={5.0} onChange={this.handleChange} />
             </Container>
         )
     }
