@@ -104,5 +104,6 @@ def mainLoop(timesleep=1, bound=5, increment=1, mid=127, channel='can0', bustype
 
 if __name__ == "__main__":
     bound = 10 * 10
-    inc = 4
+    #bound = 50
+    inc = 2
     print(mainLoop(bound=bound, increment=inc, timesleep=.1))

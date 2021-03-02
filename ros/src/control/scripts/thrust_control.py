@@ -14,7 +14,7 @@ desired_p_unramped = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 locked_dims_list = [False, False, False, False, False, False]
 disabled_list = [False, False, False, False, False, False, False, False]
 inverted_list = [0, 0, 0, 0, 0, 0, 0, 0]
-MAX_CHANGE = .035
+MAX_CHANGE = .1
 # watch dog stuff
 last_packet_time = 0.0
 is_timed_out = False
@@ -37,6 +37,7 @@ def ramp(index):
     if (abs(desired_p_unramped[index] - desired_thrusters[index]) > MAX_CHANGE):
         if (desired_p_unramped[index] - desired_thrusters[index] > 0):
             desired_thrusters[index] += MAX_CHANGE
+            #print(index, "ramping", desired_thrusters[index])
         else:
             desired_thrusters[index] -= MAX_CHANGE
         return
@@ -72,14 +73,18 @@ def on_loop():
     # val = float of range(-1, 1)
     # if int8: (val * 127.5) - 0.5 will give range -128 to 127
     # if uint8: (val + 1) * 127.5 will give 0 to 255
-    tcm.hfl = int((pwm_values[0] + 1) * 127.5)
-    tcm.hfr = int((pwm_values[1] + 1) * 127.5)
-    tcm.hbr = int((pwm_values[2] + 1) * 127.5)
-    tcm.hbl = int((pwm_values[3] + 1) * 127.5)
-    tcm.vfl = int((pwm_values[4] + 1) * 127.5)
-    tcm.vfr = int((pwm_values[5] + 1) * 127.5)
-    tcm.vbr = int((pwm_values[6] + 1) * 127.5)
-    tcm.vbl = int((pwm_values[7] + 1) * 127.5)
+    thrusters = [127,127,127,127,127,127,127,127]
+    for i in range(0,8):
+        thrusters[i] = int((pwm_values[i] + 1) * 127.5)
+    tcm.thrusters = thrusters
+    # tcm.thrusters[0] = int((pwm_values[0] + 1) * 127.5)
+    # tcm.thrusters[0] = int((pwm_values[1] + 1) * 127.5)
+    # tcm.thrusters[0] = int((pwm_values[2] + 1) * 127.5)
+    # tcm.thrusters[0] = int((pwm_values[3] + 1) * 127.5)
+    # tcm.vfl = int((pwm_values[4] + 1) * 127.5)
+    # tcm.vfr = int((pwm_values[5] + 1) * 127.5)
+    # tcm.vbr = int((pwm_values[6] + 1) * 127.5)
+    # tcm.vbl = int((pwm_values[7] + 1) * 127.5)
 
     tsm = thrust_status_msg()
     tsm.status = pwm_values
@@ -99,7 +104,7 @@ if __name__ == "__main__":
 
     # initialize subscribers
     comm_sub = rospy.Subscriber('/thrust_command', thrust_command_msg, _pilot_command)
-    ramp_sub = rospy.Subscriber('/ramp', String, _updateRamp)
+    #ramp_sub = rospy.Subscriber('/ramp', String, _updateRamp)
     # controller_sub = rospy.Subscriber('/surface/controller',controller_msg, _teleop)
     #controller_sub = rospy.Subscriber('gamepad_listener', controller_msg, _teleop)
     # initialize publishers

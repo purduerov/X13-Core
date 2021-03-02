@@ -20,8 +20,9 @@ if __name__ == "__main__":
         channel = sys.argv[1]
     can_bus = can.interface.Bus(channel=channel, bustype='socketcan')
 
-    values = [0xFF, 0x00]
-    for _ in range(100):
+    values = [0x80,0x40,0x20,0x10,0x08,0x04,0x02,0x01,0x00]
+   # values = [0x20,0x08] 
+    for _ in range(100000000000):
     	for v in values:
             data_array = [0] * 8;
             for i in range(0,8):
