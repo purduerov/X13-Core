@@ -10,33 +10,62 @@ from std_msgs.msg import String
 from std_msgs.msg import Bool
 from shared_msgs.msg import rov_velocity_command
 from geometry_msgs.msg import Twist
+from std_msgs.msg import Empty
 
 from config import *
 
 pm_toggle = False
 gh_toggle = False
 
+SCALE_TRANSLATIONAL_X = 4.0
+SCALE_TRANSLATIONAL_Y = 4.0
+SCALE_TRANSLATIONAL_Z = 4.0
+
+SCALE_ROTATIONAL_X = 1.5
+SCALE_ROTATIONAL_Y = 1.5
+SCALE_ROTATIONAL_Z = 1.5
+
 def getMessage():
     global gamepad_state
 
     t = Twist()
 
-    t.linear.x = gamepad_state['LSY'] * SCALE_TRANSLATIONAL
-    t.linear.y = gamepad_state['LSX'] * SCALE_TRANSLATIONAL * SCALE_TRANSLATIONAL_MAGIC
-    t.linear.z = (gamepad_state['RT'] - gamepad_state['LT']) * SCALE_TRANSLATIONAL
+    t.linear.x = gamepad_state['LSY'] * SCALE_TRANSLATIONAL_X
+    t.linear.y = gamepad_state['LSX'] * SCALE_TRANSLATIONAL_Y
+    t.linear.z = (gamepad_state['RT'] - gamepad_state['LT']) * SCALE_TRANSLATIONAL_Z
 
     if gamepad_state['LB'] == 1:
-        x = 1 * SCALE_ROTATIONAL
+        x = 1 * SCALE_ROTATIONAL_X
     elif gamepad_state['RB'] == 1:
-        x = -1 * SCALE_ROTATIONAL
+        x = -1 * SCALE_ROTATIONAL_X
     else:
         x = 0.0
 
     t.angular.x = x
-    t.angular.y = gamepad_state['RSY'] * SCALE_ROTATIONAL
-    t.angular.z = -gamepad_state['RSX'] * SCALE_ROTATIONAL
+    t.angular.y = gamepad_state['RSY'] * SCALE_ROTATIONAL_Y
+    t.angular.z = -gamepad_state['RSX'] * SCALE_ROTATIONAL_Z
 
     return rov_velocity_command(t, 'gamepad', False, False)
+
+def changeConstants(event):
+    global SCALE_ROTATIONAL_X, SCALE_ROTATIONAL_Y, SCALE_ROTATIONAL_Z, SCALE_TRANSLATIONAL_X, SCALE_TRANSLATIONAL_Y, SCALE_TRANSLATIONAL_Z
+
+    rate = rospy.Rate(10)
+
+    while not rospy.is_shutdown():
+        arr = sys.stdin().readline().rstrip().split(',')
+        if len(arr):
+            print(arr)
+            arr = [float(v) for v in arr]
+
+            SCALE_TRANSLATIONAL_X = arr[0]
+            SCALE_TRANSLATIONAL_Y = arr[1]
+            SCALE_TRANSLATIONAL_Z = arr[2]
+
+            SCALE_ROTATIONAL_X = arr[3]
+            SCALE_ROTATIONAL_Y = arr[4]
+            SCALE_ROTATIONAL_Z = arr[5]
+        rate.sleep()
 
 def getPMState():
     global pm_toggle
@@ -120,6 +149,7 @@ if __name__ == '__main__':
     pub = rospy.Publisher('rov_velocity', rov_velocity_command, queue_size=10)
     pub_pm = rospy.Publisher('pm_cmd', Bool, queue_size=10)
     pub_gh = rospy.Publisher('gh_cmd', Bool, queue_size=10)
+    constants = rospy.Subscriber('gp_constants', Empty, changeConstants)
 
     try:
         talker()

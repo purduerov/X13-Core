@@ -1,6 +1,6 @@
 import React from 'react';
 import {Col, Row, Button} from 'react-bootstrap';
-import gamepadListen from './gamepadListen.js';
+import {gamepadListen, send} from './gamepadListen.js';
 import {ipcRenderer} from 'electron';
 import {monitor, kill} from './../../tools/procMonitor.js';
 
@@ -13,6 +13,7 @@ export default class Gamepad extends React.Component {
 		this.updateGamepad = this.updateGamepad.bind(this);
 		this.monitor = monitor.bind(this);
 		this.kill = kill.bind(this);
+		this.sendData = this.sendData.bind(this);
 
 		gamepadListen(this.updateGamepad, this.monitor);
 
@@ -21,6 +22,10 @@ export default class Gamepad extends React.Component {
 			this.kill();
 		});
 
+	}
+
+	sendData(data){
+		send(data);
 	}
 
 	updateGamepad(data){

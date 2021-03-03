@@ -49,15 +49,15 @@ export default class ThrusterInfo extends React.Component {
 
 	render() {
 		return (
-			<Container>
-                <ThrusterCircle thrust={this.state.thrust[0]} name='HFL' top={HFT} left={HL}/>
-                <ThrusterCircle thrust={this.state.thrust[1]} name='HFR' top={HFT} left={HR}/>
-                <ThrusterCircle thrust={this.state.thrust[2]} name='HBR' top={HBT} left={HR}/>
-                <ThrusterCircle thrust={this.state.thrust[3]} name='HBL' top={HBT} left={HL}/>
-                <ThrusterCircle thrust={this.state.thrust[4]} name='VFL' top={VFT} left={VL}/>
-                <ThrusterCircle thrust={this.state.thrust[5]} name='VFR' top={VFT} left={VR}/>
-                <ThrusterCircle thrust={this.state.thrust[6]} name='VBR' top={VBT} left={VR}/>
-                <ThrusterCircle thrust={this.state.thrust[7]} name='VBL' top={VBT} left={VL}/>
+			<Container style={{height: 350}}>
+                <ThrusterCircle thrust={this.state.thrust[4]} name='HFL' top={HFT} left={HL}/>
+                <ThrusterCircle thrust={this.state.thrust[7]} name='HFR' top={HFT} left={HR}/>
+                <ThrusterCircle thrust={this.state.thrust[6]} name='HBR' top={HBT} left={HR}/>
+                <ThrusterCircle thrust={this.state.thrust[5]} name='HBL' top={HBT} left={HL}/>
+                <ThrusterCircle thrust={this.state.thrust[0]} name='VFL' top={VFT} left={VL}/>
+                <ThrusterCircle thrust={this.state.thrust[3]} name='VFR' top={VFT} left={VR}/>
+                <ThrusterCircle thrust={this.state.thrust[2]} name='VBR' top={VBT} left={VR}/>
+                <ThrusterCircle thrust={this.state.thrust[1]} name='VBL' top={VBT} left={VL}/>
 			</Container>
 		);
 	}

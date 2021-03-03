@@ -17,13 +17,14 @@ export default class MainWindow extends Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {output: [], gamepadStyle: {backgroundColor: '#FF0000'}, activeCamera: 0};
+		this.state = {output: [], gamepadStyle: {backgroundColor: '#FF0000'}, activeCamera: 0, constants: [4.0, 4.0, 4.0, 1.0, 1.0, 1.0]};
 		this.gamepadStatusLogic = this.gamepadStatusLogic.bind(this);
 
 		this.setActiveCamera = this.setActiveCamera.bind(this);
 
 		this.roscore = null;
-		console.log(this.state.gamepadStyle);
+
+		this.gamepad = React.createRef();
 	}
 
 	pushData(data) {
@@ -45,6 +46,13 @@ export default class MainWindow extends Component {
 		});
 	}
 
+	handleConstants(e, a){
+		let st = this.state.constants;
+		st[a] = e.target.value;
+		this.setState({constants: st});
+		this.gamepad.current.sendData(this.state.constants);
+	}
+
 	render() {
 
 		return (
@@ -62,7 +70,7 @@ export default class MainWindow extends Component {
 							<Depth/>
 							<ThrustRamping/>
 							<Servo/>
-							<Gamepad status={this.gamepadStatusLogic}/>
+							<Gamepad ref={this.gamepad} status={this.gamepadStatusLogic}/>
 						</Col>
 
 						<Col xs={8} className='border mx-3'>
@@ -77,7 +85,12 @@ export default class MainWindow extends Component {
 
 						<Col className='border'>
 							<ThrusterInfo/>
-
+							<input type="range" value={this.state.constants[0]} min={0.0} max={10.0} step={0.1} onChange={(e) => {this.handleConstants(e, 0)}} />
+							<input type="range" value={this.state.constants[1]} min={0.0} max={10.0} step={0.1} onChange={(e) => {this.handleConstants(e, 1)}} />
+							<input type="range" value={this.state.constants[2]} min={0.0} max={10.0} step={0.1} onChange={(e) => {this.handleConstants(e, 2)}} />
+							<input type="range" value={this.state.constants[3]} min={0.0} max={2.0} step={0.1} onChange={(e) => {this.handleConstants(e, 3)}} />
+							<input type="range" value={this.state.constants[4]} min={0.0} max={2.0} step={0.1} onChange={(e) => {this.handleConstants(e, 4)}} />
+							<input type="range" value={this.state.constants[5]} min={0.0} max={2.0} step={0.1} onChange={(e) => {this.handleConstants(e, 5)}} />
 						</Col>
 					</Row>
 

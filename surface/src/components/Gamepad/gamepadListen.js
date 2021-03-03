@@ -1,7 +1,19 @@
 const { spawn } = require('child_process');
 const path = require('path');
 
-module.exports = function gamepadListen(connected, monitor) {
+var sender = null;
+
+export function send(data){
+    msg = ''
+    for(let i = 0; i < 6; i++){
+        msg += str(data[i])
+        if(i != 5) msg += ','
+    }
+    msg += '\n'
+    sender.stdin.write(msg);
+}
+
+export function gamepadListen(connected, monitor) {
     sender = spawn('python3', ['-u', path.resolve(__dirname, '../../../ros/src/gamepad/src/sender.py')]);
 
     monitor(sender);
