@@ -5,6 +5,7 @@ import './MainWindow.css';
 import Gamepad from './components/Gamepad/Gamepad.jsx';
 import Console from './components/Console/Console.jsx';
 import Cube from './components/Cube/Cube.jsx';
+import LinearGauge from './components/LinearGauge/LinearGauge.jsx';
 import Depth from './components/Depth/Depth.jsx';
 import ThrusterInfo from './components/ThrusterInfo/ThrusterInfo.jsx';
 import ThrustRamping from './components/ThrustRamping/ThrustRamping.jsx';
@@ -53,6 +54,7 @@ export default class MainWindow extends Component {
 							<Depth/>
 							<ThrustRamping/>
 							<Cam_servo />
+							<LinearGauge value={25}/>
 						</Col>
 
 						<Col xs={8} className='border mx-3'>
