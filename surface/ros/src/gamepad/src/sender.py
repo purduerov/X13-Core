@@ -6,11 +6,10 @@ import sys
 
 #ROS
 import rospy
-from std_msgs.msg import String
-from std_msgs.msg import Bool
+from std_msgs.msg import String, Bool, Empty
 from shared_msgs.msg import rov_velocity_command
 from geometry_msgs.msg import Twist
-from std_msgs.msg import Empty
+import socket, threading
 
 from config import *
 
@@ -47,25 +46,24 @@ def getMessage():
 
     return rov_velocity_command(t, 'gamepad', False, False)
 
-def changeConstants(event):
+def changeConstants():
     global SCALE_ROTATIONAL_X, SCALE_ROTATIONAL_Y, SCALE_ROTATIONAL_Z, SCALE_TRANSLATIONAL_X, SCALE_TRANSLATIONAL_Y, SCALE_TRANSLATIONAL_Z
 
-    rate = rospy.Rate(10)
-
+    conn, addr = cs.accept()
     while not rospy.is_shutdown():
-        arr = sys.stdin().readline().rstrip().split(',')
-        if len(arr):
-            print(arr)
-            arr = [float(v) for v in arr]
+        data = conn.recv(50)
+        print(data)
+        if not data:
+            break
+        arr = [float(d) for d in data.decode().split(',')]
+        print(arr)
+        SCALE_TRANSLATIONAL_X = arr[0]
+        SCALE_TRANSLATIONAL_Y = arr[1]
+        SCALE_TRANSLATIONAL_Z = arr[2]
 
-            SCALE_TRANSLATIONAL_X = arr[0]
-            SCALE_TRANSLATIONAL_Y = arr[1]
-            SCALE_TRANSLATIONAL_Z = arr[2]
-
-            SCALE_ROTATIONAL_X = arr[3]
-            SCALE_ROTATIONAL_Y = arr[4]
-            SCALE_ROTATIONAL_Z = arr[5]
-        rate.sleep()
+        SCALE_ROTATIONAL_X = arr[3]
+        SCALE_ROTATIONAL_Y = arr[4]
+        SCALE_ROTATIONAL_Z = arr[5]
 
 def getPMState():
     global pm_toggle
@@ -141,6 +139,10 @@ def talker():
 if __name__ == '__main__':
     global pub, pub_pm, pub_gh
 
+    cs = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    cs.bind((socket.gethostname(), 11001))
+    cs.listen(1)
+
     try:
         get_gamepad()
     except:
@@ -149,7 +151,8 @@ if __name__ == '__main__':
     pub = rospy.Publisher('rov_velocity', rov_velocity_command, queue_size=10)
     pub_pm = rospy.Publisher('pm_cmd', Bool, queue_size=10)
     pub_gh = rospy.Publisher('gh_cmd', Bool, queue_size=10)
-    constants = rospy.Subscriber('gp_constants', Empty, changeConstants)
+
+    threading.Thread(target=changeConstants).start()
 
     try:
         talker()
