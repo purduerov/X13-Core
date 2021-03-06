@@ -3,6 +3,7 @@
 import os
 import sys
 from subprocess import DEVNULL, STDOUT, check_call, PIPE, Popen
+import socket
 
 SURFACE_DIR = os.path.dirname(os.path.realpath(__file__))
 ROS_DIR = os.path.join(SURFACE_DIR, 'ros')
@@ -58,7 +59,6 @@ def develop():
     for p in procs:
         p.wait()
 
-
 def main():
     printc('Surface Launch', bc.OKBLUE)
     printc('===========================', bc.BOLD)
@@ -72,6 +72,13 @@ def main():
 
     shell_source('. {}'.format(os.path.join(ROS_DIR, 'devel/setup.sh')))
     shell_source('. {}'.format(os.path.abspath('{}/../ros/compros.sh'.format(SURFACE_DIR))))
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(('10.255.255.255', 1))
+    ip = s.getsockname()[0]
+    s.close()
+
+    os.environ.update({'ROS_IP': ip, 'ROS_HOSTNAME': ip})
+    printc('IP set to {}'.format(ip), bc.UNDERLINE)
 
     printc('Setting up frontend', bc.HEADER)
     os.chdir(SURFACE_DIR)
