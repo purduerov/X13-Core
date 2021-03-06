@@ -12,6 +12,7 @@ import Servo from './components/Servo/Servo.jsx';
 import roscore from './rosjs/roscore.js';
 import cleanEnv from '../electron/cleanEnv.js';
 import Camera from './components/Camera/Camera.jsx';
+import {connect, send} from './tools/ipc.js';
 
 export default class MainWindow extends Component {
 	constructor(props) {
@@ -24,7 +25,7 @@ export default class MainWindow extends Component {
 
 		this.roscore = null;
 
-		this.gamepad = React.createRef();
+		connect(11001);
 	}
 
 	pushData(data) {
@@ -50,7 +51,9 @@ export default class MainWindow extends Component {
 		let st = this.state.constants;
 		st[a] = e.target.value;
 		this.setState({constants: st});
-		this.gamepad.current.sendData(this.state.constants);
+
+		send(this.state.constants);
+		//Socket stuff here
 	}
 
 	render() {

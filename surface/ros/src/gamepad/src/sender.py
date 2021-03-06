@@ -51,7 +51,7 @@ def changeConstants():
 
     conn, addr = cs.accept()
     while not rospy.is_shutdown():
-        data = conn.recv(50)
+        data = conn.recv(1024)
         print(data)
         if not data:
             break
@@ -140,8 +140,8 @@ if __name__ == '__main__':
     global pub, pub_pm, pub_gh
 
     cs = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    cs.bind((socket.gethostname(), 11001))
-    cs.listen(1)
+    cs.bind(('127.0.0.1', 11001))
+    cs.listen(5)
 
     try:
         get_gamepad()
