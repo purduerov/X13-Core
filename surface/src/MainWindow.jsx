@@ -54,7 +54,6 @@ export default class MainWindow extends Component {
 							<Depth/>
 							<ThrustRamping/>
 							<Cam_servo />
-							<LinearGauge value={25}/>
 						</Col>
 
 						<Col xs={8} className='border mx-3'>
