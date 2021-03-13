@@ -1,0 +1,14 @@
+.thruster-container{
+    display: grid;
+    grid-template-rows: auto auto auto auto;
+    grid-template-columns: auto auto;
+    gap: 5px;
+}
+
+.thruster-left{
+    justify-self: start;
+}
+
+.thruster-right{
+    justify-self: end;
+}

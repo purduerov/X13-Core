@@ -18,12 +18,14 @@ function connect(port){
 }
 
 function send(arr){
-    let str = ''
-    for(let i = 0; i < arr.length; i++){
-        str += arr[i].toString() + ',';
-    }
-    str = str.slice(0, -1);
-    socket.write(str);
+    try{
+        let str = ''
+        for(let i = 0; i < arr.length; i++){
+            str += arr[i].toString() + ',';
+        }
+        str = str.slice(0, -1);
+        socket.write(str);
+    }catch(e){}
 }
 
 module.exports = {

@@ -9,14 +9,16 @@ export default function ThrustTweaker(){
     connect(11001);
 
     function handleConstants(e, id){
-        let c = constants;
+        let c = [...constants];
         c[id] = e.target.value;
-        send(c);
-        return c;
+        console.log(c);
+        console.log(constants);
+        setConstants(c);
+        send(constants);
     }
 
     function handleTranslation(e){
-        let c = constants;
+        let c = [...constants];
         for(let i = 0; i < 3; i++){
             c[i] = e.target.value;
         }
@@ -26,7 +28,7 @@ export default function ThrustTweaker(){
     }
 
     function handleRotation(e){
-        let c = constants;
+        let c = [...constants];
         for(let i = 3; i < 6; i++){
             c[i] = e.target.value;
         }
@@ -37,22 +39,23 @@ export default function ThrustTweaker(){
 
     return(
         <div className="thruster-container">
+            <b className="thruster-title">Thruster Power Tweaks</b>
             <label><b>Translation</b></label>
             <input type="range" value={globals[0]} min={0.0} max={10.0} step={0.1} onChange={(e) => {handleTranslation(e)}} />
-            <label>X Translation</label>
-            <input type="range" value={constants[0]} min={0.0} max={10.0} step={0.1} onChange={(e) => {setConstants(handleConstants(e, 0))}} />
-            <label>Y Translation</label>
-            <input type="range" value={constants[1]} min={0.0} max={10.0} step={0.1} onChange={(e) => {setConstants(handleConstants(e, 1))}} />
-            <label>Z Translation</label>
-            <input type="range" value={constants[2]} min={0.0} max={10.0} step={0.1} onChange={(e) => {setConstants(handleConstants(e, 2))}} />
+            <label>X Translation: {constants[0]}</label>
+            <input type="range" value={constants[0]} min={0.0} max={10.0} step={0.1} onChange={(e) => {handleConstants(e, 0)}} />
+            <label>Y Translation: {constants[1]}</label>
+            <input type="range" value={constants[1]} min={0.0} max={10.0} step={0.1} onChange={(e) => {handleConstants(e, 1)}} />
+            <label>Z Translation: {constants[2]}</label>
+            <input type="range" value={constants[2]} min={0.0} max={10.0} step={0.1} onChange={(e) => {handleConstants(e, 2)}} />
             <label><b>Rotation</b></label>
             <input type="range" value={globals[1]} min={0.0} max={2.0} step={0.1} onChange={(e) => {handleRotation(e)}} />
-            <label>X Rotation</label>
-            <input type="range" value={constants[3]} min={0.0} max={2.0} step={0.1} onChange={(e) => {setConstants(handleConstants(e, 3))}} />
-            <label>Y Rotation</label>
-            <input type="range" value={constants[4]} min={0.0} max={2.0} step={0.1} onChange={(e) => {setConstants(handleConstants(e, 4))}} />
-            <label>Z Rotation</label>
-            <input type="range" value={constants[5]} min={0.0} max={2.0} step={0.1} onChange={(e) => {setConstants(handleConstants(e, 5))}} />
+            <label>X Rotation: {constants[3]}</label>
+            <input type="range" value={constants[3]} min={0.0} max={2.0} step={0.1} onChange={(e) => {handleConstants(e, 3)}} />
+            <label>Y Rotation: {constants[4]}</label>
+            <input type="range" value={constants[4]} min={0.0} max={2.0} step={0.1} onChange={(e) => {handleConstants(e, 4)}} />
+            <label>Z Rotation: {constants[5]}</label>
+            <input type="range" value={constants[5]} min={0.0} max={2.0} step={0.1} onChange={(e) => {handleConstants(e, 5)}} />
         </div>
     );
 }

@@ -4,21 +4,9 @@ import ThrusterCircle from '../ThrusterCircle/ThrusterCircle.jsx';
 import thrusterListen from './thrusterListen.js';
 import {ipcRenderer} from 'electron';
 import {monitor, kill} from './../../tools/procMonitor.js';
+import './ThrusterInfo.css';
 
 const INIT_THRUST = 127;
-
-const T_OFF = 50;
-const L_OFF = 140;
-
-const HL = -130 + L_OFF;
-const HR = 60 + L_OFF;
-const VL = -90 + L_OFF;
-const VR = 20 + L_OFF;
-const HBT = 205 + T_OFF;
-const VBT = 125 + T_OFF;
-const HFT = -40 + T_OFF;
-const VFT = 40 + T_OFF;
-
 
 export default class ThrusterInfo extends React.Component {
 	constructor(props) {
@@ -49,16 +37,16 @@ export default class ThrusterInfo extends React.Component {
 
 	render() {
 		return (
-			<Container style={{height: 350}}>
-                <ThrusterCircle thrust={this.state.thrust[4]} name='HFL' top={HFT} left={HL}/>
-                <ThrusterCircle thrust={this.state.thrust[7]} name='HFR' top={HFT} left={HR}/>
-                <ThrusterCircle thrust={this.state.thrust[6]} name='HBR' top={HBT} left={HR}/>
-                <ThrusterCircle thrust={this.state.thrust[5]} name='HBL' top={HBT} left={HL}/>
-                <ThrusterCircle thrust={this.state.thrust[0]} name='VFL' top={VFT} left={VL}/>
-                <ThrusterCircle thrust={this.state.thrust[3]} name='VFR' top={VFT} left={VR}/>
-                <ThrusterCircle thrust={this.state.thrust[2]} name='VBR' top={VBT} left={VR}/>
-                <ThrusterCircle thrust={this.state.thrust[1]} name='VBL' top={VBT} left={VL}/>
-			</Container>
+			<div className="thruster-container">
+                <ThrusterCircle className="thruster-left" thrust={this.state.thrust[4]} name='HFL'/>
+                <ThrusterCircle className="thruster-right" thrust={this.state.thrust[7]} name='HFR'/>
+                <ThrusterCircle className="thruster-right" thrust={this.state.thrust[6]} name='HBR'/>
+                <ThrusterCircle className="thruster-left" thrust={this.state.thrust[5]} name='HBL'/>
+                <ThrusterCircle className="thruster-right" thrust={this.state.thrust[0]} name='VFL'/>
+                <ThrusterCircle className="thruster-left" thrust={this.state.thrust[3]} name='VFR'/>
+                <ThrusterCircle className="thruster-left" thrust={this.state.thrust[2]} name='VBR'/>
+                <ThrusterCircle className="thruster-right" thrust={this.state.thrust[1]} name='VBL'/>
+			</div>
 		);
 	}
 }
