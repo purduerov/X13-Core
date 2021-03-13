@@ -129,13 +129,9 @@ export default class Cube extends React.Component {
 
 		this.mount.appendChild(this.renderer.domElement);
 
-<<<<<<< HEAD
         this.updateImu([0, 0, 0]);
-    }
-=======
 		requestAnimationFrame(this.animate);
 	}
->>>>>>> surface-stephen
 
 	animate(){
 		this.renderScene();
@@ -159,11 +155,9 @@ export default class Cube extends React.Component {
 		});
 	}
 
-<<<<<<< HEAD
     renderScene() {
         this.renderer.render(this.scene, this.camera);
     }
-=======
 	animate() {
 		if(this.rov){
 			this.rov.rotation.x = (this.state.imu[0] / 180) * Math.PI - this.state.offset[0] + this.state.demoMode[0];
@@ -181,7 +175,6 @@ export default class Cube extends React.Component {
 	renderScene() {
 		this.renderer.render(this.scene, this.camera);
 	}
->>>>>>> surface-stephen
 
 	render() {
 		return (

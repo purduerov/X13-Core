@@ -8,13 +8,11 @@ export default function ThrustTweaker(){
 
     useEffect(() => {
         connect(11001);
-    }, []);    
+    }, []);
 
     function handleConstants(e, id){
         let c = [...constants];
-        c[id] = e.target.value;
-        console.log(c);
-        console.log(constants);
+        c[id] = parseFloat(e.target.value);
         setConstants(c);
         send(constants);
     }
@@ -22,20 +20,20 @@ export default function ThrustTweaker(){
     function handleTranslation(e){
         let c = [...constants];
         for(let i = 0; i < 3; i++){
-            c[i] = e.target.value;
+            c[i] = parseFloat(e.target.value);
         }
         setConstants(c);
-        setGlobals([e.target.value, globals[1]]);
+        setGlobals([parseFloat(e.target.value), globals[1]]);
         send(constants);
     }
 
     function handleRotation(e){
         let c = [...constants];
         for(let i = 3; i < 6; i++){
-            c[i] = e.target.value;
+            c[i] = parseFloat(e.target.value);
         }
         setConstants(c);
-        setGlobals([globals[0], e.target.value]);
+        setGlobals([globals[0], parseFloat(e.target.value)]);
         send(constants);
     }
 

@@ -40,12 +40,12 @@ export default class ThrusterInfo extends React.Component {
 			<div className="thruster-container">
                 <ThrusterCircle className="thruster-left" thrust={this.state.thrust[4]} name='HFL'/>
                 <ThrusterCircle className="thruster-right" thrust={this.state.thrust[7]} name='HFR'/>
-                <ThrusterCircle className="thruster-right" thrust={this.state.thrust[6]} name='HBR'/>
-                <ThrusterCircle className="thruster-left" thrust={this.state.thrust[5]} name='HBL'/>
-                <ThrusterCircle className="thruster-right" thrust={this.state.thrust[0]} name='VFL'/>
-                <ThrusterCircle className="thruster-left" thrust={this.state.thrust[3]} name='VFR'/>
-                <ThrusterCircle className="thruster-left" thrust={this.state.thrust[2]} name='VBR'/>
-                <ThrusterCircle className="thruster-right" thrust={this.state.thrust[1]} name='VBL'/>
+				<ThrusterCircle className="thruster-right" thrust={this.state.thrust[0]} name='VFL'/>
+				<ThrusterCircle className="thruster-left" thrust={this.state.thrust[3]} name='VFR'/>
+				<ThrusterCircle className="thruster-right" thrust={this.state.thrust[1]} name='VBL'/>
+				<ThrusterCircle className="thruster-left" thrust={this.state.thrust[2]} name='VBR'/>
+				<ThrusterCircle className="thruster-left" thrust={this.state.thrust[5]} name='HBL'/>
+                <ThrusterCircle className="thruster-right" thrust={this.state.thrust[6]} name='HBR'/>        
 			</div>
 		);
 	}

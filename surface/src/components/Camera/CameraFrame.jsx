@@ -5,7 +5,7 @@ import { Col, Container } from 'react-bootstrap';
 export default class CameraFrame extends React.Component {
 	constructor(props) {
 		super(props);
-
+		console.log(this.props.camera);
 		this.state={
 			img: this.props.camera.camFeed,
 			load_img: this.props.camera.placeholder,

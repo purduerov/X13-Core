@@ -25,7 +25,9 @@ function send(arr){
         }
         str = str.slice(0, -1);
         socket.write(str);
-    }catch(e){}
+    }catch(e){
+        console.log(e);
+    }
 }
 
 module.exports = {

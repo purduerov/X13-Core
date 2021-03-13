@@ -18,17 +18,11 @@ import Camera from './components/Camera/Camera.jsx';
 export default class MainWindow extends Component {
 	constructor(props) {
 		super(props);
-<<<<<<< HEAD
 
 		this.state = {output: [], gamepadStyle: {backgroundColor: '#FF0000'}, activeCamera: 0};
 		this.gamepadStatusLogic = this.gamepadStatusLogic.bind(this);
 
 		this.setActiveCamera = this.setActiveCamera.bind(this);
-=======
-		this.state = {depth: 0, output: [], statusUpdates: {'gamepad': false}};
-		this.gamepadStateUpdate = this.gamepadStateUpdate.bind(this);
->>>>>>> surface-stephen
-
 		this.roscore = null;
 	}
 
@@ -36,20 +30,19 @@ export default class MainWindow extends Component {
 		this.setState({ output: [...this.state.output, data] });
     }
 
-<<<<<<< HEAD
 	gamepadStatusLogic(state){
 		if(state){
 			this.setState({gamepadStyle: {backgroundColor: '#00FF00'}});
 		}else{
 			this.setState({gamepadStyle: {backgroundColor: '#FF0000'}});
 		}
-=======
+	}
+
 	gamepadStateUpdate(state){
 		console.log(state);
 		let st = this.state.statusUpdates;
 		st['gamepad'] = state;
 		this.setState({statusUpdates: st});
->>>>>>> surface-stephen
 	}
 
 	setActiveCamera(idx) {
@@ -72,9 +65,8 @@ export default class MainWindow extends Component {
 
 					<Row className='mx-0 px-3 pb-1 pt-3' style={{height: '70%'}}>
 						<Col className='border'>
-							<Camera mode="column_box" updateActiveCamera={this.setActiveCamera}/>
+							<Camera mode="column_box" ac={this.state.activeCamera} activeCamera={this.state.activeCamera} updateActiveCamera={this.setActiveCamera}/>
 							<Depth/>
-							<ThrustRamping/>
 							<Servo/>
 							<Gamepad ref={this.gamepad} status={this.gamepadStatusLogic}/>
 						</Col>
@@ -84,7 +76,6 @@ export default class MainWindow extends Component {
 							<img width='600px' height='500px' src="http://192.168.1.3:8090/test.mjpg"/>
 							<img width='600px' height='500px' src="http://192.168.1.4:8090/test.mjpg"/>
 							*/}
-
 
 							<Camera mode="main_window" activeCamera={this.state.activeCamera} updateActiveCamera={this.setActiveCamera}/>
 						</Col>
@@ -97,7 +88,7 @@ export default class MainWindow extends Component {
 
 					<Row className='mx-0 p-3 flex-grow-1'>
 						<Col className='border'>
-							<Console output={this.state.output}/>
+							<LinearGauge value={25}/>
 						</Col>
 					</Row>
 				</div>
