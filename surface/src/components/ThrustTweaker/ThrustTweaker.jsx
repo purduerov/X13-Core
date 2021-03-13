@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import './ThrustTweaker.css';
 import {connect, send} from '../../tools/ipc.js';
 
@@ -6,7 +6,9 @@ export default function ThrustTweaker(){
     const [constants, setConstants] = useState([4.0, 4.0, 4.0, 1.0, 1.0, 1.0]);
     const [globals, setGlobals] = useState([4.0, 1.0]);
 
-    connect(11001);
+    useEffect(() => {
+        connect(11001);
+    }, []);    
 
     function handleConstants(e, id){
         let c = [...constants];
