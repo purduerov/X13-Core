@@ -8,24 +8,22 @@ import Cube from './components/Cube/Cube.jsx';
 import Depth from './components/Depth/Depth.jsx';
 import ThrusterInfo from './components/ThrusterInfo/ThrusterInfo.jsx';
 import ThrustRamping from './components/ThrustRamping/ThrustRamping.jsx';
+import ThrustTweaker from './components/ThrustTweaker/ThrustTweaker.jsx';
 import Servo from './components/Servo/Servo.jsx';
 import roscore from './rosjs/roscore.js';
 import cleanEnv from '../electron/cleanEnv.js';
 import Camera from './components/Camera/Camera.jsx';
-import {connect, send} from './tools/ipc.js';
 
 export default class MainWindow extends Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {output: [], gamepadStyle: {backgroundColor: '#FF0000'}, activeCamera: 0, constants: [4.0, 4.0, 4.0, 1.0, 1.0, 1.0]};
+		this.state = {output: [], gamepadStyle: {backgroundColor: '#FF0000'}, activeCamera: 0};
 		this.gamepadStatusLogic = this.gamepadStatusLogic.bind(this);
 
 		this.setActiveCamera = this.setActiveCamera.bind(this);
 
 		this.roscore = null;
-
-		connect(11001);
 	}
 
 	pushData(data) {
@@ -45,15 +43,6 @@ export default class MainWindow extends Component {
 		this.setState({
 			activeCamera: idx
 		});
-	}
-
-	handleConstants(e, a){
-		let st = this.state.constants;
-		st[a] = e.target.value;
-		this.setState({constants: st});
-
-		send(this.state.constants);
-		//Socket stuff here
 	}
 
 	render() {
@@ -88,12 +77,7 @@ export default class MainWindow extends Component {
 
 						<Col className='border'>
 							<ThrusterInfo/>
-							<input type="range" value={this.state.constants[0]} min={0.0} max={10.0} step={0.1} onChange={(e) => {this.handleConstants(e, 0)}} />
-							<input type="range" value={this.state.constants[1]} min={0.0} max={10.0} step={0.1} onChange={(e) => {this.handleConstants(e, 1)}} />
-							<input type="range" value={this.state.constants[2]} min={0.0} max={10.0} step={0.1} onChange={(e) => {this.handleConstants(e, 2)}} />
-							<input type="range" value={this.state.constants[3]} min={0.0} max={2.0} step={0.1} onChange={(e) => {this.handleConstants(e, 3)}} />
-							<input type="range" value={this.state.constants[4]} min={0.0} max={2.0} step={0.1} onChange={(e) => {this.handleConstants(e, 4)}} />
-							<input type="range" value={this.state.constants[5]} min={0.0} max={2.0} step={0.1} onChange={(e) => {this.handleConstants(e, 5)}} />
+							<ThrustTweaker/>
 						</Col>
 					</Row>
 

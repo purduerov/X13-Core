@@ -1,0 +1,5 @@
+.thruster-container{
+    display: grid;
+    grid-auto-rows: auto;
+    grid-template-columns: auto auto;
+}
