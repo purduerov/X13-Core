@@ -5,6 +5,7 @@ import './MainWindow.css';
 import Gamepad from './components/Gamepad/Gamepad.jsx';
 import Console from './components/Console/Console.jsx';
 import Cube from './components/Cube/Cube.jsx';
+import LinearGauge from './components/LinearGauge/LinearGauge.jsx';
 import Depth from './components/Depth/Depth.jsx';
 import ThrusterInfo from './components/ThrusterInfo/ThrusterInfo.jsx';
 import ThrustRamping from './components/ThrustRamping/ThrustRamping.jsx';
@@ -17,11 +18,16 @@ import Camera from './components/Camera/Camera.jsx';
 export default class MainWindow extends Component {
 	constructor(props) {
 		super(props);
+<<<<<<< HEAD
 
 		this.state = {output: [], gamepadStyle: {backgroundColor: '#FF0000'}, activeCamera: 0};
 		this.gamepadStatusLogic = this.gamepadStatusLogic.bind(this);
 
 		this.setActiveCamera = this.setActiveCamera.bind(this);
+=======
+		this.state = {depth: 0, output: [], statusUpdates: {'gamepad': false}};
+		this.gamepadStateUpdate = this.gamepadStateUpdate.bind(this);
+>>>>>>> surface-stephen
 
 		this.roscore = null;
 	}
@@ -30,12 +36,20 @@ export default class MainWindow extends Component {
 		this.setState({ output: [...this.state.output, data] });
     }
 
+<<<<<<< HEAD
 	gamepadStatusLogic(state){
 		if(state){
 			this.setState({gamepadStyle: {backgroundColor: '#00FF00'}});
 		}else{
 			this.setState({gamepadStyle: {backgroundColor: '#FF0000'}});
 		}
+=======
+	gamepadStateUpdate(state){
+		console.log(state);
+		let st = this.state.statusUpdates;
+		st['gamepad'] = state;
+		this.setState({statusUpdates: st});
+>>>>>>> surface-stephen
 	}
 
 	setActiveCamera(idx) {

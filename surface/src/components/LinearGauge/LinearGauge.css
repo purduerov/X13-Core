@@ -1,0 +1,11 @@
+.val{
+    top: 15px;
+    position: absolute;
+    font-size: 15px;
+}
+
+.name{
+    left: 20px;
+    position: relative;
+    font-size: 15px;
+}
