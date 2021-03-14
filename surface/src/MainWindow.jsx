@@ -88,7 +88,7 @@ export default class MainWindow extends Component {
 
 					<Row className='mx-0 p-3 flex-grow-1'>
 						<Col className='border'>
-							<LinearGauge value={25}/>
+							
 						</Col>
 					</Row>
 				</div>

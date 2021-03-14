@@ -29,7 +29,7 @@ export default class Depth extends React.Component {
 
 	render() {
 		return (
-			<LinearGauge value={this.state.depth} name="DPTH"/>
+			<LinearGauge value={this.state.depth} name="DPTH" value_unit=" m" inverted={true}/>
 		);
 	}
 }

@@ -15,6 +15,7 @@ from config import *
 
 pm_toggle = False
 gh_toggle = False
+bs_toggle = False
 
 SCALE_TRANSLATIONAL_X = 4.0
 SCALE_TRANSLATIONAL_Y = 4.0
@@ -70,6 +71,11 @@ def getPMState():
 
     return Bool(pm_toggle)
 
+def getBSState():
+    global bs_toggle
+
+    return Bool(bs_toggle)
+
 def getGHState():
     global gh_toggle
 
@@ -97,7 +103,7 @@ def correct_raw(raw, abbv):
     return corrected
 
 def process_event(event):
-    global pm_toggle, gh_toggle
+    global pm_toggle, gh_toggle, bs_toggle
 
     if event.ev_type in ignore_events:
         return
@@ -110,6 +116,9 @@ def process_event(event):
         if event.code == 'BTN_EAST' and event.state:
             gh_toggle = not gh_toggle
 
+        if event.code == 'BTN_WEST' and event.state:
+            bs_toggle = not bs_toggle
+
     elif event.ev_type == EVENT_ABSOLUTE:
         gamepad_state[EVENTS[event.code]] = correct_raw(event.state, EVENTS[event.code])
     else:
@@ -120,6 +129,7 @@ def pub_data(event):
     pub.publish(getMessage())
     pub_pm.publish(getPMState())
     pub_gh.publish(getGHState())
+    pub_bs.publish(getBSState())
 
 def update_gamepad(event):
     try:
@@ -151,6 +161,7 @@ if __name__ == '__main__':
     pub = rospy.Publisher('rov_velocity', rov_velocity_command, queue_size=10)
     pub_pm = rospy.Publisher('pm_cmd', Bool, queue_size=10)
     pub_gh = rospy.Publisher('gh_cmd', Bool, queue_size=10)
+    pub_bs = rospy.Publisher('bs_cmd', Bool, queue_size=10)
 
     threading.Thread(target=changeConstants).start()
 

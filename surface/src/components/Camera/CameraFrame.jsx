@@ -34,7 +34,7 @@ export default class CameraFrame extends React.Component {
 
 			return (
 
-				<Container>
+				<div>
 					{(!loaded) && <img src={this.state.load_img} style={placeholderStyle}/>}
 					<img src={this.props.camera.camFeed}
 						 style={frameStyle}
@@ -42,14 +42,14 @@ export default class CameraFrame extends React.Component {
 						 ref={img => this.img = img}
 						 onError={() => this.img.src = this.props.camera.placeholder}
 						 onLoad={this.displayLoadingImage.bind(this)}/>
-				</Container>
+				</div>
 			);
 		} else {
 			// Type is selection menu, so it must be clickable.
 			return (
-				<Container onClick={this.props.handleClick(this.props.idx)}>
+				<div onClick={this.props.handleClick(this.props.idx)}>
 					{(!loaded) ? <img src={this.state.img} style={placeholderStyle}/> : {camImg}}
-				</Container>
+				</div>
 			);
 		}
 	}
