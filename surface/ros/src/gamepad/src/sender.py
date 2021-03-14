@@ -55,7 +55,7 @@ def changeConstants():
         print(data)
         if not data:
             break
-        arr = [float(d) for d in data.decode().split(',')]
+        arr = [float(d) for d in data.decode().split(';')[0].split(',')]
         print(arr)
         SCALE_TRANSLATIONAL_X = arr[0]
         SCALE_TRANSLATIONAL_Y = arr[1]

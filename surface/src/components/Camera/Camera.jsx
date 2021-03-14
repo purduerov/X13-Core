@@ -15,13 +15,6 @@ export default class Camera extends React.Component {
 			activeCamera: 0,
 		};
 
-		console.log('CAMERA');
-		console.log(this.state.cameras);
-		console.log(this.props.activeCamera);
-		console.log(this.props.ac);
-		console.log(this.props.updateActiveCamera);
-		console.log(this.state.cameras[this.props.activeCamera]);
-
 		this.handleClick = this.handleClick.bind(this);
 		this.handleKeyDown = this.handleKeyDown.bind(this);
 	}

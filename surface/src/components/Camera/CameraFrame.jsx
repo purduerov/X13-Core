@@ -48,7 +48,7 @@ export default class CameraFrame extends React.Component {
 			// Type is selection menu, so it must be clickable.
 			return (
 				<Container onClick={this.props.handleClick(this.props.idx)}>
-					{(!loaded) ? <img src={this.state.load_img} style={placeholderStyle}/> : {camImg}}
+					{(!loaded) ? <img src={this.state.img} style={placeholderStyle}/> : {camImg}}
 				</Container>
 			);
 		}

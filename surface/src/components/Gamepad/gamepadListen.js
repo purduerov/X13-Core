@@ -9,7 +9,7 @@ export function send(data){
         msg += str(data[i])
         if(i != 5) msg += ','
     }
-    msg += '\n'
+    msg += ';\n'
     sender.stdin.write(msg);
 }
 
