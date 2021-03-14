@@ -1,8 +1,8 @@
 import React from 'react';
-import {Container, Col, Row} from 'react-bootstrap';
 import attachDepthNode from './attachDepthNode.js';
 import {ipcRenderer} from 'electron';
 import {monitor, kill} from './../../tools/procMonitor.js';
+import LinearGauge from "../LinearGauge/LinearGauge.jsx";
 
 export default class Depth extends React.Component {
 	constructor(props) {
@@ -29,9 +29,7 @@ export default class Depth extends React.Component {
 
 	render() {
 		return (
-			<Container>
-                Depth: {this.state.depth}
-            </Container>
+			<LinearGauge value={this.state.depth} name="DPTH"/>
 		);
 	}
 }
