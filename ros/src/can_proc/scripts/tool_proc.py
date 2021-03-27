@@ -6,7 +6,8 @@ TOOLS_BOARD_ID = 0x204
 
 PM_BIT = 0b00001000
 #MANIPULATOR_CLOSE_BIT = 0b0000000
-GHOST_BIT = 0b11110111
+GHOST_BIT = 0b00100000
+BS_BIT = 0b00000010
 
 changed = False
 pseudo_lock = False
@@ -20,7 +21,8 @@ def message_received(msg):
     # data_list = [0] * 8
     pm = (msg.pm * PM_BIT)
     gt = (msg.ghost * GHOST_BIT)
-    cmd = pm | gt
+    bs = (msg.bs * BS_BIT)
+    cmd = pm | gt | bs
     # If we're doing this, we're getting rid of the rate
     # Pilots likely have a hard time beating 5 to 10 Hz...
     # We'll deal with spamming later
@@ -64,7 +66,7 @@ if __name__ == "__main__":
 
     # Publish to the CAN hardware transmitter
     pub = rospy.Publisher('can_tx', can_msg,
-                          queue_size=100)
+                          queue_size=10)
 
     sub = rospy.Subscriber('/tools_proc', tools_command_msg,
                            message_received)

@@ -32,13 +32,13 @@ def callback(requestedAngle):
     #change the angle to desired duty cycle
     duty = ((requestedAngle.data /180) * 11) + 1 #the range of the servo is dutycycle of 1-12 for some reason. So this formula should take in angle of 0-180 and transfer the value from 1-12
     #caps the duty cycle to the max angle values
-    if duty > 8.02:
-       duty = 8.02
-    elif duty < 2.02:
-       duty = 2.02
+    if duty > 6.5:  #8.02:
+       duty = 6.5
+    elif duty < 1.92:  #2.02:
+       duty = 1.92
     
     dutyDiff = abs(duty_prev - duty)
-    timeToWait = (12.5*(dutyDiff**0.515)+10)/1000
+    timeToWait = 0.03+(12.5*(dutyDiff**0.515)+10)/1000
 
     #only run if new number
     if (duty != duty_prev):
