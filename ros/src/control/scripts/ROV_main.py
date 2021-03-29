@@ -25,6 +25,7 @@ def onLoop():
     tools_command = tools_command_msg()
     tools_command.pm = controller_tools_command[0]
     tools_command.ghost = controller_tools_command[1]
+    tools_command.bs = controller_tools_command[2]
     tools_command_pub.publish(tools_command)
 
 def _velocity_input(msg):
@@ -62,11 +63,18 @@ def _gh_set_state(msg):
     else:
         controller_tools_command[1] = 0
 
+def _bs_set_state(msg):
+    if(msg.data):
+    	controller_tools_command[2] = 1
+    else:
+        controller_tools_command[2] = 0
+
 if __name__ == '__main__':
     rospy.init_node('ROV_main')
     velocity_sub = rospy.Subscriber('/rov_velocity', rov_velocity_command,_velocity_input)
     pm_sub = rospy.Subscriber('/pm_cmd',Bool, _pm_set_state)
     gh_sub = rospy.Subscriber('/gh_cmd',Bool, _gh_set_state)
+    bs_sub = rospy.Subscriber('/bs_cmd', Bool, _bs_set_state)
     #controller_sub = rospy.Subscriber('/gamepad_listener', controller_msg,_controller_input)
     thrust_command_pub = rospy.Publisher('/thrust_command', thrust_command_msg, queue_size=1)
     tools_command_pub = rospy.Publisher('/tools_proc', tools_command_msg, queue_size=10)
