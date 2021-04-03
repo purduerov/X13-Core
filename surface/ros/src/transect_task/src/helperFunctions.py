@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from sklearn.neighbors import KernelDensity
 from scipy.signal import argrelextrema
 
@@ -63,9 +63,9 @@ def save_test_image_at_sec(cap, sec):
         return False
 
 
-# ======================================================
-# Task-Related Computer Vision and Clustering Functions:
-# ======================================================
+# =======================================================
+# Task-Specific Computer Vision and Clustering Functions:
+# =======================================================
 def apply_hough_transform(img, edgy_img=None, show_all=False, threshold=100, debug=False):
     lines = None
     twist_info = None
