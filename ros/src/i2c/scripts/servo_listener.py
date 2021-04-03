@@ -13,7 +13,7 @@
 
 import rospy
 import message_filters
-from shared_msgs.msg import servo_cam, imu_msg
+from shared_msgs.msg import servo_msg, imu_msg
 
 
 def callback(servoStuff, imuStuff):
@@ -29,10 +29,10 @@ def listener():
     # name for our 'listener' node so that multiple listeners can
     # run simultaneously.
          
-    servoStuff = message_filters.Subscriber('servo', servo_cam)
+    servoStuff = message_filters.Subscriber('servo', servo_msg)
     imuStuff = message_filters.Subscriber('imu', imu_msg)
     
-    combined = message_filters.ApproximateTimeSynchronizer([servoStuff, imuStuff], 10, slop=1)
+    combined = message_filters.ApproximateTimeSynchronizer([servoStuff, imuStuff], 10, slop=10)
     combined.registerCallback(callback)
     rospy.spin() # spin() simply keeps python from exiting until this node is stopped
     
