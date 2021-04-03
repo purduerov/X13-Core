@@ -4,59 +4,32 @@ from shared_msgs.msg import can_msg, tools_command_msg
 
 TOOLS_BOARD_ID = 0x204
 
-PM_BIT = 0b00001000
-#MANIPULATOR_CLOSE_BIT = 0b0000000
-GHOST_BIT = 0b11110111
+#PM_BIT = 0b00001000
+#GHOST_BIT = 0b11110111
 
-changed = False
-pseudo_lock = False
+#Easier swapping if we plug solenoids in differently
+sol0 = 1 << 1
+sol1 = 1 << 3 
+sol2 = 1 << 5
+
+PM_BIT = sol1
+GHOST_BIT = sol2
+
 #8'bdd654321
+# ^^^ wtf is this, if no one can tell me it's getting deleted
 
 pub = None
 sub = None
 
 
 def message_received(msg):
-    # data_list = [0] * 8
-    pm = (msg.pm * PM_BIT)
-    gt = (msg.ghost * GHOST_BIT)
-    cmd = pm | gt
-    # If we're doing this, we're getting rid of the rate
-    # Pilots likely have a hard time beating 5 to 10 Hz...
-    # We'll deal with spamming later
+    cmd = (msg.pm * PM_BIT)
+    cmd |= (msg.ghost * GHOST_BIT)
+    
     cmsg = can_msg()
     cmsg.id = TOOLS_BOARD_ID
     cmsg.data = cmd
     pub.publish(cmsg)
-    # if cmsg_pm.data != pm:
-    #     cmsg_pm.data = pm
-    #     pub.publish(cmsg_pm)
-
-    # if cmsg_gt.data != gt:
-    #     cmsg_gt.data = gt
-    #     pub.publish(cmsg_gt)
-
-    # if cmsg_lb.data != lb:
-    #     cmsg_lb.data = lb
-    #     pub.publish(cmsg_lb)
-
-    # if cmsg_mk.data != mk:
-    #     cmsg_mk.data = mk
-    #     pub.publish(cmsg_mk)
-
-    # data_list[-1] = data_list[-1] | (msg.manipulator * PM_BIT)
-    # data_list[-1] = data_list[-1] | ((not msg.manipulator) * MANIPULATOR_CLOSE_BIT)
-    # data_list[-1] = data_list[-1] | (msg.groutTrout * GHOST_BIT)
-    # data_list[-1] = data_list[-1] | ((not msg.groutTrout) * GROUT_TROUT_CLOSE_BIT)
-    # data_list[-1] = data_list[-1] | (msg.liftBag * LIFT_BAG_OPEN_BIT)
-    # data_list[-1] = data_list[-1] | ((not msg.liftBag) * LIFT_BAG_CLOSE_BIT)
-    # data_list[-1] = data_list[-1] | (msg.marker * MARKER_OPEN_BIT)
-    # data_list[-1] = data_list[-1] | ((not msg.marker) * MARKER_CLOSE_BIT)
-    # data = bytearray(data_list)
-
-    # print data_list
-
-    # cmsg.data = data_list[-1]
 
 
 if __name__ == "__main__":
@@ -64,7 +37,7 @@ if __name__ == "__main__":
 
     # Publish to the CAN hardware transmitter
     pub = rospy.Publisher('can_tx', can_msg,
-                          queue_size=100)
+                          queue_size=10)
 
     sub = rospy.Subscriber('/tools_proc', tools_command_msg,
                            message_received)
