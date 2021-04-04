@@ -8,27 +8,29 @@ from scipy.signal import argrelextrema
 # =================
 # Image Processing:
 # =================
-def create_hue_edges(img):
+def create_hue_edges(img, show=True):
     hsv_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     hue = hsv_img.copy()
     hue[:, :, 1] = 255
     hue[:, :, 2] = 127
-    cv2.imshow('Current frame hue', cv2.cvtColor(hue, cv2.COLOR_HSV2BGR))
 
     edges = cv2.Canny(hue, 100, 150, apertureSize=3)
-    cv2.imshow('edges', edges)
+    if show:
+        cv2.imshow('Current frame hue', cv2.cvtColor(hue, cv2.COLOR_HSV2BGR))
+        cv2.imshow('edges', edges)
     return edges
 
 
-def create_value_edges(img):
+def create_value_edges(img, show=False):
     hsv_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     hue = hsv_img.copy()
     # remove all saturation
     hue[:, :, 1] = 0
-    cv2.imshow('Current frame value', cv2.cvtColor(hue, cv2.COLOR_HSV2BGR))
 
     edges = cv2.Canny(hue, 100, 150, apertureSize=3)
-    cv2.imshow('edges', edges)
+    if show:
+        cv2.imshow('Current frame value', cv2.cvtColor(hue, cv2.COLOR_HSV2BGR))
+        cv2.imshow('edges', edges)
     return edges
 
 
@@ -142,7 +144,7 @@ def apply_hough_transform(img, edgy_img=None, show_all=False, threshold=100, deb
             cv2.putText(img, text=f"Detected 0 lines",
                         org=(0, 30), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1,
                         color=(255, 255, 255), thickness=2)
-        return {"lines": lines, "big_lines": bigLines, "twist": twist_info}
+        return {"lines": lines, "big_lines": bigLines, "twist_info": twist_info}
 
 
 def big_lines_from_all_lines(lines, img_width=480, outer_bound=0, debug=False):

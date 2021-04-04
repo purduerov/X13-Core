@@ -15,8 +15,8 @@ now = datetime.now()
 date_time = now.strftime("%Y-%m-%d_%H:%M")
 save_path = f'output_{date_time}.avi'
 
-cap = cv2.VideoCapture("transectLineExample.mp4")
-
+# cap = cv2.VideoCapture("transectLineExample.mp4")
+cap = cv2.VideoCapture("http://192.168.1.3:8090/cam0.mjpg")
 fps = 24
 fourcc = cv2.VideoWriter_fourcc('M', 'P', 'E', 'G')
 
