@@ -7,6 +7,8 @@ import numpy as np
 import Complex_1
 import thrust_mapping
 import json
+from dynamic_reconfigure.server import Server
+from control.cfg import ROV_COMConfig
 
 desired_p = [0.0,0.0,0.0,0.0,0.0,0.0]
 desired_thrusters = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0,0.0]
@@ -91,6 +93,9 @@ def on_loop():
     # publish data
     thrust_pub.publish(tcm)
     status_pub.publish(tsm)
+def updateCOM(config, level):
+    rospy.loginfo("""Reconfigure Request: {ROV_X}, {ROV_Y}, {ROV_Z}""".format(**config))
+    return config
 
 
 if __name__ == "__main__":
@@ -100,6 +105,7 @@ if __name__ == "__main__":
 
     # initialize node and rate
     rospy.init_node('thrust_control')
+    srv = Server(ROV_COMConfig, updateCOM)
     rate = rospy.Rate(50)  # 20 hz
 
     # initialize subscribers
