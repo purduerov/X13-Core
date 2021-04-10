@@ -126,6 +126,7 @@ if __name__ == "__main__":
             #resultQ = quaternion_multiply(transQ, imuQ)
             R = Q * T1
             rads = euler_from_quaternion(Q.elements)
+            out_message.header.stamp = rospy.Time.now()
             out_message.gyro
             for i in range(0,3):
                 out_message.gyro[i] = rads[i] * 180.0 / 3.1415
