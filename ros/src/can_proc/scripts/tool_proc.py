@@ -12,6 +12,7 @@ sol0 = 1 << 1
 sol1 = 1 << 3 
 sol2 = 1 << 5
 
+SECONDARY_BIT = sol0
 PM_BIT = sol1
 GHOST_BIT = sol2
 
@@ -25,6 +26,7 @@ sub = None
 def message_received(msg):
     cmd = (msg.pm * PM_BIT)
     cmd |= (msg.ghost * GHOST_BIT)
+    cmd |= (msg.secondary * SECONDARY_BIT)
     
     cmsg = can_msg()
     cmsg.id = TOOLS_BOARD_ID

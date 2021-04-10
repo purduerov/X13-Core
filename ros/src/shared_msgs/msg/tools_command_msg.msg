@@ -1,4 +1,4 @@
 int8 pm
-int8 am
+int8 secondary
 int8 ghost
 
