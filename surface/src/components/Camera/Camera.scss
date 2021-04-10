@@ -1,0 +1,45 @@
+.grid-container{
+    display: grid;
+    flex: 1 1 auto;
+    grid-template-rows: 3fr 1fr;
+    grid-template-columns: 1fr;
+    justify-content: center;
+    gap: 5px;
+    padding: 10px;
+}
+
+.main-row{
+    display: flex;
+}
+
+.camera-row{
+    display: flex;
+    flex-flow: row;
+    gap: 5px;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.frame{
+    border-radius: 10px;
+    flex: 1 1 auto;
+    height: calc(50vh / 4);
+    width: 20%
+}
+
+.main-frame{
+    @extend .frame;
+    height: calc(100vh / 2);
+}
+
+
+
+.frame:hover{
+    border: 2px solid cyan;
+}
+ 
+.main-frame:hover{
+    border: none;
+}
+

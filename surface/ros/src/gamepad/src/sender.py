@@ -10,6 +10,7 @@ from std_msgs.msg import String, Bool, Empty
 from shared_msgs.msg import rov_velocity_command
 from geometry_msgs.msg import Twist
 import socket, threading
+import signal, os
 
 from config import *
 
@@ -24,6 +25,47 @@ SCALE_TRANSLATIONAL_Z = 4.0
 SCALE_ROTATIONAL_X = 1.5
 SCALE_ROTATIONAL_Y = 1.5
 SCALE_ROTATIONAL_Z = 1.5
+
+class SocketManager:
+    def __init__(self):
+        self.running = True
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.bind(('127.0.0.1', 11001))
+        self.sock.listen(5)
+        self.sock.settimeout(1)
+        self.connected = False
+
+        self.thread = threading.Thread(target=self.run)
+        self.thread.start()
+
+    def shutdown(self):
+        self.running = False
+        self.sock.close()
+        self.thread.join()
+
+    def run(self):
+        global SCALE_ROTATIONAL_X, SCALE_ROTATIONAL_Y, SCALE_ROTATIONAL_Z, SCALE_TRANSLATIONAL_X, SCALE_TRANSLATIONAL_Y, SCALE_TRANSLATIONAL_Z
+
+        while not self.connected and self.running:
+            try:
+                conn, addr = self.sock.accept()
+                self.connected = True
+            except:
+                pass
+        while self.running:
+            try:
+                data = conn.recv(1024)
+            except:
+                pass
+            if data:
+                arr = [float(d) for d in data.decode().split(';')[0].split(',')]
+                SCALE_TRANSLATIONAL_X = arr[0]
+                SCALE_TRANSLATIONAL_Y = arr[1]
+                SCALE_TRANSLATIONAL_Z = arr[2]
+
+                SCALE_ROTATIONAL_X = arr[3]
+                SCALE_ROTATIONAL_Y = arr[4]
+                SCALE_ROTATIONAL_Z = arr[5]
 
 def getMessage():
     global gamepad_state
@@ -46,25 +88,6 @@ def getMessage():
     t.angular.z = -gamepad_state['RSX'] * SCALE_ROTATIONAL_Z
 
     return rov_velocity_command(t, 'gamepad', False, False)
-
-def changeConstants():
-    global SCALE_ROTATIONAL_X, SCALE_ROTATIONAL_Y, SCALE_ROTATIONAL_Z, SCALE_TRANSLATIONAL_X, SCALE_TRANSLATIONAL_Y, SCALE_TRANSLATIONAL_Z
-
-    conn, addr = cs.accept()
-    while not rospy.is_shutdown():
-        data = conn.recv(1024)
-        print(data)
-        if not data:
-            break
-        arr = [float(d) for d in data.decode().split(';')[0].split(',')]
-        print(arr)
-        SCALE_TRANSLATIONAL_X = arr[0]
-        SCALE_TRANSLATIONAL_Y = arr[1]
-        SCALE_TRANSLATIONAL_Z = arr[2]
-
-        SCALE_ROTATIONAL_X = arr[3]
-        SCALE_ROTATIONAL_Y = arr[4]
-        SCALE_ROTATIONAL_Z = arr[5]
 
 def getPMState():
     global pm_toggle
@@ -125,7 +148,6 @@ def process_event(event):
         gamepad_state[EVENTS[event.code]] = event.state
 
 def pub_data(event):
-
     pub.publish(getMessage())
     pub_pm.publish(getPMState())
     pub_gh.publish(getGHState())
@@ -135,37 +157,43 @@ def update_gamepad(event):
     try:
         event = get_gamepad()[0]
         process_event(event)
-    except:
+    except Exception:
         rospy.signal_shutdown('no gamepad')
 
-def talker():
-    rospy.init_node('gp_pub', anonymous=True)
-
-    rospy.Timer(rospy.Duration(0.1), pub_data)
-    rospy.Timer(rospy.Duration(0.001), update_gamepad)
-
-    rospy.spin()
+def shutdown(sig, frame):
+    global data_thread, gamepad_thread, sock_thread
+    print('shutting down')
+    data_thread.shutdown()
+    gamepad_thread.shutdown()
+    #sock_thread.shutdown()
 
 if __name__ == '__main__':
-    global pub, pub_pm, pub_gh
+    global pub, pub_pm, pub_gh, data_thread, gamepad_thread, sock_thread
 
-    cs = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    cs.bind(('127.0.0.1', 11001))
-    cs.listen(5)
+    signal.signal(signal.SIGINT, shutdown)
+    signal.signal(signal.SIGTERM, shutdown)
 
     try:
         get_gamepad()
     except:
-        sys.exit(json.dumps({'gamepad': False}))
+        sys.exit(0)
+
+    rospy.init_node('gp_pub', anonymous=True)
 
     pub = rospy.Publisher('rov_velocity', rov_velocity_command, queue_size=10)
     pub_pm = rospy.Publisher('pm_cmd', Bool, queue_size=10)
     pub_gh = rospy.Publisher('gh_cmd', Bool, queue_size=10)
     pub_bs = rospy.Publisher('bs_cmd', Bool, queue_size=10)
 
-    threading.Thread(target=changeConstants).start()
+    #sock_thread = SocketManager()
 
-    try:
-        talker()
-    except rospy.ROSInterruptException:
-        pass
+    data_thread = rospy.Timer(rospy.Duration(0.1), pub_data)
+    gamepad_thread = rospy.Timer(rospy.Duration(0.001), update_gamepad)
+
+    print('ready')
+
+    rospy.spin()
+
+    data_thread.shutdown()
+    gamepad_thread.shutdown()
+    #sock_thread.shutdown()

@@ -23,8 +23,8 @@ can_pos = [5, 6, 7, 5, 6, 4, 5, 7]  # positions in data packet
 
 can_better_map = {
     0x201: [ 3, 7, 2, 6 ],
-    0x202: [ 8, 4, 5, 1 ],
-    0x203: [ 0, 0, 0, 0 ]
+    0x202: [ 0, 0, 0, 0 ],
+    0x203: [ 8, 4, 5, 1 ]
 }
 
 can_pow = [127,127,127,127,127,127,127,127]  # power of thrusters
