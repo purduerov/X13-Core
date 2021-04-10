@@ -12,6 +12,10 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   shared_msgs
   std_msgs
+  dynamic_reconfigure
+)
+generate_dynamic_reconfigure_options(
+    cfg/ROV_COM.cfg
 )
 
 ## System dependencies are found with CMake's conventions

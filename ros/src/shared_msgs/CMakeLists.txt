@@ -61,6 +61,7 @@ add_message_files(
    controller_msg.msg
    thrust_disable_inverted_msg.msg
    rov_velocity_command.msg
+   servo_msg.msg
  )
 
 ## Generate services in the 'srv' folder

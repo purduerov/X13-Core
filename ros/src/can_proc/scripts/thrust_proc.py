@@ -9,18 +9,6 @@ global can_pub
 can_ids = [0x201, 0x201, 0x203, 0x202, 0x202, 0x203, 0x203, 0x202]  # can IDs
 can_pos = [5, 6, 7, 5, 6, 4, 5, 7]  # positions in data packet
 
-#can_better_map = {
-#    0x201: [None, None, None, None],
-#    0x202: [0, 4, 7, 3],
-#    0x203: [5, 1, 3, 6]
-#   #0x203: [None,None,None,None]
-#}
-#can_better_map = {
-#    0x201: [ 7, 0, 0, 0 ],
-#    0x202: [ 0, 4, 5, 6 ],
-#    0x203: [ 0, 1, 2, 3 ],
-#}
-
 can_better_map = {
     0x201: [ 3, 7, 2, 6 ],
     0x202: [ 0, 0, 0, 0 ],
@@ -61,11 +49,11 @@ def message_received(msg):
 
     for cid in range(base_board, max_board + 1):
         data_list = 0
-        cur = can_better_map[cid]
+        board = can_better_map[cid]
 
-        for el in cur:
-            if el is not None:
-                data_list += can_pow[el - 1]
+        for thruster in board:
+            if thruster:
+                data_list += can_pow[thruster - 1]
             else:
                 data_list += 127
 
