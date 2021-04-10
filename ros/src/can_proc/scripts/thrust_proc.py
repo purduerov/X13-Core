@@ -9,14 +9,25 @@ global can_pub
 can_ids = [0x201, 0x201, 0x203, 0x202, 0x202, 0x203, 0x203, 0x202]  # can IDs
 can_pos = [5, 6, 7, 5, 6, 4, 5, 7]  # positions in data packet
 
+#can_better_map = {
+#    0x201: [None, None, None, None],
+#    0x202: [0, 4, 7, 3],
+#    0x203: [5, 1, 3, 6]
+#   #0x203: [None,None,None,None]
+#}
+#can_better_map = {
+#    0x201: [ 7, 0, 0, 0 ],
+#    0x202: [ 0, 4, 5, 6 ],
+#    0x203: [ 0, 1, 2, 3 ],
+#}
+
 can_better_map = {
-    0x201: [None, None, None, None],
-    0x202: [0, 4, 7, 3],
-    0x203: [5, 1, 3, 6]
-   #0x203: [None,None,None,None]
+    0x201: [ 3, 7, 2, 6 ],
+    0x202: [ 0, 0, 0, 0 ],
+    0x203: [ 8, 4, 5, 1 ]
 }
 
-can_pow = []  # power of thrusters
+can_pow = [127,127,127,127,127,127,127,127]  # power of thrusters
 can_last = {
     0x201: None,
     0x202: None,
@@ -34,15 +45,16 @@ def message_received(msg):
     rospy.loginfo('message received')
 
     # Seperate final_thrust_msg
-    del can_pow[:]
-    can_pow.append(msg.hfl)
-    can_pow.append(msg.hfr)
-    can_pow.append(msg.hbr)
-    can_pow.append(msg.hbl)
-    can_pow.append(msg.vfl)
-    can_pow.append(msg.vfr)
-    can_pow.append(msg.vbr)
-    can_pow.append(msg.vbl)
+    can_pow = msg.thrusters
+
+    # can_pow.append(msg.hfl)
+    # can_pow.append(msg.hfr)
+    # can_pow.append(msg.hbr)
+    # can_pow.append(msg.hbl)
+    # can_pow.append(msg.vfl)
+    # can_pow.append(msg.vfr)
+    # can_pow.append(msg.vbr)
+    # can_pow.append(msg.vbl)
 
     base_board = min(can_ids)
     max_board = max(can_ids)
@@ -53,7 +65,7 @@ def message_received(msg):
 
         for el in cur:
             if el is not None:
-                data_list += can_pow[el]
+                data_list += can_pow[el - 1]
             else:
                 data_list += 127
 

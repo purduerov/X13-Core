@@ -1,3 +1,7 @@
 ros/build
 ros/devel
+<<<<<<< HEAD
 .vscode
+=======
+*.swp
+>>>>>>> origin/surface-hunter
