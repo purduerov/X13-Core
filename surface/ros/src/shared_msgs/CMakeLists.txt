@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.0.2)
 project(shared_msgs)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
@@ -61,6 +61,7 @@ add_message_files(
    controller_msg.msg
    thrust_disable_inverted_msg.msg
    rov_velocity_command.msg
+   servo_msg.msg
  )
 
 ## Generate services in the 'srv' folder
@@ -116,6 +117,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES shared_msgs
+   CATKIN_DEPENDS message_runtime
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
 )

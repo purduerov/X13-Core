@@ -3,13 +3,14 @@
         <node name="can_node" pkg="can_com" type="can_bus.py"/>
         <node name="thrust_proc" pkg="can_proc" type="thrust_proc.py"/>
         <node name="tool_proc" pkg="can_proc" type="tool_proc.py"/>
-        <node name="ROV_main" pkg="control" type="ROV_main.py"/> 
+        <node name="ROV_main" pkg="control" type="ROV_main.py"/>
 	<node name="depth" pkg="i2c" type="depth_proc.py"/>
         <node name="imu" pkg="i2c" type="imu_proc.py" output="screen"/>
         <node name="servo" pkg="i2c" type="servo_listener.py"/>
-	
+
     <node name="thrust_control" pkg="control" type="thrust_control.py" output="screen"/>
     </group>
     <node name="gp_listen" pkg="roslib_comm" type="gamepad_listener.py"/>
+
     <node pkg="tf2_ros" type="static_transform_publisher" name="link1_broadcaster" args="0 0 0 0 0.7068252 0 0.7073883 imu base_link" />
 </launch>

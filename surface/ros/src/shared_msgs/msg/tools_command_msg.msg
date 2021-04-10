@@ -1,5 +1,3 @@
-int8 manipulator
-int8 groutTrout
-int8 liftBag
-int8 marker
-
+int8 pm
+int8 am
+int8 ghost
