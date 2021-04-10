@@ -3,38 +3,24 @@ import * as React from 'react';
 import Slider from '../../Slider/Slider';
 import './ThrustTweaker.scss';
 
-interface State{
-    values: Array<number>
+const updateValue = (key, value) => {
+    
 }
 
-export default class Servo extends React.Component<{}, State>{
-    constructor(props){
-        super(props);
+const Servo: React.FC = () => {
+    const [values, setValues] = React.useState([0, 0, 0, 0, 0, 0])
 
-        this.state = {
-            values: [0, 0, 0, 0, 0, 0]
-        }
-
-        this.updateValue = this.updateValue.bind(this);
-    }
-
-    updateValue(value){
-
-    }
-
-    render(){
-        return(
-            <div className='tweaker-container'>
-                <div className='tweaker-title'>Thrust Tweaker</div>
-                <div className='tweaker-subtitle'>Translation</div>
-                <div className='tweaker-subtitle'>Rotation</div>
-                <Slider callback={this.updateValue}/>
-                <Slider callback={this.updateValue}/>
-                <Slider callback={this.updateValue}/>
-                <Slider callback={this.updateValue}/>
-                <Slider callback={this.updateValue}/>
-                <Slider callback={this.updateValue}/>
-            </div>
-        )
-    }
+    return(
+        <div className='tweaker-container'>
+            <div className='tweaker-title'>Thrust Tweaker</div>
+            <div className='tweaker-subtitle'>Translation</div>
+            <div className='tweaker-subtitle'>Rotation</div>
+            <Slider callback={updateValue}/>
+            <Slider callback={updateValue}/>
+            <Slider callback={updateValue}/>
+            <Slider callback={updateValue}/>
+            <Slider callback={updateValue}/>
+            <Slider callback={updateValue}/>
+        </div>
+    )
 }

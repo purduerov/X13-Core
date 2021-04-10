@@ -8,44 +8,22 @@ interface Props{
     callback(val: number): void
 }
 
-interface State{
-    value: number
-}
 
-export default class Slider extends React.Component<Props, State> {
-    static defaultProps = {
-        vertical: false,
-        min: 0,
-        max: 100,
-        initVal: 50,
-        callback: () => {}
-    }
+const Slider: React.FC<Props> = ({min, max, callback}) => {
 
-    constructor(props) {
-        super(props);
+    const [value, setValue] = React.useState(0);
 
-        this.state = {
-            value: 50
-        }
-
-        this.handleChange = this.handleChange.bind(this);
-    }
-
-    handleChange(val) {
-        this.setState({value: val.target.value});
-        this.props.callback(this.state.value);
-    }
-
-    render() {
-        return (
-            <input type='range' 
-                min={this.props.min} 
-                max={this.props.max}
-                value={this.state.value}
-                className='slider'
-                onChange={this.handleChange}
-            />
-        )
-    }
-
+    return (
+        <input 
+            type='range' 
+            min={min} 
+            max={max}
+            value={value}
+            className='slider'
+            onChange={(e) => {
+                setValue(parseFloat(e.target.value));
+                callback(value);
+            }}
+        />
+    )
 }
