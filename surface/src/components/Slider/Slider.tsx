@@ -2,9 +2,9 @@ import * as React from 'react';
 import './Slider.scss';
 
 interface Props{
-    vertical: boolean
-    min: number
-    max: number
+    vertical?: boolean
+    min?: number
+    max?: number
     callback(val: number): void
 }
 
@@ -34,3 +34,7 @@ const Slider: React.FC<Props> = (props) => {
         />
     )
 }
+
+Slider.defaultProps = defaultProps;
+
+export default Slider;
