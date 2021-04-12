@@ -22,6 +22,8 @@ const ThrustTweaker: React.FC = () => {
                             let temp = [...values];
                             temp[idx] = val;
                             setValues(temp);
+
+                            ipcRenderer.send('gamepad_sock', values);
                         }
                     }/>
                 )     

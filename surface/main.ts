@@ -16,9 +16,11 @@ const nodeManager = async (win) => {
     process.env = env;
     gamepadListener(win);
     win.webContents.send(CATKIN_MAKE, log('catkin_make', 'Built and sourced'));
+    /*
     servo(win).catch(e => {
       console.log(e);
     });
+    */
     thrusters(win).catch(e => {
       console.log(e);
     });

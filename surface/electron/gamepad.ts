@@ -2,6 +2,10 @@ import path from 'path';
 import {spawn} from 'child_process';
 import msg from '../src/components/Log/LogItem';
 import {GAMEPAD} from '../src/components/Log/channels';
+import net from 'net';
+import { ipcMain } from 'electron';
+
+let socket = new net.Socket();
 
 let timeout = 0;
 
@@ -27,6 +31,26 @@ export async function gamepadListener(win) {
         console.log(data.toString());
         if(`${data}`.includes('ready')){
             win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Gamepad connected'));
+            socket = net.connect(11001, 'localhost', () => {
+                win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket connected'));
+            })
+
+            socket.on('error', (err) => {
+                win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket error'));
+            })
+
+            ipcMain.on('gamepad_sock', (e, arr) => {
+                try{
+                    let str = ''
+                    for(let i = 0; i < arr.length; i++){
+                        str += arr[i].toString() + ',';
+                    }
+                    str = str.slice(0, -1);
+                    socket.write(str);
+                }catch(e){
+                    win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket write error'));
+                }
+            })
         }
     })
 

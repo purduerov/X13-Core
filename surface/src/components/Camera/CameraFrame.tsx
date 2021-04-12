@@ -34,8 +34,13 @@ export default class CameraFrame extends React.Component<Props, State> {
 	}
 
 	imageLoad(){
-		this.setState({loaded: true});
+		this.props.handleClick(this.props.index);
+		this.setState({
+			img: this.props.camera.feed
+		})
 	}
+
+
 
 	render() {
 		return (
@@ -43,8 +48,9 @@ export default class CameraFrame extends React.Component<Props, State> {
 				className={this.props.type == 'main' ? 'main-frame' : 'frame'}
 				alt="Image not found"
 				onError={this.imageError}
-				onLoad={this.imageLoad}
-				onClick={this.props.type == 'secondary' ? () => this.props.handleClick(this.props.index) : () => {}}/>
+				onClick={this.props.type == 'secondary' ? () => this.imageLoad() : () => {this.setState({
+					img: this.props.camera.feed
+				})}}/>
 		);
 	}
 }

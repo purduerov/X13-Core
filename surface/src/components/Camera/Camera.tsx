@@ -5,7 +5,8 @@ import cameras from './camera.json';
 import './Camera.scss';
 
 interface State{
-	activeCamera: number
+	activeCamera: number,
+	selected: any
 }
 
 export default class Camera extends React.Component<{}, State> {
@@ -14,6 +15,7 @@ export default class Camera extends React.Component<{}, State> {
 
 		this.state = {
 			activeCamera: 0,
+			selected: cameras[0]
 		};
 
 		this.handleClick = this.handleClick.bind(this);
@@ -32,21 +34,23 @@ export default class Camera extends React.Component<{}, State> {
 		key = parseInt(key);
 		if ([1,2,3,4].includes(key)) {
 			this.setState({
-				activeCamera: key - 1
+				activeCamera: key - 1,
+				selected: cameras[key - 1]
 			});
 		}
 	}
 
 	handleClick(idx) {
 		this.setState({
-			activeCamera: idx - 1
+			activeCamera: idx - 1,
+			selected: cameras[idx - 1]
 		});
 	}
 	render() {
 		return(
 			<div className='grid-container'>
 				<div className='main-row'>
-					<CameraFrame type='main' handleClick={this.handleClick} camera={cameras[this.state.activeCamera]} />
+					<CameraFrame type='main' handleClick={() => {}} camera={this.state.selected} />
 				</div>
 				<div className='camera-row'>
 					{cameras.map((camera, idx) => {
