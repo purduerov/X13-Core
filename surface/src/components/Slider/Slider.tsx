@@ -5,6 +5,7 @@ interface Props{
     vertical?: boolean
     min?: number
     max?: number
+    step?: number
     callback(val: number): void
 }
 
@@ -12,6 +13,7 @@ const defaultProps: Props = {
     vertical: false,
     min: 0,
     max: 100,
+    step: 1,
     callback: (_) => {}
 }
 
@@ -26,6 +28,7 @@ const Slider: React.FC<Props> = (props) => {
             min={props.min} 
             max={props.max}
             value={value}
+            step={props.step}
             className='slider'
             onChange={(e) => {
                 setValue(parseFloat(e.target.value));

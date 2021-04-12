@@ -165,7 +165,7 @@ def shutdown(sig, frame):
     print('shutting down')
     data_thread.shutdown()
     gamepad_thread.shutdown()
-    #sock_thread.shutdown()
+    sock_thread.shutdown()
 
 if __name__ == '__main__':
     global pub, pub_pm, pub_gh, data_thread, gamepad_thread, sock_thread
@@ -185,7 +185,7 @@ if __name__ == '__main__':
     pub_gh = rospy.Publisher('gh_cmd', Bool, queue_size=10)
     pub_bs = rospy.Publisher('bs_cmd', Bool, queue_size=10)
 
-    #sock_thread = SocketManager()
+    sock_thread = SocketManager()
 
     data_thread = rospy.Timer(rospy.Duration(0.1), pub_data)
     gamepad_thread = rospy.Timer(rospy.Duration(0.001), update_gamepad)
@@ -196,4 +196,4 @@ if __name__ == '__main__':
 
     data_thread.shutdown()
     gamepad_thread.shutdown()
-    #sock_thread.shutdown()
+    sock_thread.shutdown()
