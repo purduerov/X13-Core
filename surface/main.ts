@@ -14,7 +14,7 @@ const nodeManager = async (win) => {
   });
   setupRos().then((env) => {
     process.env = env;
-    gamepadListener(win);
+    //gamepadListener(win);
     win.webContents.send(CATKIN_MAKE, log('catkin_make', 'Built and sourced'));
     /*
     servo(win).catch(e => {
