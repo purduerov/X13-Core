@@ -6,38 +6,35 @@ import Camera from './components/Camera/Camera';
 import ThrustTweaker from './components/Thrusters/Tweaker/ThrustTweaker';
 import IMU from './components/IMU/IMU';
 
-export default class MainWindow extends React.Component<{}, {}> {
-    constructor(props){
-        super(props);
-    }
 
-    render(){
-        return(
-            <main>
-                <div className="left-column">
+const MainWindow: React.FC = () => {
+    return(
+        <main>
+            <div className="left-column">
 
-                    <Servo/>
-                    <ThrustTweaker/>
+                <Servo/>
+                <ThrustTweaker/>
 
-                </div>
-                <div className="center-column">
+            </div>
+            <div className="center-column">
 
-                    <Camera/>
+                <Camera/>
 
-                </div>
-                <div className="right-column">
+            </div>
+            <div className="right-column">
 
-                    <ThrusterInfo/>
-                    <IMU/>
+                <ThrusterInfo/>
+                <IMU/>
 
-                </div>
+            </div>
 
-                <div className="bottom-column">
-                    
-                    <Log/>
+            <div className="bottom-column">
+                
+                <Log/>
 
-                </div>
-            </main>
-        )
-    }
+            </div>
+        </main>
+    )
 }
+
+export default MainWindow;
