@@ -1,5 +1,4 @@
-#! /usr/bin/python3
-
+#! /usr/bin/env python3
 
 #Notes:
 #This scripts takes an input of 0-180 degrees from the test servo publisher node
@@ -9,43 +8,6 @@
 #that's not mathmatically correct but it works so eh
 #duty cycle(6) for in the middle. duty cycle(0) is off
 #for this inclosure the input can be 12 to 120 degrees. the code will automatically make these the max values
-
-
-import rospy
-import message_filters
-from shared_msgs.msg import servo_msg, imu_msg
-
-
-def callback(servoStuff, imuStuff):
-    print(servoStuff)
-    print(imuStuff)
-    #rospy.loginfo(rospy.get_caller_id() + 'I heard %s', servo_cam.data)
-
-def listener():
-
-    # In ROS, nodes are uniquely named. If two nodes with the same
-    # name are launched, the previous one is kicked off. The
-    # anonymous=True flag means that rospy will choose a unique
-    # name for our 'listener' node so that multiple listeners can
-    # run simultaneously.
-         
-    servoStuff = message_filters.Subscriber('servo', servo_msg)
-    imuStuff = message_filters.Subscriber('imu', imu_msg)
-    
-    combined = message_filters.ApproximateTimeSynchronizer([servoStuff, imuStuff], 10, slop=10)
-    combined.registerCallback(callback)
-    rospy.spin() # spin() simply keeps python from exiting until this node is stopped
-    
-    print("shutting down servo node")
-
-   
-
-
-if __name__ == '__main__':
-    rospy.init_node('servo_control_node', anonymous=True)
-    listener()
-    
-'''
 
 import rospy
 from std_msgs.msg import Float32
@@ -70,9 +32,9 @@ def callback(requestedAngle):
     #change the angle to desired duty cycle
     duty = ((requestedAngle.data /180) * 11) + 1 #the range of the servo is dutycycle of 1-12 for some reason. So this formula should take in angle of 0-180 and transfer the value from 1-12
     #caps the duty cycle to the max angle values
-    if duty > 8.02:
+    if duty > 18.02:
        duty = 8.02
-    elif duty < 2.02:
+    elif duty < 0.02:
        duty = 2.02
     
     dutyDiff = abs(duty_prev - duty)
@@ -108,4 +70,4 @@ def listener():
 if __name__ == '__main__':
     #subscribe to the can hardware transmitter
     listener()
-'''
+
