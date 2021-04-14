@@ -1,2 +1,3 @@
 .catkin_workspace
 *.swp
+**/__pycache__
