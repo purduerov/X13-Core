@@ -7,6 +7,14 @@ TOOLS_BOARD_ID = 0x204
 #PM_BIT = 0b00001000
 #GHOST_BIT = 0b11110111
 
+#=============================
+#Grant told me to put it here, don't delete yet
+#yeet - green
+#am - brown
+#pm - blue
+#bs - yello
+#=============================
+
 #Easier swapping if we plug solenoids in differently
 sol0 = 1 << 1
 sol1 = 1 << 3 
