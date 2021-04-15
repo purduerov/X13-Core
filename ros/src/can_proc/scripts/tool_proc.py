@@ -7,12 +7,23 @@ TOOLS_BOARD_ID = 0x204
 #PM_BIT = 0b00001000
 #GHOST_BIT = 0b11110111
 
+BLUE = 1 << 1
+BROWN = 1 << 2
+YELLOW = 1 << 3
+GREEN = 1 << 4
+WHITE = 1 << 5
+
 #=============================
 #Grant told me to put it here, don't delete yet
 #yeet - green
 #am - brown
 #pm - blue
 #bs - yello
+#blue - 0b00000010
+#brown - 0b00000100
+#yellow - 0b00001000
+#green - 0b00010000
+#white - 0b00100000
 #=============================
 
 #Easier swapping if we plug solenoids in differently
@@ -32,9 +43,9 @@ sub = None
 
 
 def message_received(msg):
-    cmd = (msg.pm * PM_BIT)
-    cmd |= (msg.ghost * GHOST_BIT)
-    cmd |= (msg.secondary * SECONDARY_BIT)
+    cmd = (msg.pm * BLUE)
+    cmd |= (msg.ghost * GREEN)
+    cmd |= (msg.secondary * YELLOW)
     
     cmsg = can_msg()
     cmsg.id = TOOLS_BOARD_ID
