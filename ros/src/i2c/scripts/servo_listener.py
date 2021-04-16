@@ -17,11 +17,14 @@
 
 
 #import statements
-##import RPi.GPIO as GPIO #imports the standard Raspberry Pi GPIO library
+import RPi.GPIO as GPIO #imports the standard Raspberry Pi GPIO library
 import rospy
 from time import sleep #imports sleep (aka waiting or pause) into the program
 import message_filters
 from shared_msgs.msg import servo_msg, imu_msg
+
+MAX_ANGLE = 98
+MIN_ANGLE = 20
 
 #Coverts angle to duty cycle, need to update values here
 def angleToDuty(angle): 
@@ -43,7 +46,6 @@ sleep(0.04) #max time delay
 p.ChangeDutyCycle(0)
 
 def callback(servoStuff, imuStuff):
-    #print(servoStuff)
     #print(imuStuff)
     global angle_prev
     global duty_prev
@@ -53,20 +55,20 @@ def callback(servoStuff, imuStuff):
 
     if(servoStuff.servo_lock_status == True):
         if(lockSet == 0):
-            imuPitchRef = imuStuff.gyro[1]
+            imuPitchRef = imuStuff.gyro[2]
             lockSet = 1
             print(f"lock has been set. imupitchRef = {imuPitchRef}")
-        imuPitchDiff = imuPitchRef - imuStuff.gyro[1] #might have to switch this to be the other way around
+        imuPitchDiff = imuStuff.gyro[2] - imuPitchRef #might have to switch this to be the other way around
         print(f'imuPitchDiff has been found = {imuPitchDiff}')
     else:
         lockSet = 0
         print("lock has been unset")
 
     adjustedAngle = servoStuff.angle + imuPitchDiff
-    if adjustedAngle > 180:
-        adjustedAngle = 180
-    elif adjustedAngle < 0:
-        adjustedAngle = 0
+    if adjustedAngle > MAX_ANGLE:
+        adjustedAngle = MAX_ANGLE
+    elif adjustedAngle < MIN_ANGLE:
+        adjustedAngle = MIN_ANGLE
     
     if (adjustedAngle != angle_prev):
         adjustedDuty = angleToDuty(adjustedAngle)
@@ -99,9 +101,9 @@ def listener():
     # anonymous=True flag means that rospy will choose a unique
     # name for our 'listener' node so that multiple listeners can
     # run simultaneously.
-         
+    print("starting")     
     servoStuff = message_filters.Subscriber('ServoAngles', servo_msg)
-    imuStuff = message_filters.Subscriber('IMUvalues', imu_msg)
+    imuStuff = message_filters.Subscriber('imu', imu_msg)
     
     combined = message_filters.ApproximateTimeSynchronizer([servoStuff, imuStuff], 1, slop=10000)
     combined.registerCallback(callback)

@@ -10,7 +10,7 @@ def talker():
     rate = rospy.Rate(10) # 10hz
     while not rospy.is_shutdown():
         servoCam = servo_msg()
-        servoCam.angle =  float(input("Insert desired angle: "))
+        servoCam.angle = float(input("Insert desired angle: "))
         servoCam.servo_lock_status = False
         servoCam.header.stamp = rospy.Time.now()
         servoCam.header.frame_id = "/ServoTest"
