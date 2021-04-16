@@ -2,4 +2,15 @@
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: repeat(4, 1fr);
+    gap: 5px;
+}
+
+.compensator-amount{
+    width: 100%;
+    text-align: center;
+}
+
+.compensator-title{
+    @extend .compensator-amount;
+    border-bottom: solid;
 }

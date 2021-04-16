@@ -1,13 +1,16 @@
 import { ipcRenderer } from 'electron';
 import * as React from 'react';
 import Slider from '../Slider/Slider';
+import './Compensator.scss';
+
+const names = ['X', 'Y', 'Z'];
 
 const Compensator: React.FC = () => {
     const [values, setValues] = React.useState<Array<number>>([0.0, 0.0, 0.0])
 
     return(
         <div className='compensator-container'>
-            <h3>Buoyancy</h3>
+            <div className='compensator-title'>Buoyancy</div>
             {values.map((val, idx) => {
                 return(
                     <Slider
@@ -19,7 +22,7 @@ const Compensator: React.FC = () => {
 
                             ipcRenderer.send('')
                         }}
-                    />
+                    /> 
                 )
             })}
         </div>
