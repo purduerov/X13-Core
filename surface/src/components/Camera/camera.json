@@ -6,7 +6,7 @@
 	},
 	{
 		"name": "Camera 2",
-		"feed": "http://192.168.1.4:8090/cam1",
+		"feed": "http://192.168.1.3:8090/cam1",
 		"placeholder": "./img/test_cam2.png"
 	},
 	{
