@@ -10,7 +10,8 @@ const Servo: React.FC = () => {
         <div className='servo-container'>
             <div className='servo-title'>Camera Angle</div>
             <Slider
-                callback={(val) => {
+                value = {value}
+                callback = {(val) => {
                     setValue(val);
                     ipcRenderer.send('servo_send');
                 }}

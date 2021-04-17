@@ -16,9 +16,10 @@ const ThrustTweaker: React.FC = () => {
             <div className='tweaker-title'>Thrust Tweaker</div>
             <div className='tweaker-subtitle-left'>Translation</div>
             <div className='tweaker-subtitle-right'>Rotation</div>
-            {values.map((_, idx) => {
+            {values.map((v, idx) => {
                 return(
                     <Slider 
+                        value={v}
                         key={idx} 
                         max={idx < 3 ? TRANSLATION_MAX : ROTATION_MAX} 
                         step={idx < 3 ? TRANSLATION_STEP : ROTATION_STEP}

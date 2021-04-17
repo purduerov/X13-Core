@@ -34,7 +34,7 @@ const ThrusterCircle: React.FC<Props> = (props) => {
         <div className={props.className}>
             <div className='active-border' style={angle <= 180 ? l180(angle) : g180(angle, props.thrust)}>
                 <div className='circle'>
-                    <span className='val 360'>{angle / 360 * 100}%</span>
+                    <span className='val 360'>{Math.round(angle / 360 * 100)}%</span>
                     <br/>
                     <span className='val 360'>{props.name}</span>
                 </div>

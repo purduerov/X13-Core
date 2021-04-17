@@ -7,6 +7,7 @@ interface Props{
     max?: number
     step?: number
     callback(val: number): void
+    value: number
 }
 
 const defaultProps: Props = {
@@ -14,7 +15,8 @@ const defaultProps: Props = {
     min: 0,
     max: 100,
     step: 1,
-    callback: (_) => {}
+    callback: (_) => {},
+    value: 0
 }
 
 
@@ -27,12 +29,11 @@ const Slider: React.FC<Props> = (props) => {
             type='range' 
             min={props.min} 
             max={props.max}
-            value={value}
+            value={props.value}
             step={props.step}
             className='slider'
             onChange={(e) => {
-                setValue(parseFloat(e.target.value));
-                props.callback(value);
+                props.callback(parseFloat(e.target.value));
             }}
         />
     )

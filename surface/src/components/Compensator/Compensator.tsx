@@ -14,7 +14,11 @@ const Compensator: React.FC = () => {
             {values.map((val, idx) => {
                 return(
                     <Slider
+                        value={val}
                         key={idx}
+                        min={-1.0}
+                        max={1.0}
+                        step={0.1}
                         callback={(val) => {
                             let temp = [...values];
                             temp[idx] = val;
