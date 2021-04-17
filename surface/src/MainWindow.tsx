@@ -6,6 +6,7 @@ import Camera from './components/Camera/Camera';
 import ThrustTweaker from './components/Thrusters/Tweaker/ThrustTweaker';
 import IMU from './components/IMU/IMU';
 import Compensator from './components/Compensator/Compensator';
+import CoM from './components/CoM/CoM';
 
 
 const MainWindow: React.FC = () => {
@@ -16,6 +17,7 @@ const MainWindow: React.FC = () => {
                 <Servo/>
                 <ThrustTweaker/>
                 <Compensator/>
+                <CoM/>
 
             </div>
             <div className="center-column">

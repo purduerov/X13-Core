@@ -1,0 +1,16 @@
+.com-container{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 1fr);
+    gap: 5px;
+}
+
+.com-amount{
+    width: 100%;
+    text-align: center;
+}
+
+.com-title{
+    @extend .com-amount;
+    border-bottom: solid;
+}
