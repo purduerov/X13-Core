@@ -127,6 +127,7 @@ if __name__ == "__main__":
             R = Q * T1
             rads = euler_from_quaternion(Q.elements)
             out_message.header.stamp = rospy.Time.now()
+            out_message.header.frame_id = "/IMU_euler"
             out_message.gyro
             for i in range(0,3):
                 out_message.gyro[i] = rads[i] * 180.0 / 3.1415
