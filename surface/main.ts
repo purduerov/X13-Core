@@ -3,15 +3,15 @@ import setIp from './electron/setIp';
 import setupRos from './electron/setupRos';
 import {gamepadListener} from './electron/gamepad';
 import log from './src/components/Log/LogItem';
-import {CATKIN_MAKE, SET_IP} from './src/components/Log/channels';
+import {CATKIN_MAKE} from './src/components/Log/channels';
 import servo from './electron/servo';
 import thrusters from './electron/thrusters';
 import imu from './electron/imu';
 
 const nodeManager = async (win) => {
-  await setIp().then((addr) => {
-    win.webContents.send(SET_IP, log('ip_set', `Found ${addr} as local machine`));
-  });
+  
+  await setIp(win);
+  
   setupRos().then((env) => {
     process.env = env;
     gamepadListener(win);
@@ -32,7 +32,7 @@ const nodeManager = async (win) => {
   })
 }
 
-function createWindow () {
+const createWindow = () => {
   // Create the browser window.
   let win = new BrowserWindow({
     width: 1920,
