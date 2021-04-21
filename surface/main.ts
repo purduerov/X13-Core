@@ -1,35 +1,25 @@
 import {app, BrowserWindow , ipcMain} from 'electron';
 import setIp from './electron/setIp';
 import setupRos from './electron/setupRos';
-import {gamepadListener} from './electron/gamepad';
+import gamepadListener from './electron/gamepad';
 import log from './src/components/Log/LogItem';
-import {CATKIN_MAKE} from './src/components/Log/channels';
+import {CATKIN_MAKE, IMU, SET_IP, THRUSTERS} from './src/components/Log/channels';
 import servo from './electron/servo';
 import thrusters from './electron/thrusters';
 import imu from './electron/imu';
 
 const nodeManager = async (win) => {
   
-  await setIp(win);
+  await setIp(win).catch(e => win.webContents.send(SET_IP, log('SetIP', `Error: ${e}`)));
   
-  setupRos().then((env) => {
-    process.env = env;
-    gamepadListener(win);
-    win.webContents.send(CATKIN_MAKE, log('catkin_make', 'Built and sourced'));
-    /*
-    servo(win).catch(e => {
-      console.log(e);
-    });
-    */
-    thrusters(win).catch(e => {
-      console.log(e);
-    });
-    imu(win).catch(e => {
-      console.log(e);
-    })
-  }).catch((err) => {
-    win.webContents.send(CATKIN_MAKE, log('catkin_make', `Error: ${err}`));
-  })
+  await setupRos().catch(e => win.webContents.send(CATKIN_MAKE, log('catkin_make', `Error: ${e}`)));
+
+  gamepadListener(win);
+  win.webContents.send(CATKIN_MAKE, log('catkin_make', 'Built and sourced'));
+
+  //thrusters(win).catch(e => send(THRUSTERS, log('Thrusters', `Error: ${e}`)));
+
+  //imu(win).catch(e => send(IMU, log('IMU', `Error: ${e}`)));
 }
 
 const createWindow = () => {
@@ -46,12 +36,8 @@ const createWindow = () => {
 
   // and load the index.html of the app.
   win.loadFile('./index.html');
-  //win.removeMenu();
 
-  ipcMain.on('logger', (e, msg) => {
-    if(msg == 'ready') nodeManager(win);
-  })
-  
+  ipcMain.on('logger', (e, msg) => nodeManager(win));
 }
 
 app.on('ready', createWindow);

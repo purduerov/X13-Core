@@ -7,28 +7,37 @@ import { ipcMain } from 'electron';
 
 let socket = new net.Socket();
 
-let timeout = 0;
+let sender;
 
-export async function gamepadListener(win) {
-    let sender = spawn('python3', ['-u', path.resolve(__dirname, '../ros/src/gamepad/src/sender.py')]);
-    timeout = Date.now();
+const wait = async (win) => {
+    let promise = new Promise((resolve, reject) => {
+        setTimeout(() => resolve('spawn again'), 1000);
+    });
+    await promise;
 
-    sender.on('exit', code => { 
-        if(Date.now() - timeout > 1000){
-            win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Error! Gamepad lost. Reacquiring...'));
-        }
-        setTimeout(() => {
-            gamepadListener(win);
-        }, 1000)   
+    gamepadListener(win);
+}
+
+const kill = () => {
+    sender.kill('SIGINT');
+    sender.kill('SIGINT');
+}
+
+const gamepadListener = async (win: Electron.BrowserWindow) => {
+    win.on('close', kill);
+
+    sender = spawn('python3', ['-u', path.resolve(__dirname, '../ros/src/gamepad/src/sender.py')]);
+
+    sender.on('exit', _ => {
+        wait(win);
+        win.removeListener('close', kill);
     });
 
     sender.stderr.on('data', data => {
-        console.log(`Gamepad Listener:\n${data}`);
         win.webContents.send(GAMEPAD, msg('gamepad_listener', `Error: ${data}`));
-    })
+    });
 
     sender.stdout.on('data', data => {
-        console.log(data.toString());
         if(`${data}`.includes('ready')){
             win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Gamepad connected'));
             socket = net.connect(11001, 'localhost', () => {
@@ -53,9 +62,6 @@ export async function gamepadListener(win) {
             })
         }
     })
-
-    win.on('close', _ => {
-        sender.kill('SIGINT');
-        sender.kill('SIGINT');
-    })
 }
+
+export default gamepadListener;
