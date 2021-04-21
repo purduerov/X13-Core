@@ -166,6 +166,7 @@ def shutdown(sig, frame):
     data_thread.shutdown()
     gamepad_thread.shutdown()
     sock_thread.shutdown()
+    rospy.signal_shutdown('now')
 
 if __name__ == '__main__':
     global pub, pub_pm, pub_gh, data_thread, gamepad_thread, sock_thread
@@ -178,14 +179,15 @@ if __name__ == '__main__':
     except:
         sys.exit(0)
 
-    rospy.init_node('gp_pub', anonymous=True)
+    sock_thread = SocketManager()
+    
+    rospy.init_node('gp_pub', anonymous=True, disable_signals=True)
 
     pub = rospy.Publisher('rov_velocity', rov_velocity_command, queue_size=10)
     pub_pm = rospy.Publisher('pm_cmd', Bool, queue_size=10)
     pub_gh = rospy.Publisher('gh_cmd', Bool, queue_size=10)
     pub_bs = rospy.Publisher('bs_cmd', Bool, queue_size=10)
 
-    sock_thread = SocketManager()
 
     data_thread = rospy.Timer(rospy.Duration(0.1), pub_data)
     gamepad_thread = rospy.Timer(rospy.Duration(0.001), update_gamepad)

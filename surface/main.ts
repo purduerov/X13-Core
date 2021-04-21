@@ -3,12 +3,12 @@ import setIp from './electron/setIp';
 import setupRos from './electron/setupRos';
 import gamepadListener from './electron/gamepad';
 import log from './src/components/Log/LogItem';
-import {CATKIN_MAKE, IMU, SET_IP, THRUSTERS} from './src/components/Log/channels';
+import {CATKIN_MAKE, IMU, SERVO, SET_IP, THRUSTERS} from './src/components/Log/channels';
 import servo from './electron/servo';
 import thrusters from './electron/thrusters';
 import imu from './electron/imu';
 
-const nodeManager = async (win) => {
+const nodeManager = async (win: BrowserWindow) => {
   
   await setIp(win).catch(e => win.webContents.send(SET_IP, log('SetIP', `Error: ${e}`)));
   
@@ -16,6 +16,8 @@ const nodeManager = async (win) => {
 
   gamepadListener(win);
   win.webContents.send(CATKIN_MAKE, log('catkin_make', 'Built and sourced'));
+
+  servo(win).catch(e => win.webContents.send(SERVO, `Error: ${e}`));
 
   //thrusters(win).catch(e => send(THRUSTERS, log('Thrusters', `Error: ${e}`)));
 
