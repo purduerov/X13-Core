@@ -29,7 +29,7 @@ WHITE = 1 << 5
 #Easier swapping if we plug solenoids in differently
 sol0 = 1 << 1
 sol1 = 1 << 3 
-sol2 = 1 << 5
+sol2 = 1 << 4
 
 SECONDARY_BIT = sol0
 PM_BIT = sol1
