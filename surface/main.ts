@@ -19,9 +19,9 @@ const nodeManager = async (win: BrowserWindow) => {
 
   servo(win).catch(e => win.webContents.send(SERVO, `Error: ${e}`));
 
-  //thrusters(win).catch(e => send(THRUSTERS, log('Thrusters', `Error: ${e}`)));
+  thrusters(win).catch(e => win.webContents.send(THRUSTERS, log('Thrusters', `Error: ${e}`)));
 
-  //imu(win).catch(e => send(IMU, log('IMU', `Error: ${e}`)));
+  imu(win).catch(e => win.webContents.send(IMU, log('IMU', `Error: ${e}`)));
 }
 
 const createWindow = () => {

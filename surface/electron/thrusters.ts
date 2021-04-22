@@ -15,7 +15,7 @@ const thrusters = async (win) => {
     listener.stdout.on('data', data => {
         try{
             let arr: Array<number> = JSON.parse(data.toString().split('\n')[0]);
-            win.webContents.send(THRUSTERS, arr);
+            win.webContents.send('thrusters', arr);
         }catch(e){
             
         }

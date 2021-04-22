@@ -56,7 +56,7 @@ if __name__ == '__main__':
 
     rospy.init_node('servo_sender', disable_signals=True)
 
-    pub = rospy.Publisher('/rov/servo', Float32, queue_size=10)
+    pub = rospy.Publisher('/rov/ServoAngles', Float32, queue_size=10)
     rate = rospy.Rate(10)
 
     print('ready')
