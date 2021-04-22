@@ -24,7 +24,7 @@ const CoM: React.FC = () => {
                             temp[idx] = val;
                             setValues(temp);
 
-                            ipcRenderer.send('')
+                            ipcRenderer.send('com_send', temp);
                         }}
                     /> 
                 )

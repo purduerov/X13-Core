@@ -7,6 +7,7 @@ import {CATKIN_MAKE, IMU, SERVO, SET_IP, THRUSTERS} from './src/components/Log/c
 import servo from './electron/servo';
 import thrusters from './electron/thrusters';
 import imu from './electron/imu';
+import com from './electron/com';
 
 const nodeManager = async (win: BrowserWindow) => {
   
@@ -22,6 +23,8 @@ const nodeManager = async (win: BrowserWindow) => {
   thrusters(win).catch(e => win.webContents.send(THRUSTERS, log('Thrusters', `Error: ${e}`)));
 
   imu(win).catch(e => win.webContents.send(IMU, log('IMU', `Error: ${e}`)));
+
+  com(win);
 }
 
 const createWindow = () => {

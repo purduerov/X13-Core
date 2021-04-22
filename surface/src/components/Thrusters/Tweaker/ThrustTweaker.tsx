@@ -2,6 +2,7 @@ import { ipcRenderer } from 'electron';
 import * as React from 'react';
 import Slider from '../../Slider/Slider';
 import './ThrustTweaker.scss';
+import {GamepadParams} from '../../../../electron/gamepad';
 
 const TRANSLATION_MAX = 10.0;
 const ROTATION_MAX = 4.0;
@@ -27,8 +28,15 @@ const ThrustTweaker: React.FC = () => {
                             let temp = [...values];
                             temp[idx] = val;
                             setValues(temp);
+                            
+                            let params: GamepadParams = {
+                                type: 'scale',
+                                values: values
+                            }
 
-                            ipcRenderer.send('gamepad_sock', values);
+                            console.log(params.values)
+
+                            ipcRenderer.send('gamepad_sock', params);
                         }
                     }/>
                 )     

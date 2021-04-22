@@ -1,4 +1,5 @@
 import { ipcRenderer } from 'electron';
+import { GamepadParams } from '../../../electron/gamepad';
 import * as React from 'react';
 import Slider from '../Slider/Slider';
 import './Compensator.scss';
@@ -24,7 +25,12 @@ const Compensator: React.FC = () => {
                             temp[idx] = val;
                             setValues(temp);
 
-                            ipcRenderer.send('')
+                            let params: GamepadParams = {
+                                type: 'trim',
+                                values: temp
+                            }
+
+                            ipcRenderer.send('compensator', params);
                         }}
                     /> 
                 )

@@ -26,6 +26,10 @@ SCALE_ROTATIONAL_X = 1.5
 SCALE_ROTATIONAL_Y = 1.5
 SCALE_ROTATIONAL_Z = 1.5
 
+TRIM_X = 0.0
+TRIM_Y = 0.0
+TRIM_Z = 0.0
+
 class SocketManager:
     def __init__(self):
         self.running = True
@@ -45,6 +49,7 @@ class SocketManager:
 
     def run(self):
         global SCALE_ROTATIONAL_X, SCALE_ROTATIONAL_Y, SCALE_ROTATIONAL_Z, SCALE_TRANSLATIONAL_X, SCALE_TRANSLATIONAL_Y, SCALE_TRANSLATIONAL_Z
+        global TRIM_X, TRIM_Y, TRIM_Z
 
         while not self.connected and self.running:
             try:
@@ -58,23 +63,31 @@ class SocketManager:
             except:
                 pass
             if data:
-                arr = [float(d) for d in data.decode().split(';')[0].split(',')]
-                SCALE_TRANSLATIONAL_X = arr[0]
-                SCALE_TRANSLATIONAL_Y = arr[1]
-                SCALE_TRANSLATIONAL_Z = arr[2]
+                decoded = data.decode()
+                mode = decoded.split(':')[0]
+                arr = [float(d) for d in decoded.split(':')[1].split(',')]
 
-                SCALE_ROTATIONAL_X = arr[3]
-                SCALE_ROTATIONAL_Y = arr[4]
-                SCALE_ROTATIONAL_Z = arr[5]
+                if mode == 'scale':
+                    SCALE_TRANSLATIONAL_X = arr[0]
+                    SCALE_TRANSLATIONAL_Y = arr[1]
+                    SCALE_TRANSLATIONAL_Z = arr[2]
+
+                    SCALE_ROTATIONAL_X = arr[3]
+                    SCALE_ROTATIONAL_Y = arr[4]
+                    SCALE_ROTATIONAL_Z = arr[5]
+                elif mode == 'trim':
+                    TRIM_X = arr[0]
+                    TRIM_Y = arr[1]
+                    TRIM_Z = arr[2]
 
 def getMessage():
     global gamepad_state
 
     t = Twist()
 
-    t.linear.x = gamepad_state['LSY'] * SCALE_TRANSLATIONAL_X
-    t.linear.y = gamepad_state['LSX'] * SCALE_TRANSLATIONAL_Y
-    t.linear.z = (gamepad_state['RT'] - gamepad_state['LT']) * SCALE_TRANSLATIONAL_Z
+    t.linear.x = gamepad_state['LSY'] * SCALE_TRANSLATIONAL_X + TRIM_X
+    t.linear.y = gamepad_state['LSX'] * SCALE_TRANSLATIONAL_Y + TRIM_Y
+    t.linear.z = (gamepad_state['RT'] - gamepad_state['LT']) * SCALE_TRANSLATIONAL_Z + TRIM_Z
 
     if gamepad_state['LB'] == 1:
         x = 1 * SCALE_ROTATIONAL_X
