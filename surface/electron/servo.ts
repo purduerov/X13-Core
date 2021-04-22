@@ -16,9 +16,7 @@ const messager = (win) => {
 
     sock.on('error', _ => win.webContents.send(SERVO, msg('servo', 'Socket error!')));
 
-    win.on('close', _ => {
-        sock.end();
-    })
+    win.on('close', sock.end);
 }
 
 const servo = async (win) => {

@@ -13,7 +13,7 @@ const Servo: React.FC = () => {
                 value = {value}
                 callback = {(val) => {
                     setValue(val);
-                    ipcRenderer.send('servo_send');
+                    ipcRenderer.send('servo_send', val);
                 }}
             />
             <div className='servo-angle'>{value}&deg;</div>
