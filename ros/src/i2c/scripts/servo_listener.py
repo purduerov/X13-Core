@@ -37,7 +37,7 @@ GPIO.setmode(GPIO.BCM) #Setting a Pin Mode aka Chose Board pin number scheme
 GPIO.setup(13, GPIO.OUT) #sets up pin 13 to an output
 p = GPIO.PWM(13,50) #sets up pin 13 as a PWM pin(50 is the frequency)
 p.start(0) #starts running PWM on the pin and sets it to 0. 0 is the middle
-angle_prev = 90 #sets to middle angle
+angle_prev = 45 #sets to middle angle
 duty_prev = angleToDuty(angle_prev)
 lockSet = 0
 imuPitchRef = 0
