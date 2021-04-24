@@ -31,6 +31,7 @@ const com = async (win) => {
     sender.stderr.on('data', e => win.webContents.send(COM, msg('com', `Error: ${e}`)));
 
     sender.stdout.on('data', data => {
+        win.webContents.send(COM, msg('com', `Data: ${data}`))
         if(`${data}`.includes('ready')){
             messager(win);
         }

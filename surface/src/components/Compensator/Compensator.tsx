@@ -17,8 +17,8 @@ const Compensator: React.FC = () => {
                     <Slider
                         value={val}
                         key={idx}
-                        min={-1.0}
-                        max={1.0}
+                        min={-5.0}
+                        max={5.0}
                         step={0.1}
                         callback={(val) => {
                             let temp = [...values];

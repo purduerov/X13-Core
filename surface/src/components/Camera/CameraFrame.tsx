@@ -6,12 +6,14 @@ interface Props{
 	handleClick(number): void
 	secondary?: boolean
 	index?: number
+	rotate: number
 	camera: CameraInterface
 }
 
 const defaultProps: Props = {
 	handleClick: (_) => {},
 	secondary: false,
+	rotate: 0,
 	camera: {
 		feed: '',
 		placeholder: '',
@@ -29,6 +31,7 @@ const CameraFrame: React.FC<Props> = (props) => {
 		<img src={src}
 			className={props.secondary ? 'frame' : 'main-frame'}
 			alt="Image not found"
+			style={{transform: `rotate(${props.rotate}deg)`}}
 			onError={() => setSrc(props.camera.placeholder)}
 			onClick={() => props.handleClick(props.index)}
 		/>

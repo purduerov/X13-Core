@@ -40,13 +40,19 @@ class SocketManager:
             except:
                 pass
             if data:
-                global com_x, com_y, com_z
+                global com_x, com_y, com_z, pub
 
                 arr = [float(d) for d in data.decode().split(';')[0].split(',')]
 
                 com_x = arr[0]
                 com_y = arr[1]
                 com_z = arr[2]
+
+                msg = com_msg()
+                msg.com[0] = com_x
+                msg.com[1] = com_y
+                msg.com[2] = com_z
+                pub.publish(msg)
 
 def shutdown(sig, frame):
     global sock
@@ -61,17 +67,11 @@ if __name__ == '__main__':
 
     sock = SocketManager(int(sys.argv[1]))
 
-    rospy.init_node('servo_sender', disable_signals=True)
+    rospy.init_node('com_sender', disable_signals=True)
 
     pub = rospy.Publisher('/rov/com_tweak', com_msg, queue_size=10)
     rate = rospy.Rate(10)
 
     print('ready')
 
-    while not rospy.is_shutdown():
-        msg = com_msg()
-        msg.com[0] = com_x
-        msg.com[1] = com_y
-        msg.com[2] = com_z
-        pub.publish(msg)
-        rate.sleep()
+    rospy.spin()
