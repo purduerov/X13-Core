@@ -42,7 +42,9 @@ const createWindow = () => {
   // and load the index.html of the app.
   win.loadFile('./index.html');
 
-  ipcMain.on('logger', (e, msg) => nodeManager(win));
+  if(process.env.NODE_ENV !== 'development'){
+    ipcMain.on('logger', (e, msg) => nodeManager(win));
+  } 
 }
 
 app.on('ready', createWindow);
