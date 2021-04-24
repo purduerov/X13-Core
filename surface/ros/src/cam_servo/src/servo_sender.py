@@ -66,5 +66,6 @@ if __name__ == '__main__':
         msg = servo_msg()
         msg.angle = angle
         msg.servo_lock_status = False
+        msg.header.stamp = rospy.Time.now()
         pub.publish(msg)
         rate.sleep()
