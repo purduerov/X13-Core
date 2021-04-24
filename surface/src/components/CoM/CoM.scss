@@ -1,17 +1,16 @@
-.servo-container{
+.com-container{
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(3, auto);
+    grid-template-rows: auto repeat(3, 1fr);
     gap: 5px;
 }
 
-.servo-angle{
+.com-amount{
     width: 100%;
     text-align: center;
 }
 
-.servo-title{
-    @extend .servo-angle;
+.com-title{
+    @extend .com-amount;
     border-bottom: solid;
 }
-

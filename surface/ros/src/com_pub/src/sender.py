@@ -2,11 +2,13 @@
 
 import rospy
 from std_msgs.msg import Float32, String
-from shared_msgs.msg import servo_msg
+from shared_msgs.msg import com_msg
 import socket, signal, sys
 import threading
 
-angle = 30.0
+com_x = 0.0
+com_y = 0.0
+com_z = 0.0
 
 class SocketManager:
     def __init__(self, port):
@@ -34,13 +36,23 @@ class SocketManager:
                 pass
         while self.running:
             try:
-                data = conn.recv(10)
+                data = conn.recv(20)
             except:
                 pass
             if data:
-                global angle
+                global com_x, com_y, com_z, pub
 
-                angle = float(data.decode())
+                arr = [float(d) for d in data.decode().split(';')[0].split(',')]
+
+                com_x = arr[0]
+                com_y = arr[1]
+                com_z = arr[2]
+
+                msg = com_msg()
+                msg.com[0] = com_x
+                msg.com[1] = com_y
+                msg.com[2] = com_z
+                pub.publish(msg)
 
 def shutdown(sig, frame):
     global sock
@@ -55,17 +67,11 @@ if __name__ == '__main__':
 
     sock = SocketManager(int(sys.argv[1]))
 
-    rospy.init_node('servo_sender', disable_signals=True)
+    rospy.init_node('com_sender', disable_signals=True)
 
-    pub = rospy.Publisher('/rov/ServoAngles', servo_msg, queue_size=10)
+    pub = rospy.Publisher('/rov/com_tweak', com_msg, queue_size=10)
     rate = rospy.Rate(10)
 
     print('ready')
 
-    while not rospy.is_shutdown():
-        msg = servo_msg()
-        msg.angle = angle
-        msg.servo_lock_status = False
-        msg.header.stamp = rospy.Time.now()
-        pub.publish(msg)
-        rate.sleep()
+    rospy.spin()

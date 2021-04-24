@@ -7,56 +7,42 @@ interface Props{
     name: string
 }
 
-export default class ThrusterCircle extends React.Component<Props, {}> {
-    circleStyle: {}
-
-	constructor(props: Props) {
-        super(props);
-
-        this.circleStyle = {
-            backgroundImage: 'linear-gradient(91deg, transparent 50%, #A6A6A6 50%), linear-gradient(90deg, #A6A6A6 50%, transparent 50%)'
-        };
-
-        this.setValue = this.setValue.bind(this);
-		this.setValue();
-
-    }
-
-    componentDidUpdate(){
-        this.setValue();
-    }
-
-    setValue() {
-		var color = '#39B4CC';
-		if(this.props.thrust < 127){
-			color = '#FF4747';
-		}
-		var output = Math.round((Math.abs(this.props.thrust - 127) / 127) * 360);
-
-        if(output <= 180){
-            this.circleStyle = {
-                backgroundImage: 'linear-gradient(' + (output + 90) +'deg, transparent 50%, #A6A6A6 50%),linear-gradient(90deg, #A6A6A6 50%, transparent 50%)',
-				backgroundColor: color
-			};
-        }else{
-            this.circleStyle = {
-                backgroundImage: 'linear-gradient(' + (output - 90) +'deg, transparent 50%, ' + color + ' 50%),linear-gradient(90deg, #A6A6A6 50%, transparent 50%)',
-				backgroundColor: color
-			};
-        }
-    }
-
-	render() {
-		return (
-			<div className={this.props.className}>
-                <div className='active-border' style={this.circleStyle}>
-                    <div className='circle'>
-                        <span className='val 360'>{Math.round(((Math.abs(this.props.thrust) - 127) / 127) * 100)}%</span>
-						<br/>
-						<span className='val 360'>{this.props.name}</span>
-                    </div>
-                </div>
-			</div>
-		);
-	}
+const l180 = (val: number, original: number) => {
+    return({
+        backgroundImage:
+            `linear-gradient(${val + 90}deg, transparent 50%, #A6A6A6 50%),` +
+            `linear-gradient(90deg, #A6A6A6 50%, transparent 50%)`,
+        backgroundColor: original < 127 ? '#FF4747' : '#39B4CC'
+    })
 }
+
+const g180 = (val: number, original: number) => {
+    return({
+        backgroundImage:
+            `linear-gradient(${val - 90}deg, transparent 50%, ${original < 127 ? '#FF4747' : '#39B4CC'} 50%),` +
+            `linear-gradient(90deg, #A6A6A6 50%, transparent 50%)`,
+        backgroundColor: original < 127 ? '#FF4747' : '#39B4CC'
+    })
+}
+
+const ThrusterCircle: React.FC<Props> = (props) => {
+    const [angle, setAngle] = React.useState(Math.round(((Math.abs(props.thrust) - 127) / 127) * 360));
+    
+    React.useEffect(() => {
+        setAngle(Math.round(((Math.abs(props.thrust) - 127) / 127) * 360))
+    }, [props.thrust]);
+    
+    return(
+        <div className={props.className}>
+            <div className='active-border' style={angle <= 180 ? l180(angle, props.thrust) : g180(angle, props.thrust)}>
+                <div className='circle'>
+                    <span className='val 360'>{Math.round(angle / 360 * 100)}%</span>
+                    <br/>
+                    <span className='val 360'>{props.name}</span>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default ThrusterCircle;
