@@ -28,7 +28,7 @@ const MainWindow: React.FC = () => {
             <div className="right-column">
 
                 <ThrusterInfo/>
-                <IMU/>
+                
 
             </div>
 

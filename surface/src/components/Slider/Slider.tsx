@@ -21,10 +21,12 @@ const defaultProps: Props = {
     unit: ''
 }
 
-
 const Slider: React.FC<Props> = (props) => {
-    const starting: Props = Object.assign({}, props)
-    console.log(starting.value);
+    const [starting, setStarting] = React.useState(0);
+    React.useEffect(() => {
+        setStarting(Object.assign({}, props).value);
+    }, [])
+    
 
     return (
         <div className='slider-container'>
