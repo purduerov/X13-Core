@@ -17,7 +17,8 @@ locked_dims_list = [False, False, False, False, False, False]
 disabled_list = [False, False, False, False, False, False, False, False]
 inverted_list = [0, 0, 0, 0, 0, 0, 0, 0]
 desired_thrust_final = [0, 0, 0, 0, 0, 0]
-MAX_CHANGE = .1
+MAX_CHANGE = .8
+tm = thrust_mapping.ThrustMapper()
 # watch dog stuff
 last_packet_time = 0.0
 is_timed_out = False
@@ -63,7 +64,7 @@ def on_loop():
 
     # calculate thrust
     #pwm_values = c.calculate(desired_thrust_final, disabled_list, False)
-    desired_p_unramped = tm.thrustVectorToPWM(tm.calculateThrusterOutput(desired_thrust_final))
+    desired_p_unramped = tm.thrustVectorToPWM(tm.calculateThrusterOutput(desired_p))
     # invert relevant values
     #for i in range(8):
     #    if inverted_list[i] == 1:
@@ -126,7 +127,7 @@ if __name__ == "__main__":
 
     # define variable for class Complex to allow calculation of thruster pwm values
     c = Complex_1.Complex()
-    tm = thrust_mapping.ThrustMapper()
+   
     
 
     while not rospy.is_shutdown():
