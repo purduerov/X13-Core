@@ -11,13 +11,14 @@ const sourceRos = async () => {
     })
 }
 
-export default async function setupRos() {
+const setupRos = async () => {
     process.chdir('./ros');
-    const stdout = execSync('catkin_make');
+    
+    execSync('catkin_make');
 
-    let env: NodeJS.ProcessEnv = await sourceRos();
+    await sourceRos();
 
     process.chdir('../');
-
-    return env;
 }
+
+export default setupRos;

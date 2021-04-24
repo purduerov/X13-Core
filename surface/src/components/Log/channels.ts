@@ -5,6 +5,7 @@ export const GAMEPAD = 'gamepad_listener';
 export const SERVO = 'servo';
 export const THRUSTERS = 'thruster_listener';
 export const IMU = 'imu_listener';
+export const COM = 'com_sender';
 
 export default [
     SET_IP,
@@ -13,5 +14,6 @@ export default [
     GAMEPAD,
     SERVO,
     THRUSTERS,
-    IMU
+    IMU,
+    COM
 ]

@@ -2,36 +2,83 @@ import path from 'path';
 import {spawn} from 'child_process';
 import msg from '../src/components/Log/LogItem';
 import {GAMEPAD} from '../src/components/Log/channels';
+import net from 'net';
+import { ipcMain } from 'electron';
+import { values } from 'webpack.config';
 
-let timeout = 0;
+export interface GamepadParams {
+    type: 'trim' | 'scale'
+    values: Array<number>
+}
 
-export async function gamepadListener(win) {
-    let sender = spawn('python3', ['-u', path.resolve(__dirname, '../ros/src/gamepad/src/sender.py')]);
-    timeout = Date.now();
+let socket = new net.Socket();
 
-    sender.on('exit', code => { 
-        if(Date.now() - timeout > 1000){
-            win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Error! Gamepad lost. Reacquiring...'));
-        }
-        setTimeout(() => {
-            gamepadListener(win);
-        }, 1000)   
+let sender;
+
+const wait = async (win) => {
+    let promise = new Promise((resolve, reject) => {
+        setTimeout(() => resolve('spawn again'), 1000);
+    });
+    await promise;
+
+    gamepadListener(win);
+}
+
+const kill = () => {
+    sender.kill('SIGINT');
+    sender.kill('SIGINT');
+}
+
+const gamepadListener = async (win: Electron.BrowserWindow) => {
+    win.on('close', kill);
+
+    sender = spawn('python3', ['-u', path.resolve(__dirname, '../ros/src/gamepad/src/sender.py')]);
+
+    sender.on('exit', _ => {
+        wait(win);
+        win.removeListener('close', kill);
     });
 
     sender.stderr.on('data', data => {
-        console.log(`Gamepad Listener:\n${data}`);
         win.webContents.send(GAMEPAD, msg('gamepad_listener', `Error: ${data}`));
-    })
+    });
 
     sender.stdout.on('data', data => {
-        console.log(data.toString());
         if(`${data}`.includes('ready')){
             win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Gamepad connected'));
-        }
-    })
+            socket = net.connect(11001, 'localhost', () => {
+                win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket connected'));
+            })
 
-    win.on('close', _ => {
-        sender.kill('SIGINT');
-        sender.kill('SIGINT');
+            socket.on('error', (err) => {
+                win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket error'));
+            })
+
+            ipcMain.on('gamepad_sock', (e, params: GamepadParams) => {
+                try{
+                    let str = `${params.type}:`
+                    for(let v of params.values) str += `${v.toString()},`;
+                    str = str.slice(0, -1);
+                    socket.write(str);
+                }catch(e){
+                    win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket write error'));
+                }
+            })
+
+            ipcMain.on('compensator', (e, params: GamepadParams) => {
+                try{
+                    let str = `${params.type}:`
+                    for(let v of params.values) str += `${v.toString()},`;
+                    str = str.slice(0, -1);
+                    socket.write(str);
+                }catch(e){
+                    win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket write error'));
+                }
+            })
+        }
+
+        win.webContents.send(GAMEPAD, msg('gamepad_listener', `Data: ${data}`));
     })
 }
+
+export default gamepadListener;

@@ -15,7 +15,7 @@
 .camera-row{
     display: flex;
     flex-flow: row;
-    gap: 5px;
+    gap: 20px;
     justify-content: center;
     align-items: center;
     overflow: hidden;
@@ -25,15 +25,14 @@
     border-radius: 10px;
     flex: 1 1 auto;
     height: calc(50vh / 4);
-    width: 20%
+    max-width: 150px;
 }
 
 .main-frame{
     @extend .frame;
     height: calc(100vh / 2);
+    max-width: unset;
 }
-
-
 
 .frame:hover{
     border: 2px solid cyan;

@@ -1,6 +1,8 @@
 import os from 'os';
+import { SET_IP } from '../src/components/Log/channels';
+import log from '../src/components/Log/LogItem';
 
-async function getIp() {
+const getIp = () => {
     let inter = os.networkInterfaces();
     let i: Array<os.NetworkInterfaceInfo>
 
@@ -15,12 +17,14 @@ async function getIp() {
     return 'localhost';
 }
 
-export default async function setIp(){
-    const ip = await getIp();
+const setIp = async (win) => {
+    const ip = getIp();
 
     process.env.ROS_HOSTNAME = ip;
     process.env.ROS_IP = ip;
     process.env.ROS_MASTER_URI = 'http://192.168.1.3:11311';
 
-    return ip;
+    win.webContents.send(SET_IP, log('ip_set', `Found ${ip} as local machine`));
 }
+
+export default setIp;

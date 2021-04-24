@@ -55,6 +55,7 @@ const animate = (s: T) => {
 const IMU: React.FC = () => {
 
     const ref = React.useRef<any>(null);
+    const [offsets, setOffsets] = React.useState<Array<number>>([0.0, 0.0, 0.0]);
 
     ipcRenderer.on('imu', (e, data) => {
         orientation = data;
@@ -82,7 +83,14 @@ const IMU: React.FC = () => {
     }, [])
 
     return(
-        <div style={{width: '100%', height: '100%'}} ref={ref}></div>
+        <div>
+            <button onClick={() => {
+
+                }}>
+                Calibrate (Not Available)
+            </button>
+            <div style={{width: '100%', height: '100%'}} ref={ref}></div>
+        </div>     
     )
 }
 

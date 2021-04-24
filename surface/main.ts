@@ -1,36 +1,33 @@
 import {app, BrowserWindow , ipcMain} from 'electron';
 import setIp from './electron/setIp';
 import setupRos from './electron/setupRos';
-import {gamepadListener} from './electron/gamepad';
+import gamepadListener from './electron/gamepad';
 import log from './src/components/Log/LogItem';
-import {CATKIN_MAKE, SET_IP} from './src/components/Log/channels';
+import {CATKIN_MAKE, IMU, SERVO, SET_IP, THRUSTERS} from './src/components/Log/channels';
 import servo from './electron/servo';
 import thrusters from './electron/thrusters';
 import imu from './electron/imu';
+import com from './electron/com';
 
-const nodeManager = async (win) => {
-  await setIp().then((addr) => {
-    win.webContents.send(SET_IP, log('ip_set', `Found ${addr} as local machine`));
-  });
-  setupRos().then((env) => {
-    process.env = env;
-    gamepadListener(win);
-    win.webContents.send(CATKIN_MAKE, log('catkin_make', 'Built and sourced'));
-    servo(win).catch(e => {
-      console.log(e);
-    });
-    thrusters(win).catch(e => {
-      console.log(e);
-    });
-    imu(win).catch(e => {
-      console.log(e);
-    })
-  }).catch((err) => {
-    win.webContents.send(CATKIN_MAKE, log('catkin_make', `Error: ${err}`));
-  })
+const nodeManager = async (win: BrowserWindow) => {
+  
+  await setIp(win).catch(e => win.webContents.send(SET_IP, log('SetIP', `Error: ${e}`)));
+  
+  await setupRos().catch(e => win.webContents.send(CATKIN_MAKE, log('catkin_make', `Error: ${e}`)));
+
+  gamepadListener(win);
+  win.webContents.send(CATKIN_MAKE, log('catkin_make', 'Built and sourced'));
+
+  servo(win).catch(e => win.webContents.send(SERVO, `Error: ${e}`));
+
+  thrusters(win).catch(e => win.webContents.send(THRUSTERS, log('Thrusters', `Error: ${e}`)));
+
+  imu(win).catch(e => win.webContents.send(IMU, log('IMU', `Error: ${e}`)));
+
+  com(win);
 }
 
-function createWindow () {
+const createWindow = () => {
   // Create the browser window.
   let win = new BrowserWindow({
     width: 1920,
@@ -44,12 +41,10 @@ function createWindow () {
 
   // and load the index.html of the app.
   win.loadFile('./index.html');
-  //win.removeMenu();
 
-  ipcMain.on('logger', (e, msg) => {
-    if(msg == 'ready') nodeManager(win);
-  })
-  
+  if(process.env.NODE_ENV !== 'development'){
+    ipcMain.on('logger', (e, msg) => nodeManager(win));
+  } 
 }
 
 app.on('ready', createWindow);

@@ -4,37 +4,30 @@ import {ipcRenderer} from 'electron';
 import './Log.scss';
 import * as channels from './channels';
 
-interface State{
-    items: Array<LogItem>
-}
 
-export default class Log extends React.Component<{}, State> {
-    constructor(props){
-        super(props);
+const Log: React.FC = () => {
+    const [items, setItems] = React.useState<Array<LogItem>>([]);
 
-        this.state = {items: []};
-    }
-    componentDidMount(){
+    React.useEffect(() => {
         ipcRenderer.send('logger', 'ready');
 
         channels.default.map(channel => {
             ipcRenderer.on(channel, (e, data: LogItem) => {
-                this.addItem(data);
+                setItems(old => [...old, data]);
             });
         });
-    }
+    }, [])
 
-    addItem(item: LogItem){
-        this.setState({items: [...this.state.items, item]});
-    }
-
-	render() {
-		return (
-			<ol>
-                {this.state.items.map((item, index) => {
-                    return <li key={index}>{`${item.timestamp ? item.timestamp : ''} (${item.process}): ${item.text}`}</li>
-                })}
-            </ol>
-		);
-	}
+    return(
+        <ol>
+            {items.map((item, index) => {
+                return <li key={index}>
+                    {`${item.timestamp ? item.timestamp : ''} (${item.process}): ${item.text}`}
+                </li>
+            })}
+        </ol>
+    )
 }
+
+export default Log;
+
