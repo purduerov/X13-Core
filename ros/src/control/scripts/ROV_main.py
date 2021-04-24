@@ -77,7 +77,7 @@ if __name__ == '__main__':
     #controller_sub = rospy.Subscriber('/gamepad_listener', controller_msg,_controller_input)
     thrust_command_pub = rospy.Publisher('/thrust_command', thrust_command_msg, queue_size=1)
     tools_command_pub = rospy.Publisher('/tools_proc', tools_command_msg, queue_size=10)
-    r = rospy.Rate(10)
+    r = rospy.Rate(50)
     while not rospy.is_shutdown():
         onLoop()
         r.sleep()

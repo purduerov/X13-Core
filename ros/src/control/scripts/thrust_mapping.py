@@ -5,8 +5,8 @@ from numpy import linalg
 # then this comment should be updated describing our process and where all the numbers came from.
 #
 # All measurements are based on:
-# X: LEFT/RIGHT MOTION OF THE ROV. LEFT = +X
-# Y: FORWARD/BACK. FORWARD = +Y = SIDE THE ROV CLAW IS ON
+# X: FORWARD/BACK. FORWARD = +X = SIDE THE ROV CLAW IS ON
+# Y: LEFT/RIGHT MOTION OF THE ROV. LEFT = +Y 
 # Z: UP/DOWN. UP = +Z
 #
 # PITCH: TILT FORWARD/BACK. +PITCH TILTS FORWARD (LOOK DOWN). USE RIGHT HAND RULE ON X AXIS.
@@ -27,7 +27,7 @@ DIRECTION_SCALE = [10, 10, 5, 5, 5, 5]
 # as possible in the exact direction. Then, it will add in additional force if possible, as long as any additional force
 # is close enough to the needed additional force. Value is scaled from 0 to 1, 1 for exact vectors only, and 0 for
 # fuckit let's go places.
-SIMILARITY_MINIMUM = .95
+SIMILARITY_MINIMUM = 1.0
 # If we already yield >= this amount of the desired force, then break
 PERCENT_DESIRED_FORCE_YIELDED = .99
 # Values beneath this are assumed to be zero because of double rounding
@@ -39,11 +39,11 @@ THRUST_MAX = 3.71
 # Center of mass coordinates relative to our measurement point
 COM_X = 0.0  # 0.056 * 0.0254
 COM_Y = 0.0  # -0.1256 * 0.0254
-COM_Z = 2.0 * 0.0254
+COM_Z = 1.4 * 0.0254
 
 # Thruster locations relative to the measurement point of the ROV.
 #                      X	Y	Z
-location = np.matrix([[4.438, 5.679, 0],  # Thruster 1
+location_frame_absolute = np.matrix([[4.438, 5.679, 0],  # Thruster 1
                       [-4.438, 5.679, 0],  # Thruster 2
                       [-4.438, -5.679, 0],  # Thruster 3
                       [4.438, -5.679, 0],  # Thruster 4
@@ -51,7 +51,8 @@ location = np.matrix([[4.438, 5.679, 0],  # Thruster 1
                       [-7.5, 7.313, -2.25],  # Thruster 6
                       [-7.5, -7.313, -2.25],  # Thruster 7
                       [7.5, -7.313, -2.25]])  # Thruster 8
-location *= 0.0254
+location_frame_absolute *= 0.0254 # inches to meters
+location = location_frame_absolute
 
 # Directions the thrust forces point. MUST BE UNIT VECTORS.
 # NOTE
@@ -78,6 +79,7 @@ for vector in direction:
 class ThrustMapper:
     def __init__(self):
         self.location = np.copy(location)
+        self.location_frame_absolute = np.copy(location_frame_absolute)
         self.direction = np.copy(direction)
         self.torque = None
         self.changeOriginLocation(COM_X, COM_Y, COM_Z)
@@ -97,13 +99,14 @@ class ThrustMapper:
 
         self.calcTorqueValues()
         #self.createThruserForceMap()
+    # tune the origin relative to X, Y, Z
     def changeOrigin(self, X, Y, Z):
-        self.com = [X * .0254,Y * .0254,Z * .0254]
+        #self.com = [X ,Y ,Z ]
         for i in range(0, len(self.location)):
-            self.location[i][0] = self.location[i][0] - self.com[0]
-            self.location[i][1] = self.location[i][1] - self.com[1]
-            self.location[i][2] = self.location[i][2] - self.com[2]
-
+            self.location[i][0] = self.location_frame_absolute[i][0] - self.com[0] + X
+            self.location[i][1] = self.location_frame_absolute[i][1] - self.com[1] + Y
+            self.location[i][2] = self.location_frame_absolute[i][2] - self.com[2] + Z
+        self.location = self.location * .0254
         self.calcTorqueValues()
         self.createThruserForceMap()
 
