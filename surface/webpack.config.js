@@ -3,7 +3,6 @@ const path = require('path');
 
 module.exports = [
     {
-      mode: 'development',
       entry: './main.ts',
       target: 'electron-main',
       module: {
@@ -27,7 +26,6 @@ module.exports = [
       }
     },
     {
-        mode: 'development',
         entry: './src/index.tsx',
         target: 'electron-renderer',
         devtool: 'source-map',
