@@ -78,7 +78,7 @@ if __name__ == "__main__":
     #sub = rospy.Subscriber('reset_imu', Bool,
     #                       _reset_imu_offsets)
     
-    rate = rospy.Rate(50)  # 10hz
+    rate = rospy.Rate(25)  # 10hz
     while not rospy.is_shutdown():
         # try:
         #     trans = tfBuffer.lookup_transform('imu', 'base_link', rospy.Time())

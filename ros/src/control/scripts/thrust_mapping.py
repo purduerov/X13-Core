@@ -83,6 +83,7 @@ class ThrustMapper:
         self.changeOriginLocation(COM_X, COM_Y, COM_Z)
         self.thrusterForceMap = None
         self.createThruserForceMap()
+        self.com = [COM_X, COM_Y, COM_Z]
 
     # Changes the origin location to the given location.
     # relX = the new X origin relative to the current X origin
@@ -95,6 +96,16 @@ class ThrustMapper:
             self.location[i][2] = self.location[i][2] - relZ
 
         self.calcTorqueValues()
+        #self.createThruserForceMap()
+    def changeOrigin(self, X, Y, Z):
+        self.com = [X * .0254,Y * .0254,Z * .0254]
+        for i in range(0, len(self.location)):
+            self.location[i][0] = self.location[i][0] - self.com[0]
+            self.location[i][1] = self.location[i][1] - self.com[1]
+            self.location[i][2] = self.location[i][2] - self.com[2]
+
+        self.calcTorqueValues()
+        self.createThruserForceMap()
 
     # Calculates the torque matrix using the location matrix and the direction matrix.
     # Resulting torque values be an 3x8 array with a [pitch, roll, yaw] entry for each thruster.

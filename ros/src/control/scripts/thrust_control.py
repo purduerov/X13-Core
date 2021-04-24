@@ -1,6 +1,6 @@
 #! /usr/bin/python3
 import rospy
-from shared_msgs.msg import auto_control_msg, final_thrust_msg, thrust_status_msg, thrust_command_msg, controller_msg
+from shared_msgs.msg import auto_control_msg, final_thrust_msg, thrust_status_msg, thrust_command_msg, controller_msg, com_msg
 from sensor_msgs.msg import Imu
 from std_msgs.msg import Float32, String
 import numpy as np
@@ -16,6 +16,7 @@ desired_p_unramped = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 locked_dims_list = [False, False, False, False, False, False]
 disabled_list = [False, False, False, False, False, False, False, False]
 inverted_list = [0, 0, 0, 0, 0, 0, 0, 0]
+desired_thrust_final = [0, 0, 0, 0, 0, 0]
 MAX_CHANGE = .1
 # watch dog stuff
 last_packet_time = 0.0
@@ -33,6 +34,7 @@ def _pilot_command(comm):
     desired_p = comm.desired_thrust
     # disabled_list = comm.disable_thrusters
     # inverted_list = comm.inverted
+    on_loop()
 
 
 def ramp(index):
@@ -96,7 +98,9 @@ def on_loop():
 def updateCOM(config, level):
     rospy.loginfo("""Reconfigure Request: {ROV_X}, {ROV_Y}, {ROV_Z}""".format(**config))
     return config
-
+def _comUpdate(msg):
+    tm.changeOrigin(msg.com[0],msg.com[1],msg.com[2])
+    rospy.loginfo("changed" + str(msg.com[0]) + ":" + str(msg.com[1]) + ":" + str(msg.com[2]))
 
 if __name__ == "__main__":
     '''
@@ -106,10 +110,11 @@ if __name__ == "__main__":
     # initialize node and rate
     rospy.init_node('thrust_control')
     srv = Server(ROV_COMConfig, updateCOM)
-    rate = rospy.Rate(50)  # 20 hz
+    rate = rospy.Rate(25)  # 20 hz
 
     # initialize subscribers
     comm_sub = rospy.Subscriber('/thrust_command', thrust_command_msg, _pilot_command)
+    com_sub = rospy.Subscriber('com_tweak', com_msg, _comUpdate)
     #ramp_sub = rospy.Subscriber('/ramp', String, _updateRamp)
     # controller_sub = rospy.Subscriber('/surface/controller',controller_msg, _teleop)
     #controller_sub = rospy.Subscriber('gamepad_listener', controller_msg, _teleop)
@@ -122,9 +127,10 @@ if __name__ == "__main__":
     # define variable for class Complex to allow calculation of thruster pwm values
     c = Complex_1.Complex()
     tm = thrust_mapping.ThrustMapper()
-    desired_thrust_final = [0, 0, 0, 0, 0, 0]
+    
 
     while not rospy.is_shutdown():
-        on_loop()
-        rate.sleep()
+        rospy.spin()
+        # on_loop()
+        # rate.sleep()
 
