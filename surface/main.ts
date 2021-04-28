@@ -3,7 +3,7 @@ import setIp from './electron/setIp';
 import setupRos from './electron/setupRos';
 import gamepadListener from './electron/gamepad';
 import log from './src/components/Log/LogItem';
-import {CATKIN_MAKE, IMU, SERVO, SET_IP, THRUSTERS} from './src/components/Log/channels';
+import {CATKIN_MAKE, GENERAL, IMU, SERVO, SET_IP, THRUSTERS} from './src/components/Log/channels';
 import servo from './electron/servo';
 import thrusters from './electron/thrusters';
 import imu from './electron/imu';
@@ -41,6 +41,11 @@ const createWindow = () => {
 
   // and load the index.html of the app.
   win.loadFile('./index.html');
+
+  ipcMain.on('logger', (e, msg) => {
+    e.sender.send(GENERAL, log('General', 'Welcome!', '#7AFF33'));
+    e.sender.send(GENERAL, log('General', 'Pilot Interface Starting...'));
+  })
 
   if(process.env.NODE_ENV !== 'development'){
     ipcMain.on('logger', (e, msg) => nodeManager(win));

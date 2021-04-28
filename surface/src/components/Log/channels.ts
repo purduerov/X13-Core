@@ -6,6 +6,7 @@ export const SERVO = 'servo';
 export const THRUSTERS = 'thruster_listener';
 export const IMU = 'imu_listener';
 export const COM = 'com_sender';
+export const GENERAL = 'general';
 
 export default [
     SET_IP,
@@ -15,5 +16,6 @@ export default [
     SERVO,
     THRUSTERS,
     IMU,
-    COM
+    COM,
+    GENERAL
 ]

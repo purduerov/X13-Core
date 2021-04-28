@@ -28,10 +28,9 @@ const CameraFrame: React.FC<Props> = (props) => {
 	}, [props.camera])
 
 	return(
-		<img src={src}
+		<div 
+			style={{backgroundImage: `URL(${src})`, transform: `rotate(${props.rotate}deg)`}}
 			className={props.secondary ? 'frame' : 'main-frame'}
-			alt="Image not found"
-			style={{transform: `rotate(${props.rotate}deg)`}}
 			onError={() => setSrc(props.camera.placeholder)}
 			onClick={() => props.handleClick(props.index)}
 		/>
