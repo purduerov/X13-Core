@@ -27,7 +27,7 @@ DIRECTION_SCALE = [10, 10, 5, 5, 5, 5]
 # as possible in the exact direction. Then, it will add in additional force if possible, as long as any additional force
 # is close enough to the needed additional force. Value is scaled from 0 to 1, 1 for exact vectors only, and 0 for
 # fuckit let's go places.
-SIMILARITY_MINIMUM = 1.0
+SIMILARITY_MINIMUM = .95
 # If we already yield >= this amount of the desired force, then break
 PERCENT_DESIRED_FORCE_YIELDED = .99
 # Values beneath this are assumed to be zero because of double rounding
@@ -61,6 +61,7 @@ location = location_frame_absolute
 XCOMP = np.sin(7 * np.pi / 18)
 YCOMP = np.cos(7 * np.pi / 18)
 
+oneiteration = False
 #                      X	Y	Z
 direction = np.matrix([[0, 0, 1],  # Thruster 1
                        [0, 0, 1],  # Thruster 2
@@ -103,10 +104,10 @@ class ThrustMapper:
     def changeOrigin(self, X, Y, Z):
         #self.com = [X ,Y ,Z ]
         for i in range(0, len(self.location)):
-            self.location[i][0] = self.location_frame_absolute[i][0] - self.com[0] + X
-            self.location[i][1] = self.location_frame_absolute[i][1] - self.com[1] + Y
-            self.location[i][2] = self.location_frame_absolute[i][2] - self.com[2] + Z
-        self.location = self.location * .0254
+            self.location[i][0] = self.location_frame_absolute[i][0] - self.com[0] + X * .0254
+            self.location[i][1] = self.location_frame_absolute[i][1] - self.com[1] + Y * .0254
+            self.location[i][2] = self.location_frame_absolute[i][2] - self.com[2] + Z * .0254
+        #self.location = self.location * .0254
         self.calcTorqueValues()
         self.createThruserForceMap()
 
@@ -186,6 +187,8 @@ class ThrustMapper:
             # print(outputNeeded)
             if np.linalg.norm(outputNeeded) < np.linalg.norm(desiredForce) * (1 - PERCENT_DESIRED_FORCE_YIELDED):
                 break
+            if oneiteration:
+                break
         # print('Restarting!!!!!!!!!!!!!!!!')
 
         return np.transpose(outputThrust).tolist()[0]
@@ -215,9 +218,9 @@ class ThrustMapper:
 
     # Blindly copied from Complex_1. Check these values at some point please
     def thrustToPWM(self, thrustVal):
-        if thrustVal < -ZERO_ROUND_THRESHOLD:
-            pwm = 0.018 * (thrustVal ** 3) + 0.117 * (thrustVal ** 2) + 0.4955 * thrustVal - 0.0991
-        elif thrustVal > ZERO_ROUND_THRESHOLD:
+        if thrustVal < -.04:
+            pwm = 0.018 * (thrustVal ** 3) + 0.117 * (thrustVal ** 2) + 0.4981 * thrustVal - 0.09808
+        elif thrustVal > .04:
             pwm = 0.0095 * (thrustVal ** 3) - 0.0783 * (thrustVal ** 2) + 0.4004 * thrustVal + 0.0986
         else:
             # assume 0 even though dead band has range of pwm values
@@ -240,11 +243,18 @@ class ThrustMapper:
 
 
 if __name__ == '__main__':
+    global oneiteration
     tm = ThrustMapper()
 
-    for i in range(100):
-        desired_thrust_final = [0, 0, 0, 0, 0, 0]  # X Y Z Ro Pi Ya
+    #for i in range(100):
+    desired_thrust_final = [0.1, 0, 0.0, 0, 0, 0]  # X Y Z Ro Pi Ya
 
-        pwm_values = tm.calculateThrusterOutput(desired_thrust_final)
-
-        print(list(np.around(np.array(pwm_values), 2)))
+    pwm_values = tm.calculateThrusterOutput(desired_thrust_final)
+    oneiteration = True
+    pwm_values2 = tm.calculateThrusterOutput(desired_thrust_final)
+    result1=np.matmul(tm.thrusterForceMap, pwm_values)
+    result2=np.matmul(tm.thrusterForceMap, pwm_values2)
+    print(list(np.around(np.array(pwm_values), 2)))
+    print(list(np.around(np.array(pwm_values2), 2)))
+    print(list(np.around(np.array(result1), 2)))
+    print(list(np.around(np.array(result2), 2)))
