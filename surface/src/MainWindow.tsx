@@ -28,6 +28,7 @@ const MainWindow: React.FC = () => {
             <div className="right-column">
 
                 <ThrusterInfo/>
+                <div className='tools-img'></div>
                 
 
             </div>
