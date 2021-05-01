@@ -1,6 +1,6 @@
 import path from 'path';
 import {spawn} from 'child_process';
-import msg from '../src/components/Log/LogItem';
+import msg, { LOG_ERROR, LOG_SUCCESS, LOG_WARNING } from '../src/components/Log/LogItem';
 import {GAMEPAD} from '../src/components/Log/channels';
 import net from 'net';
 import { ipcMain } from 'electron';
@@ -40,18 +40,18 @@ const gamepadListener = async (win: Electron.BrowserWindow) => {
     });
 
     sender.stderr.on('data', data => {
-        win.webContents.send(GAMEPAD, msg('gamepad_listener', `Error: ${data}`));
+        win.webContents.send(GAMEPAD, msg('gamepad_listener', `Error: ${data}`, LOG_ERROR));
     });
 
     sender.stdout.on('data', data => {
         if(`${data}`.includes('ready')){
-            win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Gamepad connected'));
+            win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Gamepad connected', LOG_SUCCESS));
             socket = net.connect(11001, 'localhost', () => {
-                win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket connected'));
+                win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket connected', LOG_SUCCESS));
             })
 
             socket.on('error', (err) => {
-                win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket error'));
+                win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket error', LOG_ERROR));
             })
 
             ipcMain.on('gamepad_sock', (e, params: GamepadParams) => {
@@ -61,7 +61,7 @@ const gamepadListener = async (win: Electron.BrowserWindow) => {
                     str = str.slice(0, -1);
                     socket.write(str);
                 }catch(e){
-                    win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket write error'));
+                    win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket write error', LOG_ERROR));
                 }
             })
 
@@ -72,12 +72,12 @@ const gamepadListener = async (win: Electron.BrowserWindow) => {
                     str = str.slice(0, -1);
                     socket.write(str);
                 }catch(e){
-                    win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket write error'));
+                    win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket write error', LOG_ERROR));
                 }
             })
         }
 
-        win.webContents.send(GAMEPAD, msg('gamepad_listener', `Data: ${data}`));
+        win.webContents.send(GAMEPAD, msg('gamepad_listener', `Data: ${data}`, LOG_WARNING));
     })
 }
 

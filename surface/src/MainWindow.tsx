@@ -7,6 +7,7 @@ import ThrustTweaker from './components/Thrusters/Tweaker/ThrustTweaker';
 import IMU from './components/IMU/IMU';
 import Compensator from './components/Compensator/Compensator';
 import CoM from './components/CoM/CoM';
+import Switch from './components/Switch/Switch';
 
 
 const MainWindow: React.FC = () => {
@@ -18,6 +19,7 @@ const MainWindow: React.FC = () => {
                 <ThrustTweaker/>
                 <Compensator/>
                 <CoM/>
+                <Switch/>
 
             </div>
             <div className="center-column">
@@ -28,7 +30,7 @@ const MainWindow: React.FC = () => {
             <div className="right-column">
 
                 <ThrusterInfo/>
-                <div className='tools-img'></div>
+                <img style={{width: '100%'}} src='./img/tools.png'/>
                 
 
             </div>
