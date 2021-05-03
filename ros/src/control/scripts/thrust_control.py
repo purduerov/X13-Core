@@ -17,7 +17,7 @@ locked_dims_list = [False, False, False, False, False, False]
 disabled_list = [False, False, False, False, False, False, False, False]
 inverted_list = [0, 0, 0, 0, 0, 0, 0, 0]
 desired_thrust_final = [0, 0, 0, 0, 0, 0]
-MAX_CHANGE = .8
+MAX_CHANGE = .15
 tm = thrust_mapping.ThrustMapper()
 # watch dog stuff
 last_packet_time = 0.0
