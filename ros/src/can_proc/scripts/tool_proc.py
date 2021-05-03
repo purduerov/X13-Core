@@ -43,9 +43,10 @@ sub = None
 
 
 def message_received(msg):
-    cmd = (msg.pm * BLUE)
-    cmd |= (msg.ghost * GREEN)
-    cmd |= (msg.secondary * YELLOW)
+    cmd = (msg.tools[0] * YELLOW)
+    cmd |= (msg.tools[1] * BLUE)
+    cmd |= (msg.tools[2] * BROWN)
+    cmd |= (msg.tools[3] * GREEN)
     
     cmsg = can_msg()
     cmsg.id = TOOLS_BOARD_ID
@@ -60,7 +61,7 @@ if __name__ == "__main__":
     pub = rospy.Publisher('can_tx', can_msg,
                           queue_size=10)
 
-    sub = rospy.Subscriber('/tools_proc', tools_command_msg,
+    sub = rospy.Subscriber('/tools', tools_command_msg,
                            message_received)
 
     # rate = rospy.Rate(5) # 5hz
