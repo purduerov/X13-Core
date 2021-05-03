@@ -61,7 +61,7 @@ location = location_frame_absolute
 XCOMP = np.sin(7 * np.pi / 18)
 YCOMP = np.cos(7 * np.pi / 18)
 
-oneiteration = False
+oneiteration = True
 #                      X	Y	Z
 direction = np.matrix([[0, 0, 1],  # Thruster 1
                        [0, 0, 1],  # Thruster 2
@@ -243,14 +243,14 @@ class ThrustMapper:
 
 
 if __name__ == '__main__':
-    global oneiteration
+    #global oneiteration
     tm = ThrustMapper()
 
     #for i in range(100):
     desired_thrust_final = [0.1, 0, 0.0, 0, 0, 0]  # X Y Z Ro Pi Ya
 
     pwm_values = tm.calculateThrusterOutput(desired_thrust_final)
-    oneiteration = True
+    #oneiteration = True
     pwm_values2 = tm.calculateThrusterOutput(desired_thrust_final)
     result1=np.matmul(tm.thrusterForceMap, pwm_values)
     result2=np.matmul(tm.thrusterForceMap, pwm_values2)
