@@ -11,12 +11,12 @@
 	},
 	{
 		"name": "Camera 3",
-		"feed": "http://192.168.1.5:8090/cam0",
+		"feed": "http://192.168.1.4:8090/cam0",
 		"placeholder": "./img/test_cam3.png"
 	},
 	{
 		"name": "Camera 4",
-		"feed": "http://192.168.1.5:8090/cam1",
+		"feed": "http://192.168.1.4:8090/cam1",
 		"placeholder": "./img/test_cam4.png"
 	}
 ]

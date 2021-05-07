@@ -3,6 +3,7 @@ import * as React from 'react';
 import Slider from '../../Slider/Slider';
 import './ThrustTweaker.scss';
 import {GamepadParams} from '../../../../electron/gamepad';
+import Switch from '../../Switch/Switch';
 
 const TRANSLATION_MAX = 10.0;
 const ROTATION_MAX = 4.0;
@@ -10,7 +11,23 @@ const TRANSLATION_STEP = 0.5;
 const ROTATION_STEP = 0.1
 
 const ThrustTweaker: React.FC = () => {
-    const [values, setValues] = React.useState([4.0, 4.0, 4.0, 1.5, 1.5, 1.5])
+    const [values, setValues] = React.useState([4.0, 4.0, 4.0, 1.5, 1.5, 1.5]);
+    const [reverse, setReverse] = React.useState(false);
+
+    const updateSwitch = () => {
+        let params: GamepadParams = {
+            type: 'reverse',
+            reverse: 'F'
+        }
+        if(reverse){
+            setReverse(false);
+        }else{
+            setReverse(true)
+            params.reverse = 'T'
+        }
+
+        ipcRenderer.send('reverse', params);
+    }
 
     return(
         <div className='tweaker-container'>
@@ -41,6 +58,9 @@ const ThrustTweaker: React.FC = () => {
                     }/>
                 )     
             })}
+            <div className='reverse-container'>
+                <Switch callback={updateSwitch} checked={reverse}></Switch>
+            </div>     
         </div>
     )
 }

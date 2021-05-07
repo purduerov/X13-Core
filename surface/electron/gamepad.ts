@@ -7,8 +7,9 @@ import { ipcMain } from 'electron';
 import { values } from 'webpack.config';
 
 export interface GamepadParams {
-    type: 'trim' | 'scale'
-    values: Array<number>
+    type: 'trim' | 'scale' | 'reverse'
+    reverse?: string
+    values?: Array<number>
 }
 
 let socket = new net.Socket();
@@ -57,7 +58,7 @@ const gamepadListener = async (win: Electron.BrowserWindow) => {
             ipcMain.on('gamepad_sock', (e, params: GamepadParams) => {
                 try{
                     let str = `${params.type}:`
-                    for(let v of params.values) str += `${v.toString()},`;
+                    for(let v of params.values!) str += `${v.toString()},`;
                     str = str.slice(0, -1);
                     socket.write(str);
                 }catch(e){
@@ -68,8 +69,17 @@ const gamepadListener = async (win: Electron.BrowserWindow) => {
             ipcMain.on('compensator', (e, params: GamepadParams) => {
                 try{
                     let str = `${params.type}:`
-                    for(let v of params.values) str += `${v.toString()},`;
+                    for(let v of params.values!) str += `${v.toString()},`;
                     str = str.slice(0, -1);
+                    socket.write(str);
+                }catch(e){
+                    win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket write error', LOG_ERROR));
+                }
+            })
+
+            ipcMain.on('reverse', (e, params: GamepadParams) => {
+                try{
+                    let str = `${params.type}:${params.reverse!}`
                     socket.write(str);
                 }catch(e){
                     win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket write error', LOG_ERROR));

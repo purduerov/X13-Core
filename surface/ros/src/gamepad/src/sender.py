@@ -28,6 +28,8 @@ TRIM_X = 0.0
 TRIM_Y = 0.0
 TRIM_Z = 0.0
 
+REVERSE = 1
+
 class SocketManager:
     def __init__(self):
         self.running = True
@@ -47,7 +49,7 @@ class SocketManager:
 
     def run(self):
         global SCALE_ROTATIONAL_X, SCALE_ROTATIONAL_Y, SCALE_ROTATIONAL_Z, SCALE_TRANSLATIONAL_X, SCALE_TRANSLATIONAL_Y, SCALE_TRANSLATIONAL_Z
-        global TRIM_X, TRIM_Y, TRIM_Z
+        global TRIM_X, TRIM_Y, TRIM_Z, REVERSE
 
         while not self.connected and self.running:
             try:
@@ -63,9 +65,9 @@ class SocketManager:
             if data:
                 decoded = data.decode()
                 mode = decoded.split(':')[0]
-                arr = [float(d) for d in decoded.split(':')[1].split(',')]
 
                 if mode == 'scale':
+                    arr = [float(d) for d in decoded.split(':')[1].split(',')]
                     SCALE_TRANSLATIONAL_X = arr[0]
                     SCALE_TRANSLATIONAL_Y = arr[1]
                     SCALE_TRANSLATIONAL_Z = arr[2]
@@ -74,17 +76,20 @@ class SocketManager:
                     SCALE_ROTATIONAL_Y = arr[4]
                     SCALE_ROTATIONAL_Z = arr[5]
                 elif mode == 'trim':
+                    arr = [float(d) for d in decoded.split(':')[1].split(',')]
                     TRIM_X = arr[0]
                     TRIM_Y = arr[1]
                     TRIM_Z = arr[2]
+                elif mode == 'reverse':
+                    REVERSE = 1 if decoded.split(':')[1] == 'F' else -1
 
 def getMessage():
     global gamepad_state
 
     t = Twist()
 
-    t.linear.x = gamepad_state['LSY'] * SCALE_TRANSLATIONAL_X + TRIM_X
-    t.linear.y = gamepad_state['LSX'] * SCALE_TRANSLATIONAL_Y + TRIM_Y
+    t.linear.x = (gamepad_state['LSY'] * SCALE_TRANSLATIONAL_X + TRIM_X) * REVERSE
+    t.linear.y = (gamepad_state['LSX'] * SCALE_TRANSLATIONAL_Y + TRIM_Y) * REVERSE
     t.linear.z = (gamepad_state['RT'] - gamepad_state['LT']) * SCALE_TRANSLATIONAL_Z + TRIM_Z
 
     if gamepad_state['LB'] == 1:

@@ -19,7 +19,6 @@ const MainWindow: React.FC = () => {
                 <ThrustTweaker/>
                 <Compensator/>
                 <CoM/>
-                <Switch/>
 
             </div>
             <div className="center-column">

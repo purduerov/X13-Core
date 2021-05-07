@@ -1,7 +1,7 @@
 .tweaker-container{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: auto auto repeat(3, 1fr);
+    grid-template-rows: auto auto repeat(3, 1fr) auto;
     grid-auto-flow: column;
     gap: 5px;
 }
@@ -28,4 +28,9 @@
     @extend .tweaker-title;
     grid-column: 2;
     grid-row: 2;
+}
+
+.reverse-container{
+    grid-row: 6;
+    grid-column: 1 / 3;
 }
