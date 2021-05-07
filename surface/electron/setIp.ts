@@ -22,7 +22,7 @@ const setIp = async (win) => {
 
     process.env.ROS_HOSTNAME = ip;
     process.env.ROS_IP = ip;
-    process.env.ROS_MASTER_URI = 'http://192.168.1.100:11311';
+    process.env.ROS_MASTER_URI = 'http://192.168.1.3:11311';
 
     win.webContents.send(SET_IP, log('ip_set', `Found ${ip} as local machine`));
 }

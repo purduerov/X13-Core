@@ -7,16 +7,14 @@ import sys
 #ROS
 import rospy
 from std_msgs.msg import String, Bool, Empty
-from shared_msgs.msg import rov_velocity_command
+from shared_msgs.msg import rov_velocity_command, tools_command_msg
 from geometry_msgs.msg import Twist
 import socket, threading
 import signal, os
 
 from config import *
 
-pm_toggle = False
-gh_toggle = False
-bs_toggle = False
+tools = [False, False, False, False]
 
 SCALE_TRANSLATIONAL_X = 4.0
 SCALE_TRANSLATIONAL_Y = 4.0
@@ -102,20 +100,13 @@ def getMessage():
 
     return rov_velocity_command(t, 'gamepad', False, False)
 
-def getPMState():
-    global pm_toggle
+def getTools():
+    global tools
 
-    return Bool(pm_toggle)
+    tm = tools_command_msg()
+    tm.tools = [i for i in tools]
 
-def getBSState():
-    global bs_toggle
-
-    return Bool(bs_toggle)
-
-def getGHState():
-    global gh_toggle
-
-    return Bool(gh_toggle)
+    return tm
 
 def correct_raw(raw, abbv):
     sign = (raw >= 0) * 2 - 1
@@ -147,13 +138,16 @@ def process_event(event):
     if event.ev_type == EVENT_KEY:
         gamepad_state[EVENTS[event.code]] = event.state
         if event.code == 'BTN_SOUTH' and event.state:
-            pm_toggle = not pm_toggle
+            tools[1] = not tools[1]
 
         if event.code == 'BTN_EAST' and event.state:
-            gh_toggle = not gh_toggle
+            tools[0] = not tools[0]
 
         if event.code == 'BTN_WEST' and event.state:
-            bs_toggle = not bs_toggle
+            tools[2] = not tools[2]
+
+        if event.code == 'BTN_NORTH' and event.state:
+            tools[3] = not tools[3]
 
     elif event.ev_type == EVENT_ABSOLUTE:
         gamepad_state[EVENTS[event.code]] = correct_raw(event.state, EVENTS[event.code])
@@ -162,9 +156,7 @@ def process_event(event):
 
 def pub_data(event):
     pub.publish(getMessage())
-    pub_pm.publish(getPMState())
-    pub_gh.publish(getGHState())
-    pub_bs.publish(getBSState())
+    pub_tools.publish(getTools())
 
 def update_gamepad(event):
     try:
@@ -182,7 +174,7 @@ def shutdown(sig, frame):
     rospy.signal_shutdown('now')
 
 if __name__ == '__main__':
-    global pub, pub_pm, pub_gh, data_thread, gamepad_thread, sock_thread
+    global pub, pub_tools, data_thread, gamepad_thread, sock_thread
 
     signal.signal(signal.SIGINT, shutdown)
     signal.signal(signal.SIGTERM, shutdown)
@@ -197,9 +189,7 @@ if __name__ == '__main__':
     rospy.init_node('gp_pub', anonymous=True, disable_signals=True)
 
     pub = rospy.Publisher('rov_velocity', rov_velocity_command, queue_size=10)
-    pub_pm = rospy.Publisher('pm_cmd', Bool, queue_size=10)
-    pub_gh = rospy.Publisher('gh_cmd', Bool, queue_size=10)
-    pub_bs = rospy.Publisher('bs_cmd', Bool, queue_size=10)
+    pub_tools = rospy.Publisher('tools', tools_command_msg, queue_size=10)
 
 
     data_thread = rospy.Timer(rospy.Duration(0.1), pub_data)
