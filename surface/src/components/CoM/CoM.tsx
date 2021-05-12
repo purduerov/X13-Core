@@ -16,8 +16,8 @@ const CoM: React.FC = () => {
                     <Slider
                         value={val}
                         key={idx}
-                        min={-1.0}
-                        max={1.0}
+                        min={-2.0}
+                        max={2.0}
                         step={0.01}
                         callback={(val) => {
                             let temp = [...values];

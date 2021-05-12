@@ -3,15 +3,15 @@ import * as React from 'react';
 import Slider from '../../Slider/Slider';
 import './ThrustTweaker.scss';
 import {GamepadParams} from '../../../../electron/gamepad';
-import Switch from '../../Switch/Switch';
+import Toggle from '../../Toggle/Toggle';
 
-const TRANSLATION_MAX = 10.0;
-const ROTATION_MAX = 4.0;
-const TRANSLATION_STEP = 0.5;
-const ROTATION_STEP = 0.1
+const TRANSLATION_MAX = 1.0;
+const ROTATION_MAX = 1.0;
+const TRANSLATION_STEP = 0.05;
+const ROTATION_STEP = 0.05;
 
 const ThrustTweaker: React.FC = () => {
-    const [values, setValues] = React.useState([4.0, 4.0, 4.0, 1.5, 1.5, 1.5]);
+    const [values, setValues] = React.useState([1.0, 1.0, 1.0, 1.0, 1.0, 1.0]);
     const [reverse, setReverse] = React.useState(false);
 
     const updateSwitch = () => {
@@ -19,12 +19,12 @@ const ThrustTweaker: React.FC = () => {
             type: 'reverse',
             reverse: 'F'
         }
-        if(reverse){
-            setReverse(false);
-        }else{
-            setReverse(true)
-            params.reverse = 'T'
+
+        if(!reverse){
+            params.reverse = 'T';
         }
+        
+        setReverse(!reverse);
 
         ipcRenderer.send('reverse', params);
     }
@@ -59,7 +59,7 @@ const ThrustTweaker: React.FC = () => {
                 )     
             })}
             <div className='reverse-container'>
-                <Switch callback={updateSwitch} checked={reverse}></Switch>
+                <Toggle toggled={reverse} callback={updateSwitch} name='Reverse'/>
             </div>     
         </div>
     )
