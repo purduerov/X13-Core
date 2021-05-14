@@ -7,7 +7,7 @@ import signal
 
 
 def getSignal(bus):
-    def signal_handler(sig, frame):
+    def signal_handler(sig, frame) -> None:
         print("CTRL+C detected")
         zeroOutThrusters(bus=bus)
         print("Thrusters zero-ed out")
@@ -16,13 +16,13 @@ def getSignal(bus):
     return signal_handler
 
 
-def zeroOutThrusters(bus=None):
+def zeroOutThrusters(bus=None) -> None:
     a = mapThrusters([127] * 8)
 
     writeToCan(a, timesleep=0.0, bus=bus, printOut=True)
 
 
-def mapThrusters(can_pow, can_map=None, printOut=False):
+def mapThrusters(can_pow, can_map=None, printOut=False) -> dict:
     if can_map is None:
         can_map = {
             0x201: [7, 0, 0, 0],
@@ -53,7 +53,7 @@ def mapThrusters(can_pow, can_map=None, printOut=False):
     return can_out
 
 
-def writeToCan(packet, timesleep=1, bus=None, printOut=False):
+def writeToCan(packet, timesleep=1, bus=None, printOut=False) -> None:
     if bus is None:
         bus = can.interface.Bus(channel='can0', bustype='socketcan')
 
