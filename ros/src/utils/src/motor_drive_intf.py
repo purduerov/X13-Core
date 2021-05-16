@@ -7,12 +7,14 @@ Box or to test with the full ROV.
 
 
 import sys
-import can
 import time
 import signal
+from copy import deepcopy
 
-from .thrust_range_test import writeToCan, getSignal, zeroOutThrusters
-from .esc_1by1_test import BASE_PACKET
+import can
+
+from thrust_range_test import writeToCan, getSignal, zeroOutThrusters
+from esc_1by1_test import BASE_PACKET
 
 
 N_CAN_BYTES = 8
@@ -59,7 +61,7 @@ def main() -> None:
             speed = int(input("Speed>").strip())
             if(speed > 255 or speed < 0):
                 raise ValueError()
-            packet = BASE_PACKET.copy()
+            packet = deepcopy(BASE_PACKET)
             packet[canId][4 + escNum] = speed
             writeToCan(packet)
         except ValueError:
