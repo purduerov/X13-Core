@@ -18,5 +18,15 @@
 		"name": "Camera 4",
 		"feed": "http://192.168.1.4:8090/cam1",
 		"placeholder": "./img/test_cam4.png"
+	},
+	{
+		"name": "Camera 4",
+		"feed": "http://192.168.1.4:8090/cam2",
+		"placeholder": "./img/test_cam4.png"
+	},
+	{
+		"name": "Camera 4",
+		"feed": "http://192.168.1.4:8090/cam3",
+		"placeholder": "./img/test_cam4.png"
 	}
 ]

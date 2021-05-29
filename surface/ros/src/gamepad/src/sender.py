@@ -16,13 +16,13 @@ from config import *
 
 tools = [False, False, False, False]
 
-SCALE_TRANSLATIONAL_X = 4.0
-SCALE_TRANSLATIONAL_Y = 4.0
-SCALE_TRANSLATIONAL_Z = 4.0
+SCALE_TRANSLATIONAL_X = 1.0
+SCALE_TRANSLATIONAL_Y = 1.0
+SCALE_TRANSLATIONAL_Z = 1.0
 
-SCALE_ROTATIONAL_X = 1.5
-SCALE_ROTATIONAL_Y = 1.5
-SCALE_ROTATIONAL_Z = 1.5
+SCALE_ROTATIONAL_X = 1.0
+SCALE_ROTATIONAL_Y = 1.0
+SCALE_ROTATIONAL_Z = 1.0
 
 TRIM_X = 0.0
 TRIM_Y = 0.0
@@ -88,7 +88,7 @@ def getMessage():
 
     t = Twist()
 
-    t.linear.x = (gamepad_state['LSY'] * SCALE_TRANSLATIONAL_X + TRIM_X) * REVERSE
+    t.linear.x = -(gamepad_state['LSY'] * SCALE_TRANSLATIONAL_X + TRIM_X) * REVERSE
     t.linear.y = (gamepad_state['LSX'] * SCALE_TRANSLATIONAL_Y + TRIM_Y) * REVERSE
     t.linear.z = (gamepad_state['RT'] - gamepad_state['LT']) * SCALE_TRANSLATIONAL_Z + TRIM_Z
 
@@ -99,8 +99,8 @@ def getMessage():
     else:
         x = 0.0
 
-    t.angular.x = x
-    t.angular.y = gamepad_state['RSY'] * SCALE_ROTATIONAL_Y
+    t.angular.x = -x
+    t.angular.y = (-gamepad_state['RSY'] * SCALE_ROTATIONAL_Y) * REVERSE
     t.angular.z = -gamepad_state['RSX'] * SCALE_ROTATIONAL_Z
 
     return rov_velocity_command(t, 'gamepad', False, False)
