@@ -1,5 +1,6 @@
 from photomosaics import *
 import cv2
+from matplotlib import pyplot as plt
 
 def test_1():
     """A test to see if noisy images can be generated and an ordered mosaic can be made."""
@@ -33,17 +34,28 @@ def test_2():
     Also an example of how to produce a mosaic from shuffled and cropped images.
     Reads a folder of ordered images, then shuffles them, then produces the ordered mosaic from shuffled images.
     """
-    path = "./shite/"
+    #path = "./shite/"
+    path = "./underwater/"
     images = image_folder_read(path)
     for image in images:
-        is_square(image)
+        hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+        hue, sat = hsv[:,:,0], hsv[:,:,1]
+        plt.subplot(131),plt.imshow(hsv)
+        plt.title('hsv'), plt.xticks([]), plt.yticks([])
+        plt.subplot(132),plt.imshow(hue)
+        plt.title('hue'), plt.xticks([]), plt.yticks([])
+        plt.subplot(133),plt.imshow(sat)
+        plt.title('sat'), plt.xticks([]), plt.yticks([])
+        plt.show()
+        
+        is_square(sat)
+
     #mess = mosaic_compile_ordered(shuffled)
     #nice = mosaic_compile_unordered(images)
     #cv2.imshow("Mess: ", mess)
     #cv2.imshow("Nice: ", nice)
 
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    
 
 
 def test_3():

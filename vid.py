@@ -11,7 +11,8 @@ if __name__ == "__main__":
 
     #filename = './photos/okcolor1.mp4'
     #filename = './photos/ROV_Pool_test.mp4'
-    filename = './photos/land.mp4'
+    #filename = './photos/land.mp4'
+    filename = './photos/2021-02-26 13-19-01.mp4'
 
     cap = cv2.VideoCapture(filename)
     frame_count = 0

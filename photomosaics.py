@@ -2,12 +2,14 @@ import cv2
 import numpy as np
 import os
 import random
+from matplotlib import pyplot as plt
 
 white_thresh = 80
 square_tolerance = .25
 
 def color_diff(color0, color1):
-    diff = 0
+    return abs(int(color0) - int(color1)) 
+    diff = 0                        #from before I only used H in HSV
     for i,j in zip(color0, color1):
         diff += abs(int(i)-int(j))  #prevent uint8 overflow
     return diff
@@ -39,8 +41,10 @@ def color_down(image):
         new_row += 1
 
     cv2.line(new_image,(col,row),(new_col,new_row),(0,255,0),1)
-    cv2.imshow("fuck", new_image)
-    cv2.waitKey(0)
+    #cv2.imshow("fuck", new_image)
+    #cv2.waitKey(0)
+    plt.subplot(111),plt.imshow(new_image)
+    plt.show()
 
     if(confirmed):
         return new_color, new_row - row
@@ -75,8 +79,10 @@ def color_right(image):
         new_col += 1
 
     cv2.line(new_image,(col,row),(new_col,new_row),(0,255,0),1)
-    cv2.imshow("fuck", new_image)
-    cv2.waitKey(0)
+    #cv2.imshow("fuck", new_image)
+    #cv2.waitKey(0)
+    plt.subplot(111),plt.imshow(new_image)
+    plt.show()
 
     if(confirmed):
         return new_color, new_col - col
@@ -111,8 +117,10 @@ def color_up(image):
         new_row -= 1
 
     cv2.line(new_image,(col,row),(new_col,new_row),(0,255,0),1)
-    cv2.imshow("fuck", new_image)
-    cv2.waitKey(0)
+    #cv2.imshow("fuck", new_image)
+    #cv2.waitKey(0)
+    plt.subplot(111),plt.imshow(new_image)
+    plt.show()
 
     if(confirmed):
         return new_color, row - new_row 
@@ -147,8 +155,10 @@ def color_left(image):
         new_col -= 1
 
     cv2.line(new_image,(col,row),(new_col,new_row),(0,255,0),1)
-    cv2.imshow("fuck", new_image)
-    cv2.waitKey(0)
+    #cv2.imshow("fuck", new_image)
+    #cv2.waitKey(0)
+    plt.subplot(111),plt.imshow(new_image)
+    plt.show()
 
     if(confirmed):
         return new_color, col - new_col 
@@ -200,15 +210,17 @@ def is_square(image):
 
     print(ret)
 
-    cv2.imshow("fuck", image)
-    cv2.waitKey(0)
+    plt.subplot(111),plt.imshow(image)
+    plt.show()
+    #cv2.imshow("fuck", image)
+    #cv2.waitKey(0)
     
 
 def image_folder_read(path):
     images = [cv2.imread(path+i) for i in os.listdir(path)]
-    if not(len(images) == 5):
-        print('Incorrect number of images, there should be exactly 5')
-        exit()
+    #if not(len(images) == 5):
+    #    print('Incorrect number of images, there should be exactly 5')
+    #    exit()
     return images 
 
 
