@@ -1,30 +1,25 @@
 from PIL import Image 
-import cv2
+import copy
 import numpy as np
 from matplotlib import pyplot as plt
 
 
-def palette(img):
-    arr = np.asarray(img)
-    palette, index = np.unique(asvoid(arr).ravel(), return_inverse=True)
-    palette = palette.view(arr.dtype).reshape(-1, arr.shape[-1])
-    count = np.bincount(index)
+def get_palette_freq(image):
+    #np.unique will flatten input: this is good, but it's a ref not a deep copy, so it would mess up the image in the calling func
+    temp = copy.deepcopy(image) 
+    #unique values, their frequency
+    image_palette, count = np.unique(temp, return_counts=True) 
+    #above is sorted by value not freq; let's sort the freqs and then use those indices to sort the palette
     order = np.argsort(count)
-    return palette[order[::-1]]
-
-
-def asvoid(arr):
-    arr = np.ascontiguousarray(arr)
-    return arr.view(np.dtype((np.void, arr.dtype.itemsize * arr.shape[-1])))
+    return image_palette[order[::-1]]
 
 
 if __name__ == "__main__":
-    num_colors = 20
-    #image = './photos/Capture.png'
-    image = './photos/ss.jpg'
+    num_colors = 30
+    image = './shite/saved3.jpg'
     image = Image.open(image)
     print(image.mode)
-    pal = palette(image)[:num_colors]
+    pal = get_palette_freq(image)[:num_colors]
     pal_image = Image.new('P', (16, 16))
     pal_image.putpalette(pal * 32) 
     quant = image.quantize(colors=len(pal), palette=pal_image, dither=0)

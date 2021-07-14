@@ -1,7 +1,5 @@
 Untracked: 
     yeet
-    hist
-    lightspeed 
     tester
     photomosaics
     vid_streamer
@@ -36,6 +34,31 @@ nn: a baby nn I used just to see how it would do. Harsh truths:
     That being said, it didn't show enough promise to make me think this extra effort was worth it,
     but maybe I can throw a freshman at it to do my dirty work for me + teach them how to build a nn. 
 
+
+hist:
+  puts pixel values into a histogram, makes a palette out of the most occurring colors, then 
+  quantizes all other colors into these on a frame 
+  based on an idea from scott 
+  very naive; to demonstrate:   
+    say I have 6 common frequencies 
+    I'm looking for 4 colors so I quant down to 4 
+    3 of my most frequent colors are shades of blue 
+    congrats you just turned the picture mostly blue 
+  additionally:
+    these frequencies are [r,g,b], so adjacent pixels may differ a lot, and your results may be a little nonsensical 
+    to fix it should be done in a continuous color spectra 
+
+
+dynamic_quant:
+  ^^ but less naive; however it's unuseably slow. much optimization would be needed to work 
+  it uses HSV since hue is a continuous [0,360] spectra 
+  instead of choosing the most frequent colors, it chooses local maxima of frequencies; to demonstrate:
+    if there are 4 blues but one blue is most common, then 6 reds and one is most common, all of which are 
+      together in a list, and I'm looking for 2 maxima, ideally it should choose one blue and one red 
+        (I said less naive, not infallible) 
+  since the reassignment of hues to this palette of maxima colors is manual and in python, it's ludicrously slow 
+  all of the runtime is spent in the quantize function 
+  GLHF 
 
 
 rov ffserver.conf:

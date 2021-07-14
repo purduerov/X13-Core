@@ -4,7 +4,7 @@ import os
 import random
 from matplotlib import pyplot as plt
 
-white_thresh = 80
+white_thresh = 20
 square_tolerance = .25
 
 def color_diff(color0, color1):
@@ -34,13 +34,13 @@ def color_down(image):
                 flag = 1
                 edge = new_row
         else:   #new color detected, back to white or off the edge of the target?
-            if(diff < white_thresh):
+            if(color_diff(image[edge][new_col], image[new_row][new_col]) < white_thresh):
                 confirmed = 1
                 break #new color confirmed 
 
         new_row += 1
 
-    cv2.line(new_image,(col,row),(new_col,new_row),(0,255,0),1)
+    cv2.line(new_image,(col,row),(new_col,new_row),(255,0,0),1)
     #cv2.imshow("fuck", new_image)
     #cv2.waitKey(0)
     plt.subplot(111),plt.imshow(new_image)
@@ -72,13 +72,14 @@ def color_right(image):
                 flag = 1
                 edge = new_col
         else:   #new color detected, back to white or off the edge of the target?
-            if(diff < white_thresh):
+            if(color_diff(image[new_row][edge], image[new_row][new_col]) < white_thresh):
+            #if(diff < white_thresh):
                 confirmed = 1
                 break #new color confirmed 
 
         new_col += 1
 
-    cv2.line(new_image,(col,row),(new_col,new_row),(0,255,0),1)
+    cv2.line(new_image,(col,row),(new_col,new_row),(255,0,0),1)
     #cv2.imshow("fuck", new_image)
     #cv2.waitKey(0)
     plt.subplot(111),plt.imshow(new_image)
@@ -110,13 +111,14 @@ def color_up(image):
                 flag = 1
                 edge = new_row
         else:   #new color detected, back to white or off the edge of the target?
-            if(diff < white_thresh):
+            if(color_diff(image[edge][new_col], image[new_row][new_col]) < white_thresh):
+            #if(diff < white_thresh):
                 confirmed = 1
                 break #new color confirmed 
 
         new_row -= 1
 
-    cv2.line(new_image,(col,row),(new_col,new_row),(0,255,0),1)
+    cv2.line(new_image,(col,row),(new_col,new_row),(255,0,0),1)
     #cv2.imshow("fuck", new_image)
     #cv2.waitKey(0)
     plt.subplot(111),plt.imshow(new_image)
@@ -148,13 +150,14 @@ def color_left(image):
                 flag = 1
                 edge = new_col
         else:   #new color detected, back to white or off the edge of the target?
-            if(diff < white_thresh):
+            if(color_diff(image[new_row][edge], image[new_row][new_col]) < white_thresh):
+            #if(diff < white_thresh):
                 confirmed = 1
                 break #new color confirmed 
 
         new_col -= 1
 
-    cv2.line(new_image,(col,row),(new_col,new_row),(0,255,0),1)
+    cv2.line(new_image,(col,row),(new_col,new_row),(255,0,0),1)
     #cv2.imshow("fuck", new_image)
     #cv2.waitKey(0)
     plt.subplot(111),plt.imshow(new_image)
