@@ -23,7 +23,7 @@ def main(args: list) -> None:
     can_bus = can.interface.Bus(channel = channel, bustype = 'socketcan')
 
     for can_rx in can_bus:
-        bus_message_received()
+        bus_message_received(can_rx)
     
 
 
