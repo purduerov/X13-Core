@@ -243,14 +243,14 @@ def get_lines():
     #image = cv2.imread('../photos/box3crop.png', -1) #bad angle
     image = cv2.imread('../photos/box2crop.png', -1) #bad angle
     #image = cv2.imread('../photos/Capture.png', -1) #alright
-    #image = cv2.imread('../photos/five.jpg', -1) #shite image
-    #image = cv2.imread('../photos/four.jpg', -1) #shite image
-    #image = cv2.imread('../photos/one.jpg', -1) #shite image
-    #image = cv2.imread('../photos/paper1.jpg', -1) #shite image
-    #image = cv2.imread('../photos/paper2.jpg', -1) #shite image
-    #image = cv2.imread('../photos/paper3.jpg', -1) #shite image
-    #image = cv2.imread('../photos/three.jpg', -1) #shite image
-    #image = cv2.imread('../photos/two.jpg', -1) #shite image
+    #image = cv2.imread('../photos/five.jpg', -1) #land image
+    #image = cv2.imread('../photos/four.jpg', -1) #land image
+    #image = cv2.imread('../photos/one.jpg', -1) #land image
+    #image = cv2.imread('../photos/paper1.jpg', -1) #land image
+    #image = cv2.imread('../photos/paper2.jpg', -1) #land image
+    #image = cv2.imread('../photos/paper3.jpg', -1) #land image
+    #image = cv2.imread('../photos/three.jpg', -1) #land image
+    #image = cv2.imread('../photos/two.jpg', -1) #land image
 
     resized = imutils.resize(image, width=300)
     #ratio = image.shape[0] / float(resized.shape[0])

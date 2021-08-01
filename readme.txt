@@ -1,8 +1,13 @@
+To run a test: 
+  on one terminal, run: ffserver -f /etc/ffserver.conf 
+  on the other, run: ffmpeg -i ./photos/2021-02-26\ 13-19-01.mp4 -c:v libvpx -cpu-used 4 -threads 8 http://localhost:8090/stream.ffm
+  This throws up a camera feed from an old video that you may now consume
+
 Untracked: 
     yeet
     tester
     photomosaics
-
+    the_one_algo_to_rule_them_all
 
 Algo:
 test3 is baseline 
@@ -60,7 +65,7 @@ dynamic_quant:
   GLHF 
 
 
-rov ffserver.conf:
+rov ffserver.conf for reference:
 
 HTTPPort 8090
 HTTPBindAddress 0.0.0.0
@@ -109,7 +114,7 @@ Format status
 
 
 
-
+my ffserver.conf: 
 
 HTTPPort 8090
 HTTPBindAddress 0.0.0.0

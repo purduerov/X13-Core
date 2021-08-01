@@ -34,9 +34,11 @@ def test_2():
     Also an example of how to produce a mosaic from shuffled and cropped images.
     Reads a folder of ordered images, then shuffles them, then produces the ordered mosaic from shuffled images.
     """
-    #path = "./shite/"
     path = "./underwater/"
     images = image_folder_read(path)
+
+    thresh = 15
+
     for image in images:
         hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
         hue, sat = hsv[:,:,0], hsv[:,:,1]

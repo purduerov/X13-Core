@@ -14,10 +14,10 @@ def color_diff(color0, color1):
         diff += abs(int(i)-int(j))  #prevent uint8 overflow
     return diff
 
-
+'''
 def color_down(image):
-    new_image = image.copy()
-    row = int(new_image.shape[0] / 2)
+    new_image = image.copy()            #so I can draw on the picture in testing 
+    row = int(new_image.shape[0] / 2)   #start at center, move towards edge looking for colors
     col = int(new_image.shape[1] / 2)
     new_row = row + 1
     new_col = col #+ 1
@@ -51,7 +51,44 @@ def color_down(image):
     if(edge is not None):
         return None, edge - row
     return None, new_row - row
+'''
 
+def color_down(image):
+    new_image = image.copy()            #so I can draw on the picture in testing 
+    row = int(new_image.shape[0] / 2)   #start at center, move towards edge looking for colors
+    col = int(new_image.shape[1] / 2)
+    new_row = row + 1
+    new_col = col #+ 1
+    white_baseline = image[row][col]
+    flag = 0
+    confirmed = 0
+    edge = None
+
+    while(new_row < new_image.shape[0]):
+        diff = color_diff(white_baseline, image[new_row][new_col])
+        if not flag:    #no new color detected yet
+            if(diff > white_thresh):
+                new_color = image[new_row][new_col]
+                flag = 1
+                edge = new_row
+        else:   #new color detected, back to white or off the edge of the target?
+            if(color_diff(image[edge][new_col], image[new_row][new_col]) < white_thresh):
+                confirmed = 1
+                break #new color confirmed 
+
+        new_row += 1
+
+    cv2.line(new_image,(col,row),(new_col,new_row),(255,0,0),1)
+    #cv2.imshow("fuck", new_image)
+    #cv2.waitKey(0)
+    plt.subplot(111),plt.imshow(new_image)
+    plt.show()
+
+    if(confirmed):
+        return new_color, new_row - row
+    if(edge is not None):
+        return None, edge - row
+    return None, new_row - row
 
 def color_right(image):
     new_image = image.copy()

@@ -16,7 +16,7 @@ def get_palette_freq(image):
 
 if __name__ == "__main__":
     num_colors = 30
-    image = './shite/saved3.jpg'
+    image = './land/saved3.jpg'
     image = Image.open(image)
     print(image.mode)
     pal = get_palette_freq(image)[:num_colors]
