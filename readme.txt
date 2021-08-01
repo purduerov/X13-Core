@@ -1,14 +1,9 @@
-To run a test: 
+To run a proper test feed: 
   on one terminal, run: ffserver -f /etc/ffserver.conf 
-  on the other, run: ffmpeg -i ./photos/2021-02-26\ 13-19-01.mp4 -c:v libvpx -cpu-used 4 -threads 8 http://localhost:8090/stream.ffm
+  on the other, run: ffmpeg -i <./path/to/.mp4> -c:v libvpx -cpu-used 4 -threads 8 http://localhost:8090/stream.ffm
   This throws up a camera feed from an old video that you may now consume
 
-Untracked: 
-    yeet
-    tester
-    photomosaics
-    the_one_algo_to_rule_them_all
-
+    
 Algo:
 test3 is baseline 
 tolerance adds tolerance to projections
@@ -38,6 +33,13 @@ nn: a baby nn I used just to see how it would do. Harsh truths:
     That being said, it didn't show enough promise to make me think this extra effort was worth it,
     but maybe I can throw a freshman at it to do my dirty work for me + teach them how to build a nn. 
 
+yeet:
+  idk honestly something I tried with contouring 
+
+photomosaics:
+  my starting take on Hunter's work
+  tester: test driver
+
 
 hist:
   puts pixel values into a histogram, makes a palette out of the most occurring colors, then 
@@ -63,6 +65,9 @@ dynamic_quant:
   since the reassignment of hues to this palette of maxima colors is manual and in python, it's ludicrously slow 
   all of the runtime is spent in the quantize function 
   GLHF 
+
+the_one_algo_to_rule_them_all:
+  I hate how simple it is, but it works very consistently. Some of these ideas are Hunter's from photomosaics.py. 
 
 
 rov ffserver.conf for reference:
