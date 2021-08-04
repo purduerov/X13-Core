@@ -29,6 +29,8 @@ TRIM_Y = 0.0
 TRIM_Z = 0.0
 
 REVERSE = 1
+LOCKOUT = False
+MODE = True
 
 class SocketManager:
     def __init__(self):
@@ -49,7 +51,7 @@ class SocketManager:
 
     def run(self):
         global SCALE_ROTATIONAL_X, SCALE_ROTATIONAL_Y, SCALE_ROTATIONAL_Z, SCALE_TRANSLATIONAL_X, SCALE_TRANSLATIONAL_Y, SCALE_TRANSLATIONAL_Z
-        global TRIM_X, TRIM_Y, TRIM_Z, REVERSE
+        global TRIM_X, TRIM_Y, TRIM_Z, REVERSE, LOCKOUT, MODE
 
         while not self.connected and self.running:
             try:
@@ -82,6 +84,10 @@ class SocketManager:
                     TRIM_Z = arr[2]
                 elif mode == 'reverse':
                     REVERSE = 1 if decoded.split(':')[1] == 'F' else -1
+                elif mode == 'lockout':
+                    LOCKOUT = decoded.split(':')[1] == 'T'
+                elif mode == 'mode':
+                    MODE = decoded.split(':')[1] == 'T'
 
 def getMessage():
     global gamepad_state
@@ -148,7 +154,7 @@ def process_event(event):
         if event.code == 'BTN_EAST' and event.state:
             tools[0] = not tools[0]
 
-        if event.code == 'BTN_WEST' and event.state:
+        if event.code == 'BTN_WEST' and event.state and LOCKOUT:
             tools[2] = not tools[2]
 
         if event.code == 'BTN_NORTH' and event.state:
