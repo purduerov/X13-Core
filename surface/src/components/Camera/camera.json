@@ -2,31 +2,37 @@
 	{
 		"name": "Camera 1",
 		"feed": "http://192.168.1.3:8090/cam0",
-		"placeholder": "./img/test_cam1.png"
+		"placeholder": "./img/test_cam1.png",
+		"angle": 0
 	},
 	{
 		"name": "Camera 2",
 		"feed": "http://192.168.1.3:8090/cam1",
-		"placeholder": "./img/test_cam2.png"
+		"placeholder": "./img/test_cam2.png",
+		"angle": 0
 	},
 	{
 		"name": "Camera 3",
 		"feed": "http://192.168.1.4:8090/cam0",
-		"placeholder": "./img/test_cam3.png"
+		"placeholder": "./img/test_cam3.png",
+		"angle": 90
 	},
 	{
 		"name": "Camera 4",
 		"feed": "http://192.168.1.4:8090/cam1",
-		"placeholder": "./img/test_cam4.png"
+		"placeholder": "./img/test_cam4.png",
+		"angle": 0
 	},
 	{
 		"name": "Camera 4",
 		"feed": "http://192.168.1.4:8090/cam2",
-		"placeholder": "./img/test_cam4.png"
+		"placeholder": "./img/test_cam4.png",
+		"angle": 0
 	},
 	{
 		"name": "Camera 4",
 		"feed": "http://192.168.1.4:8090/cam3",
-		"placeholder": "./img/test_cam4.png"
+		"placeholder": "./img/test_cam4.png",
+		"angle": 0
 	}
 ]
