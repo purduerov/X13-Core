@@ -2,15 +2,16 @@ import cv2
 import socket
 import threading
 import time
+import sys
 
 capture = False
 counter = 0
 
 class SocketManager:
-    def __init__(self):
+    def __init__(self, port):
         self.running = True
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.bind(('127.0.0.1', 11005))
+        self.sock.bind(('127.0.0.1', port))
         self.sock.listen(5)
         self.sock.settimeout(1)
         self.connected = False
@@ -24,6 +25,7 @@ class SocketManager:
         self.thread.join()
 
     def run(self):
+      global capture, counter
         while not self.connected and self.running:
             try:
                 conn, addr = self.sock.accept()
@@ -38,23 +40,25 @@ class SocketManager:
                 pass
             if data:
                 capture = len(data.decode()) > 0
+                counter = int(data.decode())
                 
-sock_thread = SocketManager()
 
-vcap = cv2.VideoCapture('http://192.168.1.3:8090/cam0')
+if __name__ == '__main__':
+  input_socket = SocketManager(int(sys.argv[1]))
 
-while(True):
-  try:
-      ret, frame = vcap.read()
-  except:
-      continue 
+  vcap = cv2.VideoCapture('http://192.168.1.3:8090/cam0')
 
-  if capture:
-    #Save image
-    cv2.imwrite(f'./testing/im{counter + 1}.png', frame)
-    counter += 1
-    capture = False
+  while(input_socket.running):
+    try:
+        ret, frame = vcap.read()
+    except:
+        continue    
 
-  time.sleep(0.5)
+    if capture:
+      #Save image
+      cv2.imwrite(f'./testing/im{counter + 1}.png', frame)
+      capture = False
 
-sock_thread.shutdown()
+    time.sleep(0.5)
+
+  input_socket.shutdown()
