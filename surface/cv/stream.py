@@ -2,15 +2,18 @@ import cv2
 import socket
 import threading
 import time
+import sys
+import signal
+import os
 
 capture = False
 counter = 0
 
 class SocketManager:
-    def __init__(self):
+    def __init__(self, port):
         self.running = True
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.bind(('127.0.0.1', 11005))
+        self.sock.bind(('127.0.0.1', port))
         self.sock.listen(5)
         self.sock.settimeout(1)
         self.connected = False
@@ -24,7 +27,7 @@ class SocketManager:
         self.thread.join()
 
     def run(self):
-        global capture
+        global capture, counter
         while not self.connected and self.running:
             try:
                 conn, addr = self.sock.accept()
@@ -39,27 +42,39 @@ class SocketManager:
                 pass
             if data:
                 capture = len(data.decode()) > 0
+                counter = int(data.decode())
+                print(capture)
+                print(counter)
                 
-sock_thread = SocketManager()
+def shutdown(sig, frame):
+    global input_socket
+    print('shutting down')
+    input_socket.shutdown()
 
-vcap = cv2.VideoCapture('http://192.168.1.3:8090/cam0')
+if __name__ == '__main__':
+    global input_socket
 
-print('ready')
+    signal.signal(signal.SIGINT, shutdown)
+    signal.signal(signal.SIGTERM, shutdown)
 
-while(True):
-  try:
-      ret, frame = vcap.read()
-  except:
-      continue 
+    input_socket = SocketManager(int(sys.argv[1]))
 
-  if capture:
-    #Save image
-    cv2.imwrite(f'./testing/im{counter + 1}.png', frame)
-    counter += 1
-    if counter > 4:
-        counter = 0
-    capture = False
+    vcap = cv2.VideoCapture('http://192.168.1.3:8090/cam0')
 
-  time.sleep(0.5)
+    print('ready')
 
-sock_thread.shutdown()
+    while(input_socket.running):
+        try:
+            ret, frame = vcap.read()
+        except:
+            continue    
+
+        if capture and ret:
+            #Save image
+            print(os.path.curdir)
+            cv2.imwrite(f'cv/testing/im{counter + 1}.png', frame)
+            capture = False
+
+        time.sleep(0.5)
+
+    input_socket.shutdown()

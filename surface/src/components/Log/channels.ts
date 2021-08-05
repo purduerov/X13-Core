@@ -7,7 +7,8 @@ export const THRUSTERS = 'thruster_listener';
 export const IMU = 'imu_listener';
 export const COM = 'com_sender';
 export const GENERAL = 'general';
-export const FRAME = 'frame_listener';
+export const RAILCAP = 'rail_capture';
+export const RAILPROC = 'rail_process';
 
 export default [
     SET_IP,
@@ -19,5 +20,6 @@ export default [
     IMU,
     COM,
     GENERAL,
-    FRAME
+    RAILCAP,
+    RAILPROC
 ]

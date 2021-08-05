@@ -3,7 +3,7 @@ import setIp from './electron/setIp';
 import setupRos from './electron/setupRos';
 import gamepadListener from './electron/gamepad';
 import log, { LOG_SUCCESS } from './src/components/Log/LogItem';
-import {CATKIN_MAKE, GENERAL, IMU, SERVO, SET_IP, THRUSTERS} from './src/components/Log/channels';
+import {CATKIN_MAKE, GENERAL, IMU, SERVO, SET_IP, THRUSTERS, RAILCAP} from './src/components/Log/channels';
 import servo from './electron/servo';
 import thrusters from './electron/thrusters';
 import imu from './electron/imu';
@@ -23,7 +23,7 @@ const nodeManager = async (win: BrowserWindow) => {
 
   thrusters(win).catch(e => win.webContents.send(THRUSTERS, log('Thrusters', `Error: ${e}`)));
 
-  //seqimgr(win).catch(e => win.webContents.send(GENERAL, log('Imager', `Error: ${e}`)));
+  seqimgr(win).catch(e => win.webContents.send(RAILCAP, log('rail_cap', `Error: ${e}`)));
 
   imu(win).catch(e => win.webContents.send(IMU, log('IMU', `Error: ${e}`)));
 
