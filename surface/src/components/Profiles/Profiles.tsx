@@ -30,6 +30,9 @@ const Profiles: React.FC = () => {
             <select onChange={(v) => updateConfig(v.target.value)}>
                 <option value='test_config'>test_config</option>
                 <option value='other_config'>other_config</option>
+                <option value='seabin'>seabin</option>
+                <option value='ghost'>ghost</option>
+                <option value='sponge'>sponge</option>
             </select>
         </div>
     )
