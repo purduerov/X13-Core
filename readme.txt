@@ -33,11 +33,13 @@ nn: a baby nn I used just to see how it would do. Harsh truths:
     That being said, it didn't show enough promise to make me think this extra effort was worth it,
     but maybe I can throw a freshman at it to do my dirty work for me + teach them how to build a nn. 
 
+
 yeet:
   idk honestly something I tried with contouring 
 
+
 photomosaics:
-  my starting take on Hunter's work
+  my starting take on Hunter's work. Made it fault tolerant and work with real target images, but not perfect. Simplified in the one algo.
   tester: test driver
 
 
@@ -69,6 +71,12 @@ dynamic_quant:
 the_one_algo_to_rule_them_all:
   I hate how simple it is, but it works very consistently. Some of these ideas are Hunter's from photomosaics.py. 
 
+
+simple.py:
+  ^^ but simpler, more fault tolerant 
+
+no_crop.py:
+  ^^ simpler still.
 
 rov ffserver.conf for reference:
 
