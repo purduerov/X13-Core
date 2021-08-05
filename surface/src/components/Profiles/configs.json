@@ -7,7 +7,7 @@
         "reverse": false,
         "lockout": true,
         "com": [0, 0, -0.2],
-        "trim": [0, 0, 1]
+        "trim": [0, 0, 0]
     },
     "other_config":{
         "name": "Other Config",

@@ -4,10 +4,28 @@ import * as React from 'react';
 import Slider from '../../Slider/Slider';
 import './Compensator.scss';
 
-const names = ['X', 'Y', 'Z'];
+interface Props {
+    vals: Array<number>
+}
 
-const Compensator: React.FC = () => {
-    const [values, setValues] = React.useState<Array<number>>([0.0, 0.0, 0.0])
+const Compensator: React.FC<Props> = (props) => {
+    const [values, setValues] = React.useState<Array<number>>([0.0, 0.0, 0.0]);
+
+    React.useEffect(() => {
+        let temp = [...values];
+        temp = props.vals.map((val, idx) => val);
+        setValues(temp);
+
+        let params: GamepadParams = {
+            type: 'trim',
+            values: temp
+        }
+
+        console.log(temp);
+
+        ipcRenderer.send('compensator', params);
+        console.log('sent')
+    }, [props.vals]);
 
     return(
         <div className='compensator-container'>

@@ -24,8 +24,9 @@ const Profiles: React.FC = () => {
                            reverse={configs[config].reverse}
                            lockout={configs[config].lockout}
                            />
-            <Compensator/>
-            <CoM/>
+            <Compensator vals={configs[config].trim}/>
+            <CoM vals={configs[config].com}/>
+            
             <select onChange={(v) => updateConfig(v.target.value)}>
                 <option value='test_config'>test_config</option>
                 <option value='other_config'>other_config</option>

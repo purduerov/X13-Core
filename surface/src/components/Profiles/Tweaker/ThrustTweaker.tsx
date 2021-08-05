@@ -81,7 +81,7 @@ const ThrustTweaker: React.FC<Props> = (props) => {
         }
 
         ipcRenderer.send('gamepad_sock', params);
-    }, props.vals)
+    }, [props.vals])
 
     const updateSwitch = () => {
         let params: GamepadParams = {
