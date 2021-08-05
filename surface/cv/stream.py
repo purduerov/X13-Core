@@ -72,7 +72,7 @@ if __name__ == '__main__':
         if capture and ret:
             #Save image
             print(os.path.curdir)
-            cv2.imwrite(f'cv/testing/im{counter + 1}.png', frame)
+            cv2.imwrite(f'cv/testing/{counter}.png', frame)
             capture = False
 
         time.sleep(0.5)

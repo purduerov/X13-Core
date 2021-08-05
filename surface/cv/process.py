@@ -99,32 +99,13 @@ def crops_and_colors(brg, image, thresh, crop_delta, color_delta):
         'up': image[upc][col], 
         'right': image[row][rightc] }
 
-    #print(image_struct)
-
-    #color drawing 
-    #cv2.line(new_image,(col,row),(col,down),(255,0,0),1) #down
-    #cv2.line(new_image,(col,row),(left,row),(255,0,0),1) #left
-    #cv2.line(new_image,(col,row),(col,up),(255,0,0),1) #up
-    #cv2.line(new_image,(col,row),(right,row),(255,0,0),1) #right
-
     #expand beyond color start for cropping purposes
     downd =  image.shape[0] if down + crop_delta > image.shape[0] else down + crop_delta
     leftd =  0 if left - crop_delta < 0 else left - crop_delta
     upd = 0 if up - crop_delta < 0 else up - crop_delta 
     rightd = image.shape[1] if right + crop_delta > image.shape[1] else right + crop_delta 
 
-    #crop delta drawing
-    #cv2.line(new_image,(col,down),(col,downd),(0,0,255),1) #down
-    #cv2.line(new_image,(left,row),(leftd,row),(0,0,255),1) #left
-    #cv2.line(new_image,(col,up),(col,upd),(0,0,255),1) #up
-    #cv2.line(new_image,(right,row),(rightd,row),(0,0,255),1) #right
-
     newer_image = brg[upd:downd, leftd:rightd, :]  #y:y+h, x:x+w, z
-
-    #plt.subplot(131),plt.imshow(image)
-    #plt.subplot(132),plt.imshow(new_image)
-    #plt.subplot(133),plt.imshow(newer_image)
-    #plt.show()
 
     return image_struct, newer_image
 
@@ -179,26 +160,10 @@ def compile_mosaic(mosaic):
 
 def image_folder_read(path):
     images = [ cv2.imread(path+j) for j in sorted( [i for i in os.listdir(path)] ) ]
-    if not(len(images) == 5):
+    if not(len(images) >= 5):
         print('Incorrect number of images, there should be exactly 5')
         exit()
     return images 
-
-
-#def color_diff_d(color0, color1):
-#    diff = 0                        #from before I only used H in HSV
-#    for i,j in zip(color0, color1):
-#        diff += abs(int(i)-int(j))  #prevent uint8 overflow
-#    return diff
-
-
-#function pointer madness
-def square_left(mosaic, image_struct, new_image, image):
-    mosaic['left_square'] = {'image_struct': image_struct, 'image': new_image}
-
-
-def square_right(mosaic, image_struct, new_image):
-    mosaic['right_square'] = {'image_struct': image_struct, 'image': new_image}
 
 
 if __name__ == "__main__":
@@ -214,8 +179,6 @@ if __name__ == "__main__":
     for i, image in enumerate(images):
         hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV) 
         sat = hsv[:,:,1]
-        #plt.imshow(sat)
-        #plt.show()
 
         image_struct, new_image = crops_and_colors(image, sat, thresh, crop_delta, color_delta) 
         
@@ -224,24 +187,11 @@ if __name__ == "__main__":
         if i == 1:
             mosaic['rect_bot'] = {'image_struct': image_struct, 'image': new_image,}
         if i == 2: 
-            diff_1 = color_diff(mosaic['top']['image_struct']['right'], image_struct['up'])
-            diff_1 += color_diff(mosaic['rect_bot']['image_struct']['right'], image_struct['left'])
-            diff_2 = color_diff(mosaic['top']['image_struct']['left'], image_struct['up'])
-            diff_2 += color_diff(mosaic['rect_bot']['image_struct']['left'], image_struct['right'])
-            
-            if diff_1 < diff_2:
-                mosaic['right_square'] = {'image_struct': image_struct, 'image': new_image,}
-                square_func = square_left
-            else:
-                mosaic['left_square'] = {'image_struct': image_struct, 'image': new_image,}
-                square_func - square_right
+            mosaic['right_square'] = {'image_struct': image_struct, 'image': new_image,}
         if i == 3: 
             mosaic['rect_right'] = {'image_struct': image_struct, 'image': new_image,}
         if i == 4:
-            square_func(mosaic, image_struct, new_image, image)
+            mosaic['left_square'] = {'image_struct': image_struct, 'image': new_image}
 
     final = compile_mosaic(mosaic)
-    #final = cv2.cvtColor(final, cv2.COLOR_BGR2RGB)
-    #plt.imshow(final)
-    #plt.show()
     cv2.imwrite('./testing/done.png', final)

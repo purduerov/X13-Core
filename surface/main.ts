@@ -9,6 +9,8 @@ import thrusters from './electron/thrusters';
 import imu from './electron/imu';
 import com from './electron/com';
 import seqimgr from './electron/seqimgr';
+import path from 'path';
+import {spawn} from 'child_process';
 
 const nodeManager = async (win: BrowserWindow) => {
   
@@ -28,6 +30,10 @@ const nodeManager = async (win: BrowserWindow) => {
   imu(win).catch(e => win.webContents.send(IMU, log('IMU', `Error: ${e}`)));
 
   com(win);
+
+  ipcMain.on('process_frame', (e) => {
+    spawn('python3', ['-u', path.resolve(__dirname, 'cv/process.py')]);
+  })
 }
 
 const createWindow = () => {

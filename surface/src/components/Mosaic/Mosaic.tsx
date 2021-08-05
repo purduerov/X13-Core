@@ -17,9 +17,12 @@ const Mosaic: React.FC = () => {
             <button
                 className='mosaic-btn'
                 onClick = {(val) => {
-                    setCounter(counter + 1);
-                    if(counter > 3) setCounter(0);
                     ipcRenderer.send('take_frame', counter);
+                    setCounter(counter + 1);
+                    if(counter > 4){
+                        ipcRenderer.send('process_frame');
+                        setCounter(0);
+                    }  
                 }}>
                 Save Frame
             </button>
