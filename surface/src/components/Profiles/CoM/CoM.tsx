@@ -1,6 +1,6 @@
 import { ipcRenderer } from 'electron';
 import * as React from 'react';
-import Slider from '../Slider/Slider';
+import Slider from '../../Slider/Slider';
 import './CoM.scss';
 
 const names = ['X', 'Y', 'Z'];

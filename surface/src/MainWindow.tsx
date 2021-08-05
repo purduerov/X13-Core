@@ -3,12 +3,10 @@ import Servo from './components/Servo/Servo';
 import ThrusterInfo from './components/Thrusters/ThrusterInfo/ThrusterInfo';
 import Log from './components/Log/Log';
 import Camera from './components/Camera/Camera';
-import ThrustTweaker from './components/Thrusters/Tweaker/ThrustTweaker';
 import IMU from './components/IMU/IMU';
-import Compensator from './components/Compensator/Compensator';
-import CoM from './components/CoM/CoM';
 import Switch from './components/Switch/Switch';
 import Mosaic from './components/Mosaic/Mosaic';
+import Profiles from './components/Profiles/Profiles';
 
 
 const MainWindow: React.FC = () => {
@@ -17,9 +15,7 @@ const MainWindow: React.FC = () => {
             <div className="left-column">
 
                 <Servo/>
-                <ThrustTweaker/>
-                <Compensator/>
-                <CoM/>
+                <Profiles/>
                 <Mosaic/>
 
             </div>

@@ -1,7 +1,7 @@
 import { ipcRenderer } from 'electron';
-import { GamepadParams } from '../../../electron/gamepad';
+import { GamepadParams } from '../../../../electron/gamepad';
 import * as React from 'react';
-import Slider from '../Slider/Slider';
+import Slider from '../../Slider/Slider';
 import './Compensator.scss';
 
 const names = ['X', 'Y', 'Z'];
