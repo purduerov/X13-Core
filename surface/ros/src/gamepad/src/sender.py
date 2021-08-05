@@ -157,10 +157,10 @@ def process_event(event):
         if event.code == 'BTN_EAST' and event.state:
             tools[0] = not tools[0]
 
-        if event.code == 'BTN_WEST' and event.state and LOCKOUT:
+        if event.code == 'BTN_WEST' and event.state:
             tools[2] = not tools[2]
 
-        if event.code == 'BTN_NORTH' and event.state:
+        if event.code == 'BTN_NORTH' and event.state and LOCKOUT:
             tools[3] = not tools[3]
 
     elif event.ev_type == EVENT_ABSOLUTE:
