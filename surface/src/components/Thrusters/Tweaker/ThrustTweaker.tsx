@@ -12,6 +12,7 @@ const ROTATION_STEP = 0.05;
 
 const ThrustTweaker: React.FC = () => {
     const [values, setValues] = React.useState([1.0, 1.0, 1.0, 1.0, 1.0, 1.0]);
+    const [fine, setFine] = React.useState(1.27)
     const [reverse, setReverse] = React.useState(false);
     const [mode, setMode] = React.useState(true);
 
@@ -77,7 +78,17 @@ const ThrustTweaker: React.FC = () => {
             <div className='reverse-container'>
                 <Toggle toggled={reverse} callback={updateSwitch} name='Reverse'/>
                 <Toggle toggled={mode} callback={updateMode} name='Fine'/>
-            </div>     
+            </div>   
+            <div className='fine-slider'>  
+            <Slider
+                value={fine}
+                key={10}
+                max={5}
+                step={0.01}
+                callback={(val) => {
+                    setFine(val)
+                }}/>
+            </div>
         </div>
     )
 }
