@@ -8,6 +8,7 @@ import IMU from './components/IMU/IMU';
 import Compensator from './components/Compensator/Compensator';
 import CoM from './components/CoM/CoM';
 import Switch from './components/Switch/Switch';
+import Mosaic from './components/Mosaic/Mosaic';
 
 
 const MainWindow: React.FC = () => {
@@ -19,6 +20,7 @@ const MainWindow: React.FC = () => {
                 <ThrustTweaker/>
                 <Compensator/>
                 <CoM/>
+                <Mosaic/>
 
             </div>
             <div className="center-column">
