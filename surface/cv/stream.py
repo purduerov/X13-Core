@@ -4,6 +4,7 @@ import threading
 import time
 
 capture = False
+counter = 0
 
 class SocketManager:
     def __init__(self):
@@ -29,13 +30,14 @@ class SocketManager:
                 self.connected = True
             except:
                 pass
+            time.sleep(1)
         while self.running:
             try:
                 data = conn.recv(1024)
             except:
                 pass
             if data:
-                decoded = data.decode()
+                capture = len(data.decode()) > 0
                 
 sock_thread = SocketManager()
 
@@ -49,8 +51,10 @@ while(True):
 
   if capture:
     #Save image
-    pass
+    cv2.imwrite(f'./testing/im{counter + 1}.png', frame)
+    counter += 1
+    capture = False
 
-  time.sleep()
+  time.sleep(0.5)
 
 sock_thread.shutdown()
