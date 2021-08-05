@@ -40,9 +40,9 @@ const ThrustTweaker: React.FC = () => {
             params.mode = 'T';
         }
         
-        setReverse(!reverse);
+        setMode(!mode);
 
-        ipcRenderer.send('reverse', params);
+        ipcRenderer.send('mode', params);
     }
 
     return(
