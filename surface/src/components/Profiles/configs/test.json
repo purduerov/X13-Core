@@ -1,7 +1,0 @@
-{
-    "name": "Test Config",
-    "translation":[1.0, 0.1, 0.5],
-    "rotation": [1.0, 1.0, 1.0],
-    "com": [0, 0, -0.2],
-    "trim": [0, 0, 1]
-}

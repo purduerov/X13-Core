@@ -10,12 +10,78 @@ const ROTATION_MAX = 1.0;
 const TRANSLATION_STEP = 0.05;
 const ROTATION_STEP = 0.05;
 
-const ThrustTweaker: React.FC = () => {
+interface Props {
+    vals: Array<number>
+    fine: number
+    reverse: boolean
+    mode: boolean
+    lockout: boolean
+}
+
+const ThrustTweaker: React.FC<Props> = (props) => {
     const [values, setValues] = React.useState([1.0, 1.0, 1.0, 1.0, 1.0, 1.0]);
     const [fine, setFine] = React.useState(1.041)
     const [reverse, setReverse] = React.useState(false);
     const [mode, setMode] = React.useState(true);
     const [lockout, setLockout] = React.useState(true);
+
+    React.useEffect(() => {
+        setFine(props.fine);
+
+        let params: GamepadParams = {
+            type: 'absolute',
+            values: [props.fine]
+        }
+
+        ipcRenderer.send('absolute', params);
+    }, [props.fine])
+
+    React.useEffect(() => {
+        setReverse(props.reverse);
+        setMode(props.mode);
+        setLockout(props.lockout);
+
+        let params: GamepadParams = {
+            type: 'reverse',
+            reverse: 'F'
+        }
+
+        if(props.reverse) params.reverse = 'T';
+
+        ipcRenderer.send('reverse', params);
+
+        params = {
+            type: 'mode',
+            mode: 'F'
+        }
+
+        if(props.mode) params.mode = 'T';
+
+        ipcRenderer.send('mode', params);
+
+        params = {
+            type: 'lockout',
+            lockout: 'F'
+        }
+
+        if(props.lockout) params.lockout = 'T'
+
+        ipcRenderer.send('lockout', params);
+
+    }, [props.reverse, props.mode, props.lockout])
+
+    React.useEffect(() => {
+        let temp = [...values];
+        temp = props.vals.map((val, idx) => val);
+        setValues(temp);
+
+        let params: GamepadParams = {
+            type: 'scale',
+            values: temp
+        }
+
+        ipcRenderer.send('gamepad_sock', params);
+    }, props.vals)
 
     const updateSwitch = () => {
         let params: GamepadParams = {
@@ -83,8 +149,6 @@ const ThrustTweaker: React.FC = () => {
                                 type: 'scale',
                                 values: values
                             }
-
-                            console.log(params.values)
 
                             ipcRenderer.send('gamepad_sock', params);
                         }

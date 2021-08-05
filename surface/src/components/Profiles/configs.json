@@ -1,0 +1,22 @@
+{
+    "test_config":{
+        "name": "Test Config",
+        "tweaker":[1.0, 0.1, 0.5, 1.0, 1.0, 1.0],
+        "fine": 1.041,
+        "mode": true,
+        "reverse": false,
+        "lockout": true,
+        "com": [0, 0, -0.2],
+        "trim": [0, 0, 1]
+    },
+    "other_config":{
+        "name": "Other Config",
+        "tweaker":[0.0, 0.1, 0.2, 1.0, 0.8, 1.0],
+        "fine": 1.041,
+        "mode": true,
+        "reverse": true,
+        "lockout": true,
+        "com": [0, 0, -0.2],
+        "trim": [0, 0, 1]
+    }
+}
