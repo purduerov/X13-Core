@@ -7,6 +7,7 @@ export const THRUSTERS = 'thruster_listener';
 export const IMU = 'imu_listener';
 export const COM = 'com_sender';
 export const GENERAL = 'general';
+export const FRAME = 'frame_listener';
 
 export default [
     SET_IP,
@@ -17,5 +18,6 @@ export default [
     THRUSTERS,
     IMU,
     COM,
-    GENERAL
+    GENERAL,
+    FRAME
 ]

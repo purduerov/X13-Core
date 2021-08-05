@@ -24,6 +24,7 @@ class SocketManager:
         self.thread.join()
 
     def run(self):
+        global capture
         while not self.connected and self.running:
             try:
                 conn, addr = self.sock.accept()
@@ -43,6 +44,8 @@ sock_thread = SocketManager()
 
 vcap = cv2.VideoCapture('http://192.168.1.3:8090/cam0')
 
+print('ready')
+
 while(True):
   try:
       ret, frame = vcap.read()
@@ -53,6 +56,8 @@ while(True):
     #Save image
     cv2.imwrite(f'./testing/im{counter + 1}.png', frame)
     counter += 1
+    if counter > 4:
+        counter = 0
     capture = False
 
   time.sleep(0.5)

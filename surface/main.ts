@@ -8,6 +8,7 @@ import servo from './electron/servo';
 import thrusters from './electron/thrusters';
 import imu from './electron/imu';
 import com from './electron/com';
+import seqimgr from './electron/seqimgr';
 
 const nodeManager = async (win: BrowserWindow) => {
   
@@ -21,6 +22,8 @@ const nodeManager = async (win: BrowserWindow) => {
   servo(win).catch(e => win.webContents.send(SERVO, `Error: ${e}`));
 
   thrusters(win).catch(e => win.webContents.send(THRUSTERS, log('Thrusters', `Error: ${e}`)));
+
+  //seqimgr(win).catch(e => win.webContents.send(GENERAL, log('Imager', `Error: ${e}`)));
 
   imu(win).catch(e => win.webContents.send(IMU, log('IMU', `Error: ${e}`)));
 
@@ -48,7 +51,9 @@ const createWindow = () => {
   })
 
   if(process.env.NODE_ENV !== 'development'){
-    ipcMain.on('logger', (e, msg) => nodeManager(win));
+    ipcMain.on('logger', (e, msg) => {
+      if(msg == 'ready') nodeManager(win);
+    });
   } 
 }
 
