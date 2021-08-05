@@ -12,9 +12,10 @@ const ROTATION_STEP = 0.05;
 
 const ThrustTweaker: React.FC = () => {
     const [values, setValues] = React.useState([1.0, 1.0, 1.0, 1.0, 1.0, 1.0]);
-    const [fine, setFine] = React.useState(1.27)
+    const [fine, setFine] = React.useState(1.041)
     const [reverse, setReverse] = React.useState(false);
     const [mode, setMode] = React.useState(true);
+    const [lockout, setLockout] = React.useState(true);
 
     const updateSwitch = () => {
         let params: GamepadParams = {
@@ -44,6 +45,21 @@ const ThrustTweaker: React.FC = () => {
         setMode(!mode);
 
         ipcRenderer.send('mode', params);
+    }
+
+    const updateLockout = () => {
+        let params: GamepadParams = {
+            type: 'lockout',
+            lockout: 'F'
+        }
+
+        if(!lockout){
+            params.lockout = 'T';
+        }
+        
+        setLockout(!lockout);
+
+        ipcRenderer.send('lockout', params);
     }
 
     return(
@@ -78,6 +94,7 @@ const ThrustTweaker: React.FC = () => {
             <div className='reverse-container'>
                 <Toggle toggled={reverse} callback={updateSwitch} name='Reverse'/>
                 <Toggle toggled={mode} callback={updateMode} name='Fine'/>
+                <Toggle toggled={lockout} callback={updateLockout} name='Yeeter Lockout'/>
             </div>   
             <div className='fine-slider'>  
             <Slider
@@ -86,7 +103,14 @@ const ThrustTweaker: React.FC = () => {
                 max={5}
                 step={0.01}
                 callback={(val) => {
-                    setFine(val)
+                    setFine(val);
+
+                    let params: GamepadParams = {
+                        type: 'absolute',
+                        values: [val]
+                    }
+            
+                    ipcRenderer.send('absolute', params);
                 }}/>
             </div>
         </div>

@@ -9,6 +9,7 @@ export interface GamepadParams {
     type: 'trim' | 'scale' | 'reverse' | 'absolute' | 'lockout' | 'mode'
     reverse?: string
     mode?: string
+    lockout?: string
     values?: Array<number>
 }
 
@@ -88,9 +89,32 @@ const gamepadListener = async (win: Electron.BrowserWindow) => {
 
             ipcMain.on('reverse', (e, params: GamepadParams) => sendParams(win, socket, params));
 
-            ipcMain.on('lockout', (e, params: GamepadParams) => sendParams(win, socket, params));
+            ipcMain.on('lockout', (e, params: GamepadParams) => {
+                try{
+                    let str = `${params.type}:${params.lockout}`;
+                    socket.write(str);
+                }catch(e){
+                    win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket write error', LOG_ERROR));
+                }
+            });
 
-            ipcMain.on('mode', (e, params: GamepadParams) => sendParams(win, socket, params));
+            ipcMain.on('mode', (e, params: GamepadParams) => {
+                try{
+                    let str = `${params.type}:${params.mode}`;
+                    socket.write(str);
+                }catch(e){
+                    win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket write error', LOG_ERROR));
+                }
+            });
+
+            ipcMain.on('absolute', (e, params: GamepadParams) => {
+                try{
+                    let str = `${params.type}:${params.values![0]}`;
+                    socket.write(str);
+                }catch(e){
+                    win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket write error', LOG_ERROR));
+                }
+            });
         }
 
         win.webContents.send(GAMEPAD, msg('gamepad_listener', `Data: ${data}`, LOG_WARNING));

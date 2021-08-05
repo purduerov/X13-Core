@@ -31,6 +31,7 @@ TRIM_Z = 0.0
 REVERSE = 1
 LOCKOUT = False
 MODE = True
+FINE_MULTIPLIER = 1.041
 
 class SocketManager:
     def __init__(self):
@@ -51,7 +52,7 @@ class SocketManager:
 
     def run(self):
         global SCALE_ROTATIONAL_X, SCALE_ROTATIONAL_Y, SCALE_ROTATIONAL_Z, SCALE_TRANSLATIONAL_X, SCALE_TRANSLATIONAL_Y, SCALE_TRANSLATIONAL_Z
-        global TRIM_X, TRIM_Y, TRIM_Z, REVERSE, LOCKOUT, MODE
+        global TRIM_X, TRIM_Y, TRIM_Z, REVERSE, LOCKOUT, MODE, FINE_MULTIPLIER
 
         while not self.connected and self.running:
             try:
@@ -88,6 +89,8 @@ class SocketManager:
                     LOCKOUT = decoded.split(':')[1] == 'T'
                 elif mode == 'mode':
                     MODE = decoded.split(':')[1] == 'T'
+                elif mode == 'absolute':
+                    FINE_MULTIPLIER = float(decoded.split(':')[1])
 
 def getMessage():
     global gamepad_state
@@ -109,7 +112,7 @@ def getMessage():
     t.angular.y = (-gamepad_state['RSY'] * SCALE_ROTATIONAL_Y) * REVERSE
     t.angular.z = -gamepad_state['RSX'] * SCALE_ROTATIONAL_Z
 
-    return rov_velocity_command(t, 'gamepad', False, False)
+    return rov_velocity_command(t, 'gamepad', MODE, FINE_MULTIPLIER, False, False)
 
 def getTools():
     global tools
