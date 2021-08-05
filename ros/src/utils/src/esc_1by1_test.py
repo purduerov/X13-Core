@@ -38,30 +38,7 @@ def main(isMapped = False, channel='can0', bustype='socketcan'):
     can_bus = can.interface.Bus(channel=channel, bustype=bustype)
     signal.signal(signal.SIGINT, getSignal(can_bus))
 
-    if(isMapped):
-        """
-        thrusterToCanId = {}
-        thrusterToEscId = {}
-        for (canId, thrusters) in can_better_map.items():
-            for (i, thruster_num_i) in enumerate(thrusters):
-                if(thruster_num_i != 0):
-                    thrusterToCanId[thruster_num_i] = canId
-                    thrusterToEscId[thruster_num_i] = i
-        print(thrusterToCanId)
-        print(thrusterToEscId)
-        a = input("Enter")
-        while True:
-            for thrusterNum in range(1, N_THRUSTERS + 1):
-                packet = deepcopy(BASE_PACKET)
-                canId = thrusterToCanId[thrusterNum]
-                motorNumber = thrusterToEscId[thrusterNum]
-                packet[canId][4 + motorNumber] = LIL_FORWARD
-                writeToCan(packet)
-                print(f"Firing thruster {thrusterNum} on ESC {canId:x} motor {motorNumber}")
-                # print(packet)
-                # print(f"   {packet[canId]}")
-                time.sleep(2)
-        """
+    if(isMapped and 0):
         base_board = min(can_better_map.keys())
         max_board = max(can_better_map.keys())
         while True:
@@ -90,12 +67,13 @@ def main(isMapped = False, channel='can0', bustype='socketcan'):
                         shift -= 8
                         data_list_send.append((data_list >> shift) % 256)
                     data = bytearray(data_list_send)
-                    
+
                     # print(f"To board {cid:x} writing {data}")
                     print(f"Thruster {thrusterNum} to board {cid:x} writing {data_list_send}")
                     writeToCan({cid: data})
                     time.sleep(2)
                     writeToCan({cid: HALT_BYTE_ARRAY})
+            time.sleep(2)
 
     else:
         while True:
@@ -106,6 +84,7 @@ def main(isMapped = False, channel='can0', bustype='socketcan'):
                     writeToCan(packet)
                     print(f"Firing ESC {can_id:x} motor {motor_index}")
                     time.sleep(2)
+            time.sleep(2)
 
 
 if __name__ == "__main__":
