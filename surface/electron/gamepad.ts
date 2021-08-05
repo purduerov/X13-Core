@@ -4,17 +4,26 @@ import msg, { LOG_ERROR, LOG_SUCCESS, LOG_WARNING } from '../src/components/Log/
 import {GAMEPAD} from '../src/components/Log/channels';
 import net from 'net';
 import { ipcMain } from 'electron';
-import { values } from 'webpack.config';
 
 export interface GamepadParams {
-    type: 'trim' | 'scale' | 'reverse'
+    type: 'trim' | 'scale' | 'reverse' | 'absolute' | 'lockout' | 'mode'
     reverse?: string
+    mode?: string
     values?: Array<number>
 }
 
 let socket = new net.Socket();
 
 let sender;
+
+const sendParams = (win, socket, params: GamepadParams) => {
+    try{
+        let str = `${params.type}:${params.reverse!}`
+        socket.write(str);
+    }catch(e){
+        win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket write error', LOG_ERROR));
+    }
+}
 
 const wait = async (win) => {
     let promise = new Promise((resolve, reject) => {
@@ -77,14 +86,11 @@ const gamepadListener = async (win: Electron.BrowserWindow) => {
                 }
             })
 
-            ipcMain.on('reverse', (e, params: GamepadParams) => {
-                try{
-                    let str = `${params.type}:${params.reverse!}`
-                    socket.write(str);
-                }catch(e){
-                    win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket write error', LOG_ERROR));
-                }
-            })
+            ipcMain.on('reverse', (e, params: GamepadParams) => sendParams(win, socket, params));
+
+            ipcMain.on('lockout', (e, params: GamepadParams) => sendParams(win, socket, params));
+
+            ipcMain.on('mode', (e, params: GamepadParams) => sendParams(win, socket, params));
         }
 
         win.webContents.send(GAMEPAD, msg('gamepad_listener', `Data: ${data}`, LOG_WARNING));
