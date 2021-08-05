@@ -29,8 +29,8 @@ const CameraFrame: React.FC<Props> = (props) => {
 
 	return(
 		<div 
-			style={{backgroundImage: `URL(${src})`, transform: `rotate(${props.rotate}deg)`}}
-			className={props.secondary ? 'frame' : 'main-frame'}
+			style={{backgroundImage: `URL(${src})`, transform: `rotate(${props.rotate}deg) ${props.rotate == 90 || props.rotate == 270 ? `translateX(${(180 - props.rotate) / 90 * 170}px)` : ''}`}}
+			className={props.secondary ? 'frame' : `main-frame ${props.rotate == 90 || props.rotate == 270 ? 'main-frame-vert' : ''}`}
 			onError={() => setSrc(props.camera.placeholder)}
 			onClick={() => props.handleClick(props.index)}
 		/>

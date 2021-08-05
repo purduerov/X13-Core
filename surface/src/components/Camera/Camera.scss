@@ -32,6 +32,12 @@
     @extend .frame;
     height: calc(100vh / 2);
     max-width: unset;
+    transition: ease 1s;
+}
+
+.main-frame-vert{
+    z-index: 1;
+    transition: ease 1s;
 }
 
 .frame:hover{
