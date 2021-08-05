@@ -4,7 +4,7 @@ import rospy
 from std_msgs.msg import String
 from std_msgs.msg import Bool
 # fix shared msgs problem by doing catkin make
-from shared_msgs.msg import rov_velocity_command
+# from shared_msgs.msg import rov_velocity_command
 from geometry_msgs.msg import Twist
 
 # CV Imports
@@ -57,7 +57,7 @@ class TransectStream:
             if self.losing_frames == self.max_losing_frames:
                 self.losses += 1
 
-            if self.losses == 1:
+            if self.losses == 2:
                 print(f"Task failed. Showing {len(output['big_lines'])} pipe(s) over {self.losing_frames} frames.")
             return
         return
@@ -65,6 +65,7 @@ class TransectStream:
     def get_message(self):
         return self.last_good_twist
         # return rov_velocity_command(self.last_good_twist, 'transect', False, False)
+
 
 def print_twist(twist):
     print(f"Linear: ({twist.linear.x}, {twist.linear.y}, {twist.linear.z}), " +
@@ -81,3 +82,5 @@ def test():
         stream.update()
         if (stream.get_message() is not None):
             print_twist(stream.get_message())
+
+test()
