@@ -179,18 +179,10 @@ def compile_mosaic(mosaic):
 
 def image_folder_read(path):
     images = [ cv2.imread(path+j) for j in sorted( [i for i in os.listdir(path)] ) ]
-    if not(len(images) == 5):
-        print('Incorrect number of images, there should be exactly 5')
-        exit()
+    #if not(len(images) == 5):
+    #    print('Incorrect number of images, there should be exactly 5')
+    #    exit()
     return images 
-
-
-#def color_diff_d(color0, color1):
-#    diff = 0                        #from before I only used H in HSV
-#    for i,j in zip(color0, color1):
-#        diff += abs(int(i)-int(j))  #prevent uint8 overflow
-#    return diff
-
 
 
 def square_right(mosaic, image_struct, new_image):

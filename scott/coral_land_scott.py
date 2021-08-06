@@ -78,14 +78,9 @@ for kernel in junc_kernels:
 
 junctions = morphology.dilation(coral_junc, morphology.square(5))
 
-print(junctions)
-
-plt.subplot(131),plt.imshow(coral)
-plt.subplot(132),plt.imshow(coral_reduce)
-plt.subplot(133),plt.imshow(junctions+ends)
-plt.show()
-
-io.imsave('./output/output.png', (coral_reduce + ends + junctions) * 255)
+io.imsave('./output/land_output.png', (coral_reduce + ends + junction) * 255)
+io.imsave('./output/land_nodes.png', (junctions + ends) * 255)
+io.imsave('./output/land_lines.png', (coral_reduce) * 255)
 
 
 #be prepared to flip a mirror image
