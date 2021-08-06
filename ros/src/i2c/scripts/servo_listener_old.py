@@ -30,13 +30,15 @@ def callback(requestedAngle):
     global duty_prev
     rate = rospy.Rate(100)  
     #change the angle to desired duty cycle
-    duty = ((requestedAngle.data /180) * 11) + 1 #the range of the servo is dutycycle of 1-12 for some reason. So this formula should take in angle of 0-180 and transfer the value from 1-12
+    duty = requestedAngle # Just make sure on frontend the requested angle is a number from 2 to 8
+    #((requestedAngle.data /180) * 11) + 1 #the range of the servo is dutycycle of 1-12 for some reason. So this formula should take in angle of 0-180 and transfer the value from 1-12
     #caps the duty cycle to the max angle values
     if duty > 8.02:
        duty = 8.02
     elif duty < 2.02:
        duty = 2.02
     
+
     dutyDiff = abs(duty_prev - duty)
     timeToWait = (12.5*(dutyDiff**0.515)+10)/1000
 
@@ -58,7 +60,7 @@ def callback(requestedAngle):
         except:
             print("there has been some error of some type :/")
     sleep(timeToWait) #this is so the servo pauses before turning off the power
-    p.ChangeDutyCycle(0) #if the servo jitters a lot uncomment this it should stop all movement in between calls
+    # p.ChangeDutyCycle(0) #if the servo jitters a lot uncomment this it should stop all movement in between calls
     
 
 def listener():
