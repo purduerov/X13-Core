@@ -186,7 +186,8 @@ def image_folder_read(path):
 
 
 if __name__ == "__main__":
-    path = './testing/'
+    #path = './testing/'
+    path = './rov_trial/'
     thresh = 10                     #difference from baseline saturation
     crop_delta = 100               #color overflow to edge
     color_delta = 25
@@ -218,4 +219,4 @@ if __name__ == "__main__":
     #final = cv2.cvtColor(final, cv2.COLOR_BGR2RGB)
     #plt.imshow(final)
     #plt.show()
-    cv2.imwrite('./testing/done.png', final)
+    cv2.imwrite(path+'done.png', final)

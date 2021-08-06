@@ -102,10 +102,10 @@ def crops_and_colors(brg, image, thresh, crop_delta, color_delta):
     #print(image_struct)
 
     #color drawing 
-    #cv2.line(new_image,(col,row),(col,down),(255,0,0),1) #down
-    #cv2.line(new_image,(col,row),(left,row),(255,0,0),1) #left
-    #cv2.line(new_image,(col,row),(col,up),(255,0,0),1) #up
-    #cv2.line(new_image,(col,row),(right,row),(255,0,0),1) #right
+    cv2.line(new_image,(col,row),(col,down),(255,0,0),1) #down
+    cv2.line(new_image,(col,row),(left,row),(255,0,0),1) #left
+    cv2.line(new_image,(col,row),(col,up),(255,0,0),1) #up
+    cv2.line(new_image,(col,row),(right,row),(255,0,0),1) #right
 
     #expand beyond color start for cropping purposes
     downd =  image.shape[0] if down + crop_delta > image.shape[0] else down + crop_delta
@@ -114,17 +114,17 @@ def crops_and_colors(brg, image, thresh, crop_delta, color_delta):
     rightd = image.shape[1] if right + crop_delta > image.shape[1] else right + crop_delta 
 
     #crop delta drawing
-    #cv2.line(new_image,(col,down),(col,downd),(0,0,255),1) #down
-    #cv2.line(new_image,(left,row),(leftd,row),(0,0,255),1) #left
-    #cv2.line(new_image,(col,up),(col,upd),(0,0,255),1) #up
-    #cv2.line(new_image,(right,row),(rightd,row),(0,0,255),1) #right
+    cv2.line(new_image,(col,down),(col,downd),(0,0,255),1) #down
+    cv2.line(new_image,(left,row),(leftd,row),(0,0,255),1) #left
+    cv2.line(new_image,(col,up),(col,upd),(0,0,255),1) #up
+    cv2.line(new_image,(right,row),(rightd,row),(0,0,255),1) #right
 
     newer_image = brg[upd:downd, leftd:rightd, :]  #y:y+h, x:x+w, z
 
-    #plt.subplot(131),plt.imshow(image)
-    #plt.subplot(132),plt.imshow(new_image)
-    #plt.subplot(133),plt.imshow(newer_image)
-    #plt.show()
+    plt.subplot(131),plt.imshow(image)
+    plt.subplot(132),plt.imshow(new_image)
+    plt.subplot(133),plt.imshow(newer_image)
+    plt.show()
 
     return image_struct, newer_image
 
