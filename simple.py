@@ -179,9 +179,9 @@ def compile_mosaic(mosaic):
 
 def image_folder_read(path):
     images = [ cv2.imread(path+j) for j in sorted( [i for i in os.listdir(path)] ) ]
-    if not(len(images) == 5):
-        print('Incorrect number of images, there should be exactly 5')
-        exit()
+    #if not(len(images) == 5):
+    #    print('Incorrect number of images, there should be exactly 5')
+    #    exit()
     return images 
 
 
