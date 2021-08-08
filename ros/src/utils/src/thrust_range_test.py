@@ -65,9 +65,9 @@ def writeToCan(packet, timesleep=1, bus=None, printOut=False) -> None:
         bus.send(can_tx, timeout=1)
 
         if printOut:
-            tst = "    0x{:x}:".format(cid)
+            tst = f"    0x{cid:x}:"
             for el in data:
-                tst += " {0:03}".format(int(el))
+                tst += f" {int(el):03}"
 
             print(tst)
 
