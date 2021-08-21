@@ -21,10 +21,10 @@ This is the simpler task, and we left a lot of room for integrating; for a task 
 ROV_main.py expects to know who is talking to it in the message type; you can send a flag to let it know to swap which set of ingress controls it should listen to. This enables you to hot swap feeds that control drones. We took this account in our design but never saw it fully through to fruition - this should be someone's focus this next year. This is a universal design so it isn't exclusive to CV via frontend taking over; anything that can generate controls can send this message format, CV was just the most obvious. 
 
 
-To rerun a video to imitate a proper test feed: 
-  on one terminal, run: ffserver -f /etc/ffserver.conf 
-  on the other, run: ffmpeg -i <./path/to/.mp4> -c:v libvpx -cpu-used 4 -threads 8 http://localhost:8090/stream.ffm
-  This throws up a camera feed from an old video that you may now consume
+To rerun a video to imitate a proper test feed: <br />
+  on one terminal, run: ffserver -f /etc/ffserver.conf <br />
+  on the other, run: ffmpeg -i <./path/to/.mp4> -c:v libvpx -cpu-used 4 -threads 8 http://localhost:8090/stream.ffm <br />
+  This throws up a camera feed from an old video that you may now consume<br />
 
 
 #### Eric's Wack Math ####
@@ -54,11 +54,11 @@ There are tons of helper functions and commented out points for you to observe w
 Don't take this seriously, this was just a viability test. Needs MUCH more work to actually work. 
 This is a classifier; you must have a tremendous training set for it to be able to classify correctly, let alone identifying square / rect and colors. Way too much effort to be worth it, I just wanted to see if it would take a lot of work or an unsurmountable amount. Looked like the last. <br />
 <br />
-NN:
-split: splits the video into image frames
-a.bash: deletes every other .jpg in a folder; adjacent frames are too similar, doesn't help in training an ai
-fix: after using https://github.com/tzutalin/labelImg to label images I accidentally reran split, so I made this file to delete every image that I didn't label
-show: shows me the bounding box on an image to make sure I'm not an idiot
+NN:<br />
+split: splits the video into image frames<br />
+a.bash: deletes every other .jpg in a folder; adjacent frames are too similar, doesn't help in training an ai<br />
+fix: after using https://github.com/tzutalin/labelImg to label images I accidentally reran split, so I made this file to delete every image that I didn't label<br />
+show: shows me the bounding box on an image to make sure I'm not an idiot<br />
 nn: a baby nn I used just to see how it would do. Harsh truths:
     Needs volumes of training data. It converges way too quickly since adjacent frames are too similar and unsimilar frames are really unsimilar and the order is implicit to batch determination; I should bind images and bounding boxes to a custom generator
     so I can randomize it, and then add in duplicate frames that have been rotated/transposed/sheared/etc.
@@ -68,52 +68,52 @@ nn: a baby nn I used just to see how it would do. Harsh truths:
 
 ### Other stuff ### 
 
-yeet:
-  idk honestly, something I tried with contouring. If it was easier to capture hard lines in blurry underwater images this would be the go to, but instead it sucks. Maybe spend some time next effort trying to see if you can capture them better than I did and return to contouring. 
+yeet:<br />
+  idk honestly, something I tried with contouring. If it was easier to capture hard lines in blurry underwater images this would be the go to, but instead it sucks. Maybe spend some time next effort trying to see if you can capture them better than I did and return to contouring. <br />
 
 
-photomosaics:
+photomosaics:<br />
   my starting take on Hunter's work. Made it fault tolerant and work with real target images, but very far from perfect. Simplified in the one algo.
-  tester: test driver
+  tester: test driver<br />
 
 
-hist:
+hist:<br />
   puts pixel values into a histogram, makes a palette out of the most occurring colors, then 
   quantizes all other colors into these on a frame 
   based on an idea from scott 
-  very naive; to demonstrate:   
-    say I have 6 common frequencies 
-    I'm looking for 4 colors so I quant down to 4 
-    3 of my most frequent colors are shades of blue 
-    congrats you just turned the picture mostly blue 
-  additionally:
-    these frequencies are [r,g,b], so adjacent pixels may differ a lot, and your results may be a little nonsensical 
-    to fix it should be done in a continuous color spectra 
+  very naive; to demonstrate:   <br />
+    say I have 6 common frequencies <br />
+    I'm looking for 4 colors so I quant down to 4 <br />
+    3 of my most frequent colors are shades of blue <br />
+    congrats you just turned the picture mostly blue <br />
+  additionally, 
+    these frequencies are [r,g,b], so adjacent pixels may differ a lot, and your results may be a little nonsensical.
+    To fix, it should be done in a continuous color spectra like hue in hsv <br />
 
-  drawback: everything is blue, so if I want the 4 highest freqs I'll get 4 shades of blue. Make a simple algo that identifies the 4 peaks in        frequency over 4 highest freqs and this will function much much better - this one is well worth your time working on. 
+  drawback: everything is blue, so if I want the 4 highest freqs I'll get 4 shades of blue. Make a simple algo that identifies the 4 peaks in        frequency over 4 highest freqs and this will function much much better - this one is well worth your time working on. <br />
 
 
-dynamic_quant:
-  ^^ but less naive; however it's unuseably slow. much optimization would be needed to work 
-  it uses HSV since hue is a continuous [0,360] spectra 
-  instead of choosing the most frequent colors, it chooses local maxima of frequencies; to demonstrate:
+dynamic_quant:<br />
+  ^^ but less naive; however it's unuseably slow. much optimization would be needed to work <br />
+  it uses HSV since hue is a continuous [0,360] spectra <br />
+  instead of choosing the most frequent colors, it chooses local maxima of frequencies; to demonstrate:<br />
     if there are 4 blues but one blue is most common, then 6 reds and one is most common, all of which are 
       together in a list, and I'm looking for 2 maxima, ideally it should choose one blue and one red 
-        (I said less naive, not infallible) 
-  since the reassignment of hues to this palette of maxima colors is manual and in python, it's ludicrously slow 
+        (I said less naive, not infallible) <br />
+  since the reassignment of hues to this palette of maxima colors is manual and in python, it's ludicrously slow, 
   all of the runtime is spent in the quantize function 
-  GLHF 
+  GLHF <br />
 
 
-the_one_algo_to_rule_them_all:
+the_one_algo_to_rule_them_all:<br />
   I hate how simple it is, but it works very consistently. Some of these ideas are Hunter's from photomosaics.py. 
 
-simple.py:
+simple.py:<br />
   ^^ but simpler, more fault tolerant 
 
-no_crop.py:
+no_crop.py:<br />
   ^^ simpler still. The dumbest algo I've ever written, but a judge at comp told me it was judges' discretion of what's good output; over-zealous cropping of a single color band could get it disqualified, so don't even crop at all for insurance. I hate it but it was our best shot at the time. 
-
+<br />
 
 rov pi ffserver.conf for reference, since they live in /etc/ where git doesn't track them:
 
