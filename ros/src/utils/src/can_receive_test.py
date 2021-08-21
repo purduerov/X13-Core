@@ -5,11 +5,11 @@ This file prints out all incoming CAN messages. FUN!
 
 
 import sys
-from copy import deepcopy
 
 import can
 
 lastEsc = [0] * 3
+
 
 def bus_message_received(can_rx: "can.Message") -> None:
     can_id = can_rx.arbitration_id
@@ -37,7 +37,6 @@ def main(args: list) -> None:
 
     for can_rx in can_bus:
         bus_message_received(can_rx)
-    
 
 
 if(__name__ == "__main__"):
