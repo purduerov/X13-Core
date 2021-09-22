@@ -113,13 +113,14 @@ if __name__ == "__main__":
     srv = Server(ROV_COMConfig, updateCOM)
     rate = rospy.Rate(25)  # 20 hz
 
+    thrust_pub = rospy.Publisher('final_thrust', final_thrust_msg, queue_size=10)
+    status_pub = rospy.Publisher('thrust_status', thrust_status_msg, queue_size=10)
+
     # initialize subscribers
     comm_sub = rospy.Subscriber('/thrust_command', thrust_command_msg, _pilot_command)
     com_sub = rospy.Subscriber('com_tweak', com_msg, _comUpdate)
 
     # initialize publishers
-    thrust_pub = rospy.Publisher('final_thrust', final_thrust_msg, queue_size=10)
-    status_pub = rospy.Publisher('thrust_status', thrust_status_msg, queue_size=10)
 
     # define variable for class Complex to allow calculation of thruster pwm values
     c = Complex_1.Complex()
