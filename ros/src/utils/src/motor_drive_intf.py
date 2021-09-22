@@ -6,19 +6,15 @@ Box or to test with the full ROV.
 """
 
 
-import sys
-import time
-import signal
+import argparse
 from copy import deepcopy
+import signal
+import sys
 
 import can
 
-from thrust_range_test import writeToCan, getSignal, zeroOutThrusters
+from thrust_range_test import writeToCan, getSignal, zeroOutThrusters, N_CAN_BYTES, ZERO_THROTTLE
 from esc_1by1_test import BASE_PACKET
-
-
-N_CAN_BYTES = 8
-ZERO_THROTTLE = 127
 
 
 def discoverCanId() -> int:
@@ -47,9 +43,16 @@ def discoverEscId() -> int:
     return escId
 
 
-def main() -> None:
+def main(args: list) -> None:
     """"""
-    can_bus = can.interface.Bus(channel = 'can0', bustype = 'socketcan')
+    parser = argparse.ArgumentParser(description = __doc__)
+    parser.add_argument("--isMapped", default = True, type = bool, help = "")
+    parser.add_argument("--channel", default = "can0", help = "Which can channel to send messages on.")
+    parser.add_argument("--bustype", default = "socketcan", help = "The bus type")
+    parsed = parser.parse_args(args)
+
+    can_bus = can.interface.Bus(channel = parsed.channel, bustype = parsed.bustype)
+
     signal.signal(signal.SIGINT, getSignal(can_bus))
 
     canId = discoverCanId()
@@ -67,8 +70,7 @@ def main() -> None:
         except ValueError:
             zeroOutThrusters()
             sys.exit(1)
-        # send CAN packet
 
 
 if(__name__ == "__main__"):
-    main()
+    main(sys.argv[1:])

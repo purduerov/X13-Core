@@ -1,9 +1,13 @@
 #! /usr/bin/python
 
-import sys
-import can
-import time
 import signal
+import sys
+import time
+
+import can
+
+N_CAN_BYTES = 8
+ZERO_THROTTLE = 127
 
 
 def getSignal(bus):
@@ -17,7 +21,7 @@ def getSignal(bus):
 
 
 def zeroOutThrusters(bus=None) -> None:
-    a = mapThrusters([127] * 8)
+    a = mapThrusters([ZERO_THROTTLE] * N_CAN_BYTES)
 
     writeToCan(a, timesleep=0.0, bus=bus, printOut=True)
 
@@ -65,9 +69,9 @@ def writeToCan(packet, timesleep=1, bus=None, printOut=False) -> None:
         bus.send(can_tx, timeout=1)
 
         if printOut:
-            tst = "    0x{:x}:".format(cid)
+            tst = f"    0x{cid:x}:"
             for el in data:
-                tst += " {0:03}".format(int(el))
+                tst += f" {int(el):03}"
 
             print(tst)
 
@@ -104,4 +108,4 @@ def mainLoop(timesleep=1, bound=5, increment=1, mid=127, channel='can0', bustype
 if __name__ == "__main__":
     bound = 10 * 10
     inc = 2
-    print(mainLoop(bound=bound, increment=inc, timesleep=.1))
+    print(mainLoop(bound=bound, increment=inc, timesleep=0.1))
