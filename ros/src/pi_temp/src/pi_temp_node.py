@@ -8,6 +8,7 @@ from std_msgs.msg import Float64
 
 def talker():
     
+    #get the cpu temperature of the pi
     cpu = CPUTemperature()
     pub = rospy.Publisher(cpu.temperature, Float64, queue_size=10)
     rospy.init_node('Pi_CPU_TEMP', anonymous=True)
