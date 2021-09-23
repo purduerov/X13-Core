@@ -4,9 +4,11 @@
         <node name="thrust_proc" pkg="can_proc" type="thrust_proc.py"/>
         <node name="tool_proc" pkg="can_proc" type="tool_proc.py"/>
         <node name="ROV_main" pkg="control" type="ROV_main.py"/>
-	<node name="depth" pkg="i2c" type="depth_proc.py"/>
+	    <node name="depth" pkg="i2c" type="depth_proc.py"/>
         <node name="imu" pkg="i2c" type="imu_proc.py" output="screen"/>
         <node name="servo" pkg="i2c" type="servo_listener.py"/>
+        <node name="pi_temp" pkg="pi_temp" type="pi_temp_node.py"/>
+
 
     <node name="thrust_control" pkg="control" type="thrust_control.py" output="screen"/>
     </group>

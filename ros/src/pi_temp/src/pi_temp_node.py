@@ -8,16 +8,14 @@ from std_msgs.msg import Float64
 
 def talker():
     
-    #get the cpu temperature of the pi
     cpu = CPUTemperature()
-    pub = rospy.Publisher(cpu.temperature, Float64, queue_size=10)
+    pub = rospy.Publisher("Pi_TEMP", Float64, queue_size=10)
     rospy.init_node('Pi_CPU_TEMP', anonymous=True)
     rate = rospy.Rate(1) # 10hz
     
     while not rospy.is_shutdown():
-        hello_str = "hello world %s" % rospy.get_time()
-        rospy.loginfo(hello_str)
-        pub.publish(hello_str)
+        rospy.loginfo(cpu.temperature)
+        pub.publish(cpu.temperature)
         rate.sleep()
    
 if __name__ == '__main__':
