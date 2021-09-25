@@ -17,21 +17,27 @@
     flex-flow: row;
     gap: 20px;
     justify-content: center;
-    align-items: center;
     overflow: hidden;
 }
 
 .frame{
     border-radius: 10px;
     flex: 1 1 auto;
-    height: calc(50vh / 4);
-    max-width: 150px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .main-frame{
     @extend .frame;
     height: calc(100vh / 2);
     max-width: unset;
+    transition: ease 1s;
+}
+
+.main-frame-vert{
+    z-index: 1;
+    transition: ease 1s;
 }
 
 .frame:hover{

@@ -42,6 +42,12 @@ class SocketManager:
 
                 angle = float(data.decode())
 
+                msg = servo_msg()
+                msg.angle = angle
+                msg.servo_lock_status = False
+                msg.header.stamp = rospy.Time.now()
+                pub.publish(msg)
+
 def shutdown(sig, frame):
     global sock
 
@@ -58,14 +64,7 @@ if __name__ == '__main__':
     rospy.init_node('servo_sender', disable_signals=True)
 
     pub = rospy.Publisher('/rov/ServoAngles', servo_msg, queue_size=10)
-    rate = rospy.Rate(10)
 
     print('ready')
 
-    while not rospy.is_shutdown():
-        msg = servo_msg()
-        msg.angle = angle
-        msg.servo_lock_status = False
-        msg.header.stamp = rospy.Time.now()
-        pub.publish(msg)
-        rate.sleep()
+    rospy.spin()

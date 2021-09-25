@@ -1,14 +1,13 @@
-#!/usr/bin/env python3
-
-import rospy
-from std_msgs.msg import Float32, String
-from shared_msgs.msg import com_msg
-import socket, signal, sys
+import cv2
+import socket
 import threading
+import time
+import sys
+import signal
+import os
 
-com_x = 0.0
-com_y = 0.0
-com_z = 0.0
+capture = False
+counter = 0
 
 class SocketManager:
     def __init__(self, port):
@@ -28,51 +27,54 @@ class SocketManager:
         self.thread.join()
 
     def run(self):
+        global capture, counter
         while not self.connected and self.running:
             try:
                 conn, addr = self.sock.accept()
                 self.connected = True
             except:
                 pass
+            time.sleep(1)
         while self.running:
             try:
-                data = conn.recv(25)
+                data = conn.recv(1024)
             except:
                 pass
             if data:
-                global com_x, com_y, com_z, pub
-
-                arr = [float(d) for d in data.decode().split(';')[0].split(',')]
-
-                if len(arr) == 3:
-                    com_x = arr[0]
-                    com_y = arr[1]
-                    com_z = arr[2]
-
-                    msg = com_msg()
-                    msg.com[0] = com_x
-                    msg.com[1] = com_y
-                    msg.com[2] = com_z
-                    pub.publish(msg)
-
+                capture = len(data.decode()) > 0
+                counter = int(data.decode())
+                print(capture)
+                print(counter)
+                
 def shutdown(sig, frame):
-    global sock
-
-    print('please')
-    sock.shutdown()
-    rospy.signal_shutdown('now')
+    global input_socket
+    print('shutting down')
+    input_socket.shutdown()
 
 if __name__ == '__main__':
+    global input_socket
+
     signal.signal(signal.SIGINT, shutdown)
     signal.signal(signal.SIGTERM, shutdown)
 
-    sock = SocketManager(int(sys.argv[1]))
+    input_socket = SocketManager(int(sys.argv[1]))
 
-    rospy.init_node('com_sender', disable_signals=True)
-
-    pub = rospy.Publisher('/rov/com_tweak', com_msg, queue_size=10)
-    rate = rospy.Rate(10)
+    vcap = cv2.VideoCapture('http://192.168.1.3:8090/cam0')
 
     print('ready')
 
-    rospy.spin()
+    while(input_socket.running):
+        try:
+            ret, frame = vcap.read()
+        except:
+            continue    
+
+        if capture and ret:
+            #Save image
+            print(os.path.curdir)
+            cv2.imwrite(f'cv/testing/{counter}.png', frame)
+            capture = False
+
+        time.sleep(0.5)
+
+    input_socket.shutdown()

@@ -1,0 +1,70 @@
+$active: #00eeff;
+$active-inner: #ffffff;
+$focus: 2px rgba(39, 94, 254, 0.302);
+$border: #BBC1E1;
+$border-hover: #00eeff;
+$background: $active-inner;
+
+$b: $background;
+$bc: $border;
+$d-t: .3s;
+$d-t-e: ease;
+$d-o: .2s;
+
+$ab: $border;
+
+.switch-container{
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+}
+
+.switch{
+    -webkit-appearance: none;
+    height: 50px;
+    width: 150px;
+    outline: none;
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    margin: 0;
+    cursor: pointer;
+    border: 1px solid $border;
+    border-radius: 25px;
+    background: $b;
+    transition: background .3s, border-color .3s, box-shadow .2s;
+}
+
+.switch::after{
+    content: '';
+    display: block;
+    position: absolute;
+    transition: transform .3s ease, opacity .2s;
+    left: 9px;
+    top: 4px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    background: $ab;
+    transform: translateX(0px);
+}
+
+.switch:hover{
+    border: 1px solid $border-hover;
+}
+
+.switch:checked{
+    background: $active;
+    border: 1px solid $active;
+    &::after{
+      background: $active-inner; 
+      transform: translateX(90px); 
+      transition: transform .6s cubic-bezier(.2, .85, .32, 1.2), opacity .3s;
+    }
+}
+
+.switch:not(:checked){
+    &::after{
+        opacity: .6;
+    }
+}

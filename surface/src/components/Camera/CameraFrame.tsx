@@ -17,7 +17,8 @@ const defaultProps: Props = {
 	camera: {
 		feed: '',
 		placeholder: '',
-		name: ''
+		name: '',
+		angle: 0
 	}
 }
 
@@ -28,10 +29,12 @@ const CameraFrame: React.FC<Props> = (props) => {
 	}, [props.camera])
 
 	return(
-		<img src={src}
-			className={props.secondary ? 'frame' : 'main-frame'}
-			alt="Image not found"
-			style={{transform: `rotate(${props.rotate}deg)`}}
+		<div 
+			style={{
+				backgroundImage: `URL(${src})`, 
+				transform: `rotate(${props.rotate}deg) ${props.rotate == 90 || props.rotate == 270 ? `translateX(${(180 - props.rotate) / 90 * 170}px)` : ''}`
+			}}
+			className={props.secondary ? 'frame' : `main-frame ${props.rotate == 90 || props.rotate == 270 ? 'main-frame-vert' : ''}`}
 			onError={() => setSrc(props.camera.placeholder)}
 			onClick={() => props.handleClick(props.index)}
 		/>

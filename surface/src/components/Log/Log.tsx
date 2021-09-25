@@ -22,7 +22,7 @@ const Log: React.FC = () => {
         <ol>
             {items.map((item, index) => {
                 return <li key={index}>
-                    {`${item.timestamp ? item.timestamp : ''} (${item.process}): ${item.text}`}
+                    {`${item.timestamp ? item.timestamp : ''} (${item.process})`}: <span style={{color: item.color}}>{item.text}</span>
                 </li>
             })}
         </ol>

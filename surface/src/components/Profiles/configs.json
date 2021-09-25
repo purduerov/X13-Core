@@ -1,0 +1,52 @@
+{
+    "test_config":{
+        "name": "Test Config",
+        "tweaker":[1.0, 0.1, 0.5, 1.0, 1.0, 1.0],
+        "fine": 1.041,
+        "mode": true,
+        "reverse": false,
+        "lockout": true,
+        "com": [0, 0, -0.2],
+        "trim": [0, 0, 0]
+    },
+    "other_config":{
+        "name": "Other Config",
+        "tweaker":[0.0, 0.1, 0.2, 1.0, 0.8, 1.0],
+        "fine": 1.041,
+        "mode": true,
+        "reverse": true,
+        "lockout": true,
+        "com": [0, 0, -0.2],
+        "trim": [0, 0, 1]
+    },
+    "seabin":{
+        "name": "Seabin Config",
+        "tweaker":[0.2, 0.5, 0.2, 1.0, 0.2, 0.2],
+        "fine": 1.041,
+        "mode": true,
+        "reverse": false,
+        "lockout": false,
+        "com": [0, 0, -0.2],
+        "trim": [0, 0, -1]
+    },
+    "ghost":{
+        "name": "Ghost Net Config",
+        "tweaker":[0.5, 0.2, 0.3, 1.0, 0.2, 0.2],
+        "fine": 1.041,
+        "mode": true,
+        "reverse": false,
+        "lockout": true,
+        "com": [0, 0, -0.2],
+        "trim": [0, 0, -1]
+    },
+    "sponge":{
+        "name": "Sponge Config",
+        "tweaker":[0.2, 0.5, 0.2, 1.0, 0.2, 0.2],
+        "fine": 1.041,
+        "mode": true,
+        "reverse": true,
+        "lockout": false,
+        "com": [0, 0, -0.2],
+        "trim": [0, 0, -2]
+    }
+}

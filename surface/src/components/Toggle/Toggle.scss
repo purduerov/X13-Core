@@ -1,0 +1,21 @@
+.toggle-base{
+    border: 2px solid #2e2e2e;
+    border-radius: 10px;
+    &:focus{
+        outline: none;
+    }
+    &:hover{
+        border: 2px solid cyan; 
+    }
+    height: 50px;
+}
+
+.toggle-true{
+    @extend .toggle-base;
+    background-color: green;
+}
+
+.toggle-false{
+    @extend .toggle-base;
+    background-color: red;
+}
