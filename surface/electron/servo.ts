@@ -1,20 +1,20 @@
 import path from 'path';
 import {spawn} from 'child_process';
-import msg, { LOG_ERROR, LOG_SUCCESS, LOG_WARNING } from '../src/components/Log/LogItem';
+import msg from '../src/components/Log/LogItem';
 import {SERVO} from '../src/components/Log/channels';
 import net from 'net';
 import {ipcMain} from 'electron';
 
 const messager = (win) => {
     let sock = net.connect(11002, undefined, () => {
-        win.webContents.send(SERVO, msg('servo', 'Socket connected', LOG_SUCCESS));
+        win.webContents.send(SERVO, msg('servo', 'Socket connected'));
     });
 
     ipcMain.on('servo_send', (e, data: number,) => {
         sock.write(`${data}`);
     })
 
-    sock.on('error', _ => win.webContents.send(SERVO, msg('servo', 'Socket error!', LOG_ERROR)));
+    sock.on('error', _ => win.webContents.send(SERVO, msg('servo', 'Socket error!')));
 
     win.on('close', sock.end);
 }
@@ -25,7 +25,7 @@ const servo = async (win) => {
     win.webContents.send(SERVO, msg('servo', 'Started'));
 
     sender.on('exit', code => { 
-        win.webContents.send(SERVO, msg('servo', 'Exiting...', LOG_WARNING));
+        win.webContents.send(SERVO, msg('servo', 'Exiting...'));
     });
 
     sender.stdout.on('data', data => {
@@ -35,7 +35,7 @@ const servo = async (win) => {
     })
 
     sender.stderr.on('data', data => {
-        win.webContents.send(SERVO, msg('servo', `Error: ${data}`, LOG_ERROR));
+        win.webContents.send(SERVO, msg('servo', `Error: ${data}`));
     })
 
     win.on('close', _ => {

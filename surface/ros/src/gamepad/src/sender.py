@@ -7,31 +7,28 @@ import sys
 #ROS
 import rospy
 from std_msgs.msg import String, Bool, Empty
-from shared_msgs.msg import rov_velocity_command, tools_command_msg
+from shared_msgs.msg import rov_velocity_command
 from geometry_msgs.msg import Twist
 import socket, threading
 import signal, os
 
 from config import *
 
-tools = [False, False, False, False]
+pm_toggle = False
+gh_toggle = False
+bs_toggle = False
 
-SCALE_TRANSLATIONAL_X = 1.0
-SCALE_TRANSLATIONAL_Y = 1.0
-SCALE_TRANSLATIONAL_Z = 1.0
+SCALE_TRANSLATIONAL_X = 4.0
+SCALE_TRANSLATIONAL_Y = 4.0
+SCALE_TRANSLATIONAL_Z = 4.0
 
-SCALE_ROTATIONAL_X = 1.0
-SCALE_ROTATIONAL_Y = 1.0
-SCALE_ROTATIONAL_Z = 1.0
+SCALE_ROTATIONAL_X = 1.5
+SCALE_ROTATIONAL_Y = 1.5
+SCALE_ROTATIONAL_Z = 1.5
 
 TRIM_X = 0.0
 TRIM_Y = 0.0
 TRIM_Z = 0.0
-
-REVERSE = 1
-LOCKOUT = True
-MODE = True
-FINE_MULTIPLIER = 1.041
 
 class SocketManager:
     def __init__(self):
@@ -52,7 +49,7 @@ class SocketManager:
 
     def run(self):
         global SCALE_ROTATIONAL_X, SCALE_ROTATIONAL_Y, SCALE_ROTATIONAL_Z, SCALE_TRANSLATIONAL_X, SCALE_TRANSLATIONAL_Y, SCALE_TRANSLATIONAL_Z
-        global TRIM_X, TRIM_Y, TRIM_Z, REVERSE, LOCKOUT, MODE, FINE_MULTIPLIER
+        global TRIM_X, TRIM_Y, TRIM_Z
 
         while not self.connected and self.running:
             try:
@@ -68,9 +65,9 @@ class SocketManager:
             if data:
                 decoded = data.decode()
                 mode = decoded.split(':')[0]
+                arr = [float(d) for d in decoded.split(':')[1].split(',')]
 
                 if mode == 'scale':
-                    arr = [float(d) for d in decoded.split(':')[1].split(',')]
                     SCALE_TRANSLATIONAL_X = arr[0]
                     SCALE_TRANSLATIONAL_Y = arr[1]
                     SCALE_TRANSLATIONAL_Z = arr[2]
@@ -79,26 +76,17 @@ class SocketManager:
                     SCALE_ROTATIONAL_Y = arr[4]
                     SCALE_ROTATIONAL_Z = arr[5]
                 elif mode == 'trim':
-                    arr = [float(d) for d in decoded.split(':')[1].split(',')]
                     TRIM_X = arr[0]
                     TRIM_Y = arr[1]
                     TRIM_Z = arr[2]
-                elif mode == 'reverse':
-                    REVERSE = 1 if decoded.split(':')[1] == 'F' else -1
-                elif mode == 'lockout':
-                    LOCKOUT = decoded.split(':')[1] == 'T'
-                elif mode == 'mode':
-                    MODE = decoded.split(':')[1] == 'T'
-                elif mode == 'absolute':
-                    FINE_MULTIPLIER = float(decoded.split(':')[1])
 
 def getMessage():
     global gamepad_state
 
     t = Twist()
 
-    t.linear.x = -(gamepad_state['LSY'] * SCALE_TRANSLATIONAL_X + TRIM_X) * REVERSE
-    t.linear.y = -(gamepad_state['LSX'] * SCALE_TRANSLATIONAL_Y + TRIM_Y) * REVERSE
+    t.linear.x = gamepad_state['LSY'] * SCALE_TRANSLATIONAL_X + TRIM_X
+    t.linear.y = gamepad_state['LSX'] * SCALE_TRANSLATIONAL_Y + TRIM_Y
     t.linear.z = (gamepad_state['RT'] - gamepad_state['LT']) * SCALE_TRANSLATIONAL_Z + TRIM_Z
 
     if gamepad_state['LB'] == 1:
@@ -108,19 +96,26 @@ def getMessage():
     else:
         x = 0.0
 
-    t.angular.x = -x
-    t.angular.y = (-gamepad_state['RSY'] * SCALE_ROTATIONAL_Y) * REVERSE
+    t.angular.x = x
+    t.angular.y = gamepad_state['RSY'] * SCALE_ROTATIONAL_Y
     t.angular.z = -gamepad_state['RSX'] * SCALE_ROTATIONAL_Z
 
-    return rov_velocity_command(t, 'gamepad', MODE, FINE_MULTIPLIER, False, False)
+    return rov_velocity_command(t, 'gamepad', False, False)
 
-def getTools():
-    global tools
+def getPMState():
+    global pm_toggle
 
-    tm = tools_command_msg()
-    tm.tools = [i for i in tools]
+    return Bool(pm_toggle)
 
-    return tm
+def getBSState():
+    global bs_toggle
+
+    return Bool(bs_toggle)
+
+def getGHState():
+    global gh_toggle
+
+    return Bool(gh_toggle)
 
 def correct_raw(raw, abbv):
     sign = (raw >= 0) * 2 - 1
@@ -152,16 +147,13 @@ def process_event(event):
     if event.ev_type == EVENT_KEY:
         gamepad_state[EVENTS[event.code]] = event.state
         if event.code == 'BTN_SOUTH' and event.state:
-            tools[1] = not tools[1]
+            pm_toggle = not pm_toggle
 
         if event.code == 'BTN_EAST' and event.state:
-            tools[0] = not tools[0]
+            gh_toggle = not gh_toggle
 
         if event.code == 'BTN_WEST' and event.state:
-            tools[2] = not tools[2]
-
-        if event.code == 'BTN_NORTH' and event.state and LOCKOUT:
-            tools[3] = not tools[3]
+            bs_toggle = not bs_toggle
 
     elif event.ev_type == EVENT_ABSOLUTE:
         gamepad_state[EVENTS[event.code]] = correct_raw(event.state, EVENTS[event.code])
@@ -170,7 +162,9 @@ def process_event(event):
 
 def pub_data(event):
     pub.publish(getMessage())
-    pub_tools.publish(getTools())
+    pub_pm.publish(getPMState())
+    pub_gh.publish(getGHState())
+    pub_bs.publish(getBSState())
 
 def update_gamepad(event):
     try:
@@ -188,7 +182,7 @@ def shutdown(sig, frame):
     rospy.signal_shutdown('now')
 
 if __name__ == '__main__':
-    global pub, pub_tools, data_thread, gamepad_thread, sock_thread
+    global pub, pub_pm, pub_gh, data_thread, gamepad_thread, sock_thread
 
     signal.signal(signal.SIGINT, shutdown)
     signal.signal(signal.SIGTERM, shutdown)
@@ -203,7 +197,9 @@ if __name__ == '__main__':
     rospy.init_node('gp_pub', anonymous=True, disable_signals=True)
 
     pub = rospy.Publisher('rov_velocity', rov_velocity_command, queue_size=10)
-    pub_tools = rospy.Publisher('tools', tools_command_msg, queue_size=10)
+    pub_pm = rospy.Publisher('pm_cmd', Bool, queue_size=10)
+    pub_gh = rospy.Publisher('gh_cmd', Bool, queue_size=10)
+    pub_bs = rospy.Publisher('bs_cmd', Bool, queue_size=10)
 
 
     data_thread = rospy.Timer(rospy.Duration(0.1), pub_data)

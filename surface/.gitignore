@@ -4,4 +4,3 @@ package-lock.json
 **/__pycache__
 **/build
 **/devel
-**/cv/testing

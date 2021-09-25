@@ -2,15 +2,12 @@ import {app, BrowserWindow , ipcMain} from 'electron';
 import setIp from './electron/setIp';
 import setupRos from './electron/setupRos';
 import gamepadListener from './electron/gamepad';
-import log, { LOG_SUCCESS } from './src/components/Log/LogItem';
-import {CATKIN_MAKE, GENERAL, IMU, SERVO, SET_IP, THRUSTERS, RAILCAP} from './src/components/Log/channels';
+import log from './src/components/Log/LogItem';
+import {CATKIN_MAKE, IMU, SERVO, SET_IP, THRUSTERS} from './src/components/Log/channels';
 import servo from './electron/servo';
 import thrusters from './electron/thrusters';
 import imu from './electron/imu';
 import com from './electron/com';
-import seqimgr from './electron/seqimgr';
-import path from 'path';
-import {spawn} from 'child_process';
 
 const nodeManager = async (win: BrowserWindow) => {
   
@@ -25,15 +22,9 @@ const nodeManager = async (win: BrowserWindow) => {
 
   thrusters(win).catch(e => win.webContents.send(THRUSTERS, log('Thrusters', `Error: ${e}`)));
 
-  seqimgr(win).catch(e => win.webContents.send(RAILCAP, log('rail_cap', `Error: ${e}`)));
-
   imu(win).catch(e => win.webContents.send(IMU, log('IMU', `Error: ${e}`)));
 
   com(win);
-
-  ipcMain.on('process_frame', (e) => {
-    spawn('python3', ['-u', path.resolve(__dirname, 'cv/process.py')]);
-  })
 }
 
 const createWindow = () => {
@@ -51,15 +42,8 @@ const createWindow = () => {
   // and load the index.html of the app.
   win.loadFile('./index.html');
 
-  ipcMain.on('logger', (e, msg) => {
-    e.sender.send(GENERAL, log('General', 'Welcome!', LOG_SUCCESS));
-    e.sender.send(GENERAL, log('General', 'Pilot Interface Starting...'));
-  })
-
   if(process.env.NODE_ENV !== 'development'){
-    ipcMain.on('logger', (e, msg) => {
-      if(msg == 'ready') nodeManager(win);
-    });
+    ipcMain.on('logger', (e, msg) => nodeManager(win));
   } 
 }
 

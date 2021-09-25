@@ -1,7 +1,7 @@
 import path from 'path';
 import {spawn} from 'child_process';
 import {IMU} from '../src/components/Log/channels';
-import msg, { LOG_ERROR, LOG_WARNING } from '../src/components/Log/LogItem';
+import msg from '../src/components/Log/LogItem';
 
 export default async function imu(win) {
     let listener = spawn('python3', ['-u', path.resolve(__dirname, '../ros/src/imu/src/status.py')]);
@@ -9,7 +9,7 @@ export default async function imu(win) {
     win.webContents.send(IMU, msg('imu', 'Started node'));
 
     listener.on('exit', code => { 
-        win.webContents.send(IMU, msg('imu', 'Node exited', LOG_WARNING));
+        win.webContents.send(IMU, msg('imu', 'Node exited'));
     });
 
     listener.stdout.on('data', data => {
@@ -23,7 +23,7 @@ export default async function imu(win) {
     })
 
     listener.stderr.on('data', data => {
-        win.webContents.send(IMU, msg('imu', `Error: ${data}`, LOG_ERROR));
+        win.webContents.send(IMU, msg('imu', `Error: ${data}`));
     })
 
     win.on('close', _ => {

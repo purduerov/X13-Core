@@ -1,13 +1,13 @@
 import path from 'path';
 import {spawn} from 'child_process';
-import msg, { LOG_ERROR, LOG_SUCCESS } from '../src/components/Log/LogItem';
+import msg from '../src/components/Log/LogItem';
 import {COM} from '../src/components/Log/channels';
 import net from 'net';
 import {ipcMain} from 'electron';
 
 const messager = (win) => {
     let sock = net.connect(11003, undefined, () => {
-        win.webContents.send(COM, msg('com', 'Socket connected', LOG_SUCCESS));
+        win.webContents.send(COM, msg('com', 'Socket connected'));
     });
 
     ipcMain.on('com_send', (e, data: Array<number>,) => {
@@ -18,7 +18,7 @@ const messager = (win) => {
             str += ';';
             sock.write(str);
         }catch(e){
-            win.webContents.send(COM, msg('com', `Error: ${e}`, LOG_ERROR));
+            win.webContents.send(COM, msg('com', `Error: ${e}`));
         }
     })
 

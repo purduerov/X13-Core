@@ -1,31 +1,13 @@
 import { ipcRenderer } from 'electron';
-import { GamepadParams } from '../../../../electron/gamepad';
+import { GamepadParams } from '../../../electron/gamepad';
 import * as React from 'react';
-import Slider from '../../Slider/Slider';
+import Slider from '../Slider/Slider';
 import './Compensator.scss';
 
-interface Props {
-    vals: Array<number>
-}
+const names = ['X', 'Y', 'Z'];
 
-const Compensator: React.FC<Props> = (props) => {
-    const [values, setValues] = React.useState<Array<number>>([0.0, 0.0, 0.0]);
-
-    React.useEffect(() => {
-        let temp = [...values];
-        temp = props.vals.map((val, idx) => val);
-        setValues(temp);
-
-        let params: GamepadParams = {
-            type: 'trim',
-            values: temp
-        }
-
-        console.log(temp);
-
-        ipcRenderer.send('compensator', params);
-        console.log('sent')
-    }, [props.vals]);
+const Compensator: React.FC = () => {
+    const [values, setValues] = React.useState<Array<number>>([0.0, 0.0, 0.0])
 
     return(
         <div className='compensator-container'>

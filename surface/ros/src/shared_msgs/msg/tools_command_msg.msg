@@ -1,1 +1,3 @@
-int8[4] tools
+int8 pm
+int8 am
+int8 ghost

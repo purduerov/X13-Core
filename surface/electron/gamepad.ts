@@ -1,30 +1,19 @@
 import path from 'path';
 import {spawn} from 'child_process';
-import msg, { LOG_ERROR, LOG_SUCCESS, LOG_WARNING } from '../src/components/Log/LogItem';
+import msg from '../src/components/Log/LogItem';
 import {GAMEPAD} from '../src/components/Log/channels';
 import net from 'net';
 import { ipcMain } from 'electron';
+import { values } from 'webpack.config';
 
 export interface GamepadParams {
-    type: 'trim' | 'scale' | 'reverse' | 'absolute' | 'lockout' | 'mode'
-    reverse?: string
-    mode?: string
-    lockout?: string
-    values?: Array<number>
+    type: 'trim' | 'scale'
+    values: Array<number>
 }
 
 let socket = new net.Socket();
 
 let sender;
-
-const sendParams = (win, socket, params: GamepadParams) => {
-    try{
-        let str = `${params.type}:${params.reverse!}`
-        socket.write(str);
-    }catch(e){
-        win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket write error', LOG_ERROR));
-    }
-}
 
 const wait = async (win) => {
     let promise = new Promise((resolve, reject) => {
@@ -51,73 +40,44 @@ const gamepadListener = async (win: Electron.BrowserWindow) => {
     });
 
     sender.stderr.on('data', data => {
-        win.webContents.send(GAMEPAD, msg('gamepad_listener', `Error: ${data}`, LOG_ERROR));
+        win.webContents.send(GAMEPAD, msg('gamepad_listener', `Error: ${data}`));
     });
 
     sender.stdout.on('data', data => {
         if(`${data}`.includes('ready')){
-            win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Gamepad connected', LOG_SUCCESS));
+            win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Gamepad connected'));
             socket = net.connect(11001, 'localhost', () => {
-                win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket connected', LOG_SUCCESS));
+                win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket connected'));
             })
 
             socket.on('error', (err) => {
-                win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket error', LOG_ERROR));
+                win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket error'));
             })
 
             ipcMain.on('gamepad_sock', (e, params: GamepadParams) => {
                 try{
                     let str = `${params.type}:`
-                    for(let v of params.values!) str += `${v.toString()},`;
+                    for(let v of params.values) str += `${v.toString()},`;
                     str = str.slice(0, -1);
                     socket.write(str);
                 }catch(e){
-                    win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket write error', LOG_ERROR));
+                    win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket write error'));
                 }
             })
 
             ipcMain.on('compensator', (e, params: GamepadParams) => {
                 try{
                     let str = `${params.type}:`
-                    for(let v of params.values!) str += `${v.toString()},`;
+                    for(let v of params.values) str += `${v.toString()},`;
                     str = str.slice(0, -1);
                     socket.write(str);
                 }catch(e){
-                    win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket write error', LOG_ERROR));
+                    win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket write error'));
                 }
             })
-
-            ipcMain.on('reverse', (e, params: GamepadParams) => sendParams(win, socket, params));
-
-            ipcMain.on('lockout', (e, params: GamepadParams) => {
-                try{
-                    let str = `${params.type}:${params.lockout}`;
-                    socket.write(str);
-                }catch(e){
-                    win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket write error', LOG_ERROR));
-                }
-            });
-
-            ipcMain.on('mode', (e, params: GamepadParams) => {
-                try{
-                    let str = `${params.type}:${params.mode}`;
-                    socket.write(str);
-                }catch(e){
-                    win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket write error', LOG_ERROR));
-                }
-            });
-
-            ipcMain.on('absolute', (e, params: GamepadParams) => {
-                try{
-                    let str = `${params.type}:${params.values![0]}`;
-                    socket.write(str);
-                }catch(e){
-                    win.webContents.send(GAMEPAD, msg('gamepad_listener', 'Socket write error', LOG_ERROR));
-                }
-            });
         }
 
-        win.webContents.send(GAMEPAD, msg('gamepad_listener', `Data: ${data}`, LOG_WARNING));
+        win.webContents.send(GAMEPAD, msg('gamepad_listener', `Data: ${data}`));
     })
 }
 

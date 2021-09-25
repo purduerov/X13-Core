@@ -15,10 +15,7 @@ const Camera: React.FC = () => {
 			<div className='camera-row'>
 				{cameras.map((camera, idx) => {
 					if (idx != active)
-						return (<CameraFrame key={idx} index={idx} rotate={0} camera={camera} secondary handleClick={(idx) => {
-							setActive(idx);
-							setRotate(cameras[idx].angle);
-						}}/>);
+						return (<CameraFrame key={idx} index={idx} rotate={0} camera={camera} secondary handleClick={setActive}/>);
 				})}
 				<button onClick={() => {
 					if(rotate == 360) setRotate(0);

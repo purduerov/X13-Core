@@ -36,7 +36,7 @@ class SocketManager:
                 pass
         while self.running:
             try:
-                data = conn.recv(25)
+                data = conn.recv(20)
             except:
                 pass
             if data:
@@ -44,16 +44,15 @@ class SocketManager:
 
                 arr = [float(d) for d in data.decode().split(';')[0].split(',')]
 
-                if len(arr) == 3:
-                    com_x = arr[0]
-                    com_y = arr[1]
-                    com_z = arr[2]
+                com_x = arr[0]
+                com_y = arr[1]
+                com_z = arr[2]
 
-                    msg = com_msg()
-                    msg.com[0] = com_x
-                    msg.com[1] = com_y
-                    msg.com[2] = com_z
-                    pub.publish(msg)
+                msg = com_msg()
+                msg.com[0] = com_x
+                msg.com[1] = com_y
+                msg.com[2] = com_z
+                pub.publish(msg)
 
 def shutdown(sig, frame):
     global sock

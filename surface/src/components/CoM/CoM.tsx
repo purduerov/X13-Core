@@ -1,23 +1,12 @@
 import { ipcRenderer } from 'electron';
 import * as React from 'react';
-import { GamepadParams } from '../../../../electron/gamepad';
-import Slider from '../../Slider/Slider';
+import Slider from '../Slider/Slider';
 import './CoM.scss';
 
-interface Props {
-    vals: Array<number>
-}
+const names = ['X', 'Y', 'Z'];
 
-const CoM: React.FC<Props> = (props) => {
-    const [values, setValues] = React.useState<Array<number>>([0.0, 0.0, 0.0]);
-
-    React.useEffect(() => {
-        let temp = [...values];
-        temp = props.vals.map((val, idx) => val);
-        setValues(temp);
-        
-        ipcRenderer.send('com_send', temp);
-    }, props.vals);
+const CoM: React.FC = () => {
+    const [values, setValues] = React.useState<Array<number>>([0.0, 0.0, 0.0])
 
     return(
         <div className='com-container'>
@@ -27,8 +16,8 @@ const CoM: React.FC<Props> = (props) => {
                     <Slider
                         value={val}
                         key={idx}
-                        min={-2.0}
-                        max={2.0}
+                        min={-1.0}
+                        max={1.0}
                         step={0.01}
                         callback={(val) => {
                             let temp = [...values];

@@ -1,7 +1,7 @@
 import path from 'path';
 import {spawn} from 'child_process';
 import {THRUSTERS} from '../src/components/Log/channels';
-import msg, { LOG_ERROR, LOG_WARNING } from '../src/components/Log/LogItem';
+import msg from '../src/components/Log/LogItem';
 
 const thrusters = async (win) => {
     let listener = spawn('python3', ['-u', path.resolve(__dirname, '../ros/src/thrusters/src/status.py')]);
@@ -9,7 +9,7 @@ const thrusters = async (win) => {
     win.webContents.send(THRUSTERS, msg(THRUSTERS, 'Started node'));
 
     listener.on('exit', code => { 
-        win.webContents.send(THRUSTERS, msg(THRUSTERS, 'Node exited', LOG_WARNING));
+        win.webContents.send(THRUSTERS, msg(THRUSTERS, 'Node exited'));
     });
 
     listener.stdout.on('data', data => {
@@ -23,7 +23,7 @@ const thrusters = async (win) => {
     })
 
     listener.stderr.on('data', data => {
-        win.webContents.send(THRUSTERS, msg(THRUSTERS, `Error: ${data}`, LOG_ERROR));
+        win.webContents.send(THRUSTERS, msg(THRUSTERS, `Error: ${data}`));
     })
 
     win.on('close', _ => {
